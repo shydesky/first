@@ -1,5 +1,4 @@
 from model import User
-from operation.op_service import op_login
 
 def login(email, key):
 	user = User.query.filter_by(email=email).one()

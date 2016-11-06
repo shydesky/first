@@ -8,8 +8,8 @@ def op_signup(**kwargs):
     email = kwargs.get('email','')
     phone = kwargs.get('phone','')
     passwd= kwargs.get('passwd','')
-    count = User.query.filter_by(email=email).conut()
-    if count > 1:
+    user = User.query.filter_by(email=email).one()
+    if user:
         return 'user exist'
     clientKey = generate_clientKey()
     user = User(email=email,phone=phone,passwd=passwd,clientKey=)

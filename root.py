@@ -1,6 +1,7 @@
 from flask import Flask
+from flask import request
 from flask.ext.jsontools import jsonapi
-from controller import service,login,signup
+from controller import service,login,signup 
 import json
 app = Flask(__name__)
 
@@ -25,7 +26,7 @@ def signup_r():
 	phone = request.args.get('phone','')
 	email = request.args.get('email','')
 	passwd = request.args.get('passwd','')
-    return signup(phone=phone,email=email,passwd=passwd)
+    return signup.signup(phone=phone,email=email,passwd=passwd)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
