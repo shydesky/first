@@ -8,9 +8,9 @@ def op_signup(**kwargs):
     email = kwargs.get('email','')
     phone = kwargs.get('phone','')
     passwd= kwargs.get('passwd','')
-    user = User.query.filter_by(email=email).one()
+    users = User.query.filter_by(email=email).all()
     import pdb;pdb.set_trace()
-    if user:
+    if users:
         return 'user exist'
     clientKey = generate_clientKey()
     user = User(email=email,phone=phone,passwd=passwd,clientKey='')
