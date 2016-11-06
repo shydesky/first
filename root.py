@@ -1,5 +1,7 @@
 from flask import Flask
+from controller import service
 app = Flask(__name__)
+
 
 @app.route("/")
 def hello():
