@@ -13,6 +13,9 @@ class User(Base):
     def __init__(self, name=None, email=None):
         self.name = name
         self.email = email
+        self.passwd = passwd
+        self.phone = phone
+        self.clientKey = clientKey
 
     def __repr__(self):
         return '<User %r>' % (self.name)
