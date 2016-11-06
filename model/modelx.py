@@ -10,7 +10,7 @@ class User(Base):
     phone = Column(String(11), unique=True)
     clientKey = Column(String(120), unique=True)
 
-    def __init__(self, name=None, email=None):
+    def __init__(self, name=None, email=None, passwd=None, phone=None, clientKey=None):
         self.name = name
         self.email = email
         self.passwd = passwd
