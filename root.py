@@ -23,9 +23,9 @@ def login():
 @app.route("/signup", methods=['POST', 'GET'])
 @jsonapi
 def signup_r():
-	phone = request.args.get('phone','')
-	email = request.args.get('email','')
-	passwd = request.args.get('passwd','')
+    phone = request.args.get('phone','')
+    email = request.args.get('email','')
+    passwd = request.args.get('passwd','')
     return signup.signup(phone=phone,email=email,passwd=passwd)
 
 if __name__ == "__main__":
