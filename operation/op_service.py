@@ -12,7 +12,7 @@ def op_signup(**kwargs):
     import pdb;pdb.set_trace()
     if users:
         return 'user exist'
-    clientKey = generate_clientKey()
+
     user = User(email=email,phone=phone,passwd=passwd,clientKey='')
     db_session.add(user)
     db_session.commit()
