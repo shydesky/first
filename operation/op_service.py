@@ -9,10 +9,11 @@ def op_signup(**kwargs):
     phone = kwargs.get('phone','')
     passwd= kwargs.get('passwd','')
     user = User.query.filter_by(email=email).one()
+    import pdb;pdb.set_trace()
     if user:
         return 'user exist'
     clientKey = generate_clientKey()
-    user = User(email=email,phone=phone,passwd=passwd,clientKey=)
+    user = User(email=email,phone=phone,passwd=passwd,clientKey='')
     db_session.add(user)
     db_session.commit()
     
