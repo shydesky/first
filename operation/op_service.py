@@ -10,7 +10,7 @@ def op_signup(**kwargs):
     passwd = kwargs.get('passwd','')
     name = kwargs.get('name','')
     users = User.query.filter_by(email=email).all()
-    import pdb;pdb.set_trace()
+    #import pdb;pdb.set_trace()
     if users:
         return 'user exist'
 

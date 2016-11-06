@@ -1,8 +1,7 @@
 from flask import Flask
 from flask import request
-from flask.ext.jsontools import jsonapi
-from controller import service,login,signup 
-import json
+from flask_jsontools import jsonapi
+from controller import service,login,signup
 app = Flask(__name__)
 
 @app.route("/")
@@ -10,15 +9,16 @@ def hello():
     return "Hello World!"
 
 @app.route("/service", methods=['POST', 'GET'])
+@jsonapi
 def service():
     userid = request.args.get('userid','')
-    return json.dumps(service.get_user(userid))
+    return service.get_user(userid)
 
 @app.route("/login", methods=['POST', 'GET'])
 @jsonapi
 def login():
     userid = request.args.get('userid','')
-    return json.dumps(service.get_user(userid))
+    return service.login(userid)
 
 @app.route("/signup", methods=['POST', 'GET'])
 @jsonapi
