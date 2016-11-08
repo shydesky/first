@@ -19,5 +19,5 @@ def process():
 
 @permission_check
 def process_calc(**kwargs):
-	ret = op_service.process_calc(request.args)
+	ret = op_service.process_calc(kwargs)
 	return ret

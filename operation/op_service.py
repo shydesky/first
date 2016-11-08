@@ -64,7 +64,7 @@ def op_signin(kwargs):
         ret['data'] = data
         return ret
 
-def process_calc(**kwargs):
+def process_calc(kwargs):
     arg1 = kwargs.get('arg1',0)
     arg2 = kwargs.get('arg2',0)
     return op_calc(float(arg1), float(arg2))
