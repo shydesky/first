@@ -2,7 +2,7 @@ from model import *
 import hashlib
 import time
 USER_FUNCTION = ['SIGNUP','SIGNIN']
-global msg
+
 msg = 'Success'
 data = {}
 ret = {'msg':msg,'data':data}
@@ -10,7 +10,7 @@ ret = {'msg':msg,'data':data}
 def process_user(kwargs):
     function = kwargs.get('function','').upper()
     if function not in USER_FUNCTION:
-        msg = 'param is wrong'
+        ret['msg'] = 'param is wrong'
     elif function == 'SIGNUP':
         data = op_signup(kwargs)
     elif function == 'SIGNIN':
@@ -29,9 +29,10 @@ def op_signup(kwargs):
     passwd = kwargs.get('passwd','')
     name = kwargs.get('name','')
     users = User.query.filter_by(email=email).all()
-    msg = 'User exist'
+    
     if users:
-        return 
+        ret['msg'] = 'User exist'
+        return ret
 
     user = User(name=name,email=email,phone=phone,passwd=passwd,clientKey='')
     db_session.add(user)
@@ -46,8 +47,7 @@ def op_signin(kwargs):
     user = User.query.filter(and_(User.email==email,User.passwd==passwd)).first()
     
     if not user:
-        msg = 'User not exist'
-        ret['msg'] = msg
+        ret['msg'] = 'User not exist'
         return ret
     else:
         hash_md5 = hashlib.md5(email + str(time.time()))
@@ -56,9 +56,8 @@ def op_signin(kwargs):
         db_session.commit()
         db_session.close()
 
-        msg = 'Signin Success'
-        ret['msg'] = msg
         data['token'] = hash_md5
+        ret['msg'] = 'Signin Success'
         return ret
 
 def process_calc(kwargs):
@@ -71,7 +70,7 @@ def process_calc(kwargs):
 def op_calc(arg1, arg2):
     ret = {}
     data = {}
-    msg = 'Success'
+
     data['X1'] = round((arg2/arg1*2.0-1)*arg1, 5)
     data['X2'] = round((arg2/arg1*3.0-2)*arg1, 5)
     data['X3'] = round((arg2/arg1*4.0-3)*arg1, 5)
@@ -90,6 +89,5 @@ def op_calc(arg1, arg2):
     data['Y7'] = round(arg2/(arg2/arg1*8.0-7), 5)
     data['Y8'] = round(arg2/(arg2/arg1*9.0-8), 5)
 
-    ret['msg'] = msg
     ret['data'] = data
     return ret
