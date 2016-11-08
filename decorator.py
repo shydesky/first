@@ -10,7 +10,7 @@ def permission_check(func):
         email = kwargs.get('email','')
         user = User.query.filter(and_(User.clientKey==key,User.email==email)).first()
         if user:
-            return func(self, *args, **kwargs)
+            return func(*args, **kwargs)
         else:
             ret['msg'] = 'Permission deny'
             ret['data'] = {}
