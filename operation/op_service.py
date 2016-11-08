@@ -3,6 +3,7 @@ USER_FUNCTION = ['SIGNUP','SIGNIN']
 
 def process_user(kwargs):
     ret = {}
+    data = {}
     msg = 'Success'
     function = kwargs.get('function','').upper()
     if function not in USER_FUNCTION:
@@ -48,6 +49,7 @@ def process_calc(kwargs):
 
 def op_calc(arg1, arg2):
     ret = {}
+    data = {}
     msg = 'Success'
     data['X1'] = round((arg2/arg1*2.0-1)*arg1, 5)
     data['X2'] = round((arg2/arg1*3.0-2)*arg1, 5)
