@@ -12,9 +12,9 @@ def process():
     if not service_name:
         return ret
     elif service_name == 'calc':
-        ret = process_calc(request.args)
+        ret = process_calc(**request.args)
     elif service_name == 'user':
-        ret = op_service.process_user(request.args)
+        ret = op_service.process_user(**request.args)
     return ret
 
 @permission_check
