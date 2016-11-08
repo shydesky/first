@@ -2,7 +2,7 @@ from model import *
 import hashlib
 import time
 USER_FUNCTION = ['SIGNUP','SIGNIN']
-msg = 'Success'
+global msg = 'Success'
 data = {}
 ret = {'msg':msg,'data':data}
 
