@@ -1,4 +1,5 @@
 from model import *
+from decorator import permission_check
 import hashlib
 import time
 USER_FUNCTION = ['SIGNUP','SIGNIN']
@@ -64,6 +65,7 @@ def op_signin(kwargs):
         ret['data'] = data
         return ret
 
+@permission_check
 def process_calc(kwargs):
     arg1 = kwargs.get('arg1',0)
     arg2 = kwargs.get('arg2',0)
