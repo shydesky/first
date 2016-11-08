@@ -47,7 +47,7 @@ def op_signin(kwargs):
     data = {}
     email = kwargs.args.get('email','')
     passwd = kwargs.args.get('passwd','')
-    userip = kwargs.remote_attr
+    userip = kwargs.remote_addr
     user = User.query.filter(and_(User.email==email,User.passwd==passwd)).first()
     
     if not user:
