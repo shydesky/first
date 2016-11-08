@@ -1,4 +1,4 @@
-#from model import *
+from model import *
 
 def process_calc(kwargs):
     arg1 = kwargs.get('arg1',0)
