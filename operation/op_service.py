@@ -3,20 +3,20 @@ import hashlib
 import time
 USER_FUNCTION = ['SIGNUP','SIGNIN']
 
-msg = 'Success'
+global_msg = 'Success'
 data = {}
-ret = {'msg':msg,'data':data}
+ret = {'msg':global_msg,'data':data}
 
 def process_user(kwargs):
     function = kwargs.get('function','').upper()
     if function not in USER_FUNCTION:
         ret['msg'] = 'param is wrong'
+        return ret
     elif function == 'SIGNUP':
         data = op_signup(kwargs)
     elif function == 'SIGNIN':
         data = op_signin(kwargs)
 
-    ret['msg'] = msg
     return ret
 
 def op_get_user(id):
