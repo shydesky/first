@@ -6,7 +6,7 @@ USER_FUNCTION = ['SIGNUP','SIGNIN']
 def process_user(kwargs):
     ret = {}
     data = {}
-    function = kwargs.get('function','').upper()
+    function = kwargs.args.get('function','').upper()
     if function not in USER_FUNCTION:
         ret['msg'] = 'param is wrong'
         ret ['data'] = data
@@ -18,13 +18,14 @@ def process_user(kwargs):
 
     return ret
 
+
 def op_signup(kwargs):
     ret = {}
     data = {}
-    email = kwargs.get('email','')
-    phone = kwargs.get('phone','')
-    passwd = kwargs.get('passwd','')
-    name = kwargs.get('name','')
+    email = kwargs.args.get('email','')
+    phone = kwargs.args.get('phone','')
+    passwd = kwargs.args.get('passwd','')
+    name = kwargs.args.get('name','')
     users = User.query.filter_by(email=email).all()
     
     if users:
@@ -44,8 +45,9 @@ def op_signup(kwargs):
 def op_signin(kwargs):
     ret = {}
     data = {}
-    email = kwargs.get('email','')
-    passwd = kwargs.get('passwd','')
+    email = kwargs.args.get('email','')
+    passwd = kwargs.args.get('passwd','')
+    userip = kwargs.remote_attr
     user = User.query.filter(and_(User.email==email,User.passwd==passwd)).first()
     
     if not user:
@@ -56,6 +58,7 @@ def op_signin(kwargs):
         hash_md5 = hashlib.md5(email + str(time.time()))
         hash_md5 = hash_md5.hexdigest()
         user.clientKey = hash_md5
+        user.userip = userip
         db_session.commit()
         db_session.close()
         data['token'] = hash_md5
@@ -65,8 +68,8 @@ def op_signin(kwargs):
         return ret
 
 def process_calc(kwargs):
-    arg1 = kwargs.get('arg1',0)
-    arg2 = kwargs.get('arg2',0)
+    arg1 = kwargs.args.get('arg1',0)
+    arg2 = kwargs.args.get('arg2',0)
     return op_calc(float(arg1), float(arg2))
 
 

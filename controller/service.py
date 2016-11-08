@@ -3,9 +3,6 @@ from flask import request
 from operation import op_service
 from decorator import permission_check
 
-def get_user(user_id):
-    return op_service.op_get_user(user_id)
-
 def process():
     ret = {}
     service_name = request.args.get('service','')
@@ -14,10 +11,14 @@ def process():
     elif service_name == 'calc':
         ret = process_calc()
     elif service_name == 'user':
-        ret = op_service.process_user(request.args)
+        ret = process_user()
     return ret
 
 @permission_check
 def process_calc():
-	ret = op_service.process_calc(request.args)
-	return ret
+    ret = op_service.process_calc(request)
+    return ret
+
+def process_user():
+    ret = op_service.process_user(request)
+    return ret
