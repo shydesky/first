@@ -30,22 +30,22 @@ def op_signup(**kwargs):
 
 def op_calc(arg1, arg2):
     ret = {}
-    ret['X1'] = (arg2/arg1*2.0-1)*arg1
-    ret['X2'] = (arg2/arg1*3.0-2)*arg1
-    ret['X3'] = (arg2/arg1*4.0-3)*arg1
-    ret['X4'] = (arg2/arg1*5.0-4)*arg1
-    ret['X5'] = (arg2/arg1*6.0-5)*arg1
-    ret['X6'] = (arg2/arg1*7.0-6)*arg1
-    ret['X7'] = (arg2/arg1*8.0-7)*arg1
-    ret['X8'] = (arg2/arg1*9.0-8)*arg1
+    ret['X1'] = round((arg2/arg1*2.0-1)*arg1, 4)
+    ret['X2'] = round((arg2/arg1*3.0-2)*arg1, 4)
+    ret['X3'] = round((arg2/arg1*4.0-3)*arg1, 4)
+    ret['X4'] = round((arg2/arg1*5.0-4)*arg1, 4)
+    ret['X5'] = round((arg2/arg1*6.0-5)*arg1, 4)
+    ret['X6'] = round((arg2/arg1*7.0-6)*arg1, 4)
+    ret['X7'] = round((arg2/arg1*8.0-7)*arg1, 4)
+    ret['X8'] = round((arg2/arg1*9.0-8)*arg1, 4)
 
-    ret['Y1'] = arg2/(arg2/arg1*2.0-1)
-    ret['Y2'] = arg2/(arg2/arg1*3.0-2)
-    ret['Y3'] = arg2/(arg2/arg1*4.0-3)
-    ret['Y4'] = arg2/(arg2/arg1*5.0-4)
-    ret['Y5'] = arg2/(arg2/arg1*6.0-5)
-    ret['Y6'] = arg2/(arg2/arg1*7.0-6)
-    ret['Y7'] = arg2/(arg2/arg1*8.0-7)
-    ret['Y8'] = arg2/(arg2/arg1*9.0-8)
+    ret['Y1'] = round(arg2/(arg2/arg1*2.0-1), 4)
+    ret['Y2'] = round(arg2/(arg2/arg1*3.0-2), 4)
+    ret['Y3'] = round(arg2/(arg2/arg1*4.0-3), 4)
+    ret['Y4'] = round(arg2/(arg2/arg1*5.0-4), 4)
+    ret['Y5'] = round(arg2/(arg2/arg1*6.0-5), 4)
+    ret['Y6'] = round(arg2/(arg2/arg1*7.0-6), 4)
+    ret['Y7'] = round(arg2/(arg2/arg1*8.0-7), 4)
+    ret['Y8'] = round(arg2/(arg2/arg1*9.0-8), 4)
     
     return ret
