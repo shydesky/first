@@ -5,6 +5,7 @@ USER_FUNCTION = ['SIGNUP','SIGNIN']
 
 def process_user(kwargs):
     ret = {}
+    data = {}
     function = kwargs.get('function','').upper()
     if function not in USER_FUNCTION:
         ret['msg'] = 'param is wrong'
@@ -18,6 +19,8 @@ def process_user(kwargs):
     return ret
 
 def op_signup(kwargs):
+    ret = {}
+    data = {}
     email = kwargs.get('email','')
     phone = kwargs.get('phone','')
     passwd = kwargs.get('passwd','')
@@ -26,7 +29,7 @@ def op_signup(kwargs):
     
     if users:
         ret['msg'] = 'User exist'
-        ret['data'] = {}
+        ret['data'] = data
         return ret
 
     user = User(name=name,email=email,phone=phone,passwd=passwd,clientKey='')
@@ -35,11 +38,12 @@ def op_signup(kwargs):
     db_session.close()
     
     ret['msg'] = 'Signup Success'
-    ret['data'] = {}
+    ret['data'] = data
     return ret
 
 def op_signin(kwargs):
-
+    ret = {}
+    data = {}
     email = kwargs.get('email','')
     passwd = kwargs.get('passwd','')
     user = User.query.filter(and_(User.email==email,User.passwd==passwd)).first()
