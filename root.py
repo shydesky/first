@@ -9,11 +9,16 @@ app = Flask(__name__)
 def hello():
     return "Hello World!"
 
+# @app.route("/service", methods=['POST', 'GET'])
+# @jsonapi
+# def service():
+#     userid = request.args.get('userid','')
+#     return service.get_user(userid)
+
 @app.route("/service", methods=['POST', 'GET'])
 @jsonapi
 def service():
-    userid = request.args.get('userid','')
-    return service.get_user(userid)
+    return service.process()
 
 @app.route("/login", methods=['POST', 'GET'])
 @jsonapi
