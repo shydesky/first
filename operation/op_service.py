@@ -1,10 +1,12 @@
 from model import *
+import hashlib
+import time
 USER_FUNCTION = ['SIGNUP','SIGNIN']
+msg = 'Success'
+data = {}
+ret = {'msg':msg,'data':data}
 
 def process_user(kwargs):
-    ret = {}
-    data = {}
-    msg = 'Success'
     function = kwargs.get('function','').upper()
     if function not in USER_FUNCTION:
         msg = 'param is wrong'
@@ -12,8 +14,7 @@ def process_user(kwargs):
         data = op_signup(kwargs)
     elif function == 'SIGNIN':
         data = op_signin(kwargs)
-    
-    ret['data'] = data
+
     ret['msg'] = msg
     return ret
 
@@ -27,9 +28,9 @@ def op_signup(kwargs):
     passwd = kwargs.get('passwd','')
     name = kwargs.get('name','')
     users = User.query.filter_by(email=email).all()
-    #import pdb;pdb.set_trace()
+    msg = 'User exist'
     if users:
-        return 'user exist'
+        return 
 
     user = User(name=name,email=email,phone=phone,passwd=passwd,clientKey='')
     db_session.add(user)
@@ -38,7 +39,26 @@ def op_signup(kwargs):
     return True
 
 def op_signin(kwargs):
-    pass
+
+    email = kwargs.get('email','')
+    passwd = kwargs.get('passwd','')
+    user = User.query.filter(and_(User.email==email,User.passwd==passwd)).first()
+    
+    if not user:
+        msg = 'User not exist'
+        ret['msg'] = msg
+        return ret
+    else:
+        hash_md5 = hashlib.md5(email + str(time.time()))
+        hash_md5 = hash_md5.hexdigest()
+        user.clientKey = 
+        db_session.commit()
+        db_session.close()
+
+        msg = 'Signin Success'
+        ret['msg'] = msg
+        data['token'] = hash_md5
+        return ret
 
 def process_calc(kwargs):
     arg1 = kwargs.get('arg1',0)
