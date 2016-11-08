@@ -51,7 +51,7 @@ def op_signin(kwargs):
     else:
         hash_md5 = hashlib.md5(email + str(time.time()))
         hash_md5 = hash_md5.hexdigest()
-        user.clientKey = 
+        user.clientKey = hash_md5
         db_session.commit()
         db_session.close()
 

@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String
+from sqlalchemy import and_
 from database import Base, db_session
 
 class User(Base):
