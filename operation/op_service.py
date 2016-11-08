@@ -3,7 +3,7 @@ from model import *
 def process_calc(kwargs):
     arg1 = kwargs.get('arg1',0)
     arg2 = kwargs.get('arg2',0)
-    return op_calc(arg1, arg2)
+    return op_calc(float(arg1), float(arg2))
 
 def process_user(kwargs):
     pass

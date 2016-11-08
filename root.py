@@ -17,7 +17,7 @@ def hello():
 
 @app.route("/service", methods=['POST', 'GET'])
 @jsonapi
-def service():
+def service_1():
     return service.process()
 
 @app.route("/login", methods=['POST', 'GET'])
