@@ -3,25 +3,19 @@ import hashlib
 import time
 USER_FUNCTION = ['SIGNUP','SIGNIN']
 
-global_msg = 'Success'
-data = {}
-ret = {'msg':global_msg,'data':data}
-
 def process_user(kwargs):
+    ret = {}
     function = kwargs.get('function','').upper()
     if function not in USER_FUNCTION:
         ret['msg'] = 'param is wrong'
+        ret ['data'] = data
         return ret
     elif function == 'SIGNUP':
-        data = op_signup(kwargs)
+        ret = op_signup(kwargs)
     elif function == 'SIGNIN':
-        data = op_signin(kwargs)
+        ret = op_signin(kwargs)
 
     return ret
-
-def op_get_user(id):
-    ret = User.query.filter_by(id=id).one()
-    return {'id':ret.id}
 
 def op_signup(kwargs):
     email = kwargs.get('email','')
@@ -32,13 +26,17 @@ def op_signup(kwargs):
     
     if users:
         ret['msg'] = 'User exist'
+        ret['data'] = {}
         return ret
 
     user = User(name=name,email=email,phone=phone,passwd=passwd,clientKey='')
     db_session.add(user)
     db_session.commit()
     db_session.close()
-    return True
+    
+    ret['msg'] = 'Signup Success'
+    ret['data'] = {}
+    return ret
 
 def op_signin(kwargs):
 
@@ -48,6 +46,7 @@ def op_signin(kwargs):
     
     if not user:
         ret['msg'] = 'User not exist'
+        ret['data'] = {}
         return ret
     else:
         hash_md5 = hashlib.md5(email + str(time.time()))
@@ -55,9 +54,10 @@ def op_signin(kwargs):
         user.clientKey = hash_md5
         db_session.commit()
         db_session.close()
-
         data['token'] = hash_md5
+
         ret['msg'] = 'Signin Success'
+        ret['data'] = data
         return ret
 
 def process_calc(kwargs):
@@ -90,4 +90,5 @@ def op_calc(arg1, arg2):
     data['Y8'] = round(arg2/(arg2/arg1*9.0-8), 5)
 
     ret['data'] = data
+    ret['msg'] ='calc Success'
     return ret
