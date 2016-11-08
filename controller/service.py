@@ -14,7 +14,7 @@ def process():
     elif service_name == 'calc':
         ret = process_calc()
     elif service_name == 'user':
-        ret = op_service.process_user(**request.args)
+        ret = op_service.process_user(request.args)
     return ret
 
 @permission_check
