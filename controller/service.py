@@ -12,6 +12,6 @@ def process():
         return ret
     elif service_name == 'calc':
         ret = op_service.process_calc(request.args)
-    elif service_name = 'user':
+    elif service_name == 'user':
         ret = op_service.process_user(request.args)
     return ret
