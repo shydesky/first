@@ -17,5 +17,5 @@ def op_signup(**kwargs):
     user = User(name=name,email=email,phone=phone,passwd=passwd,clientKey='')
     db_session.add(user)
     db_session.commit()
-    
+    db_session.close() 
     return True

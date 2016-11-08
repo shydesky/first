@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import request
 from flask_jsontools import jsonapi
+from database import db_session
 from controller import service,login,signup
 app = Flask(__name__)
 
@@ -29,5 +30,11 @@ def signup_r():
     name = request.args.get('name','')
     return signup.signup(name=name,phone=phone,email=email,passwd=passwd)
 
+
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db_session.remove()
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
+
