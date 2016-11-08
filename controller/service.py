@@ -18,6 +18,6 @@ def process():
     return ret
 
 @permission_check
-def process_calc(**kwargs):
+def process_calc(*args,**kwargs):
 	ret = op_service.process_calc(kwargs)
 	return ret
