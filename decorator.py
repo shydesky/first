@@ -10,7 +10,7 @@ def permission_check(func):
         #email = kwargs.get('email','')
         key = request.args.get('token','')
         email = request.args.get('email','')
-        user = User.query.filter(and_(User.clientKey==key,User.email==email)).first()
+        user = User.query.filter(and_(User.clientKey==key,User.email==email)).filter(User.usertype!=0).first()
         if user:
             return func(*args, **kwargs)
         else:

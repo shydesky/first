@@ -26,14 +26,15 @@ def op_signup(kwargs):
     phone = kwargs.args.get('phone','')
     passwd = kwargs.args.get('passwd','')
     name = kwargs.args.get('name','')
+    usertype = kwargs.args.get('usertype','')
     users = User.query.filter_by(email=email).all()
-    
+
     if users:
         ret['msg'] = 'User exist'
         ret['data'] = data
         return ret
 
-    user = User(name=name,email=email,phone=phone,passwd=passwd,clientKey='')
+    user = User(name=name,email=email,phone=phone,passwd=passwd,clientKey='',usertype=usertype)
     db_session.add(user)
     db_session.commit()
     db_session.close()

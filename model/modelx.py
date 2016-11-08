@@ -11,13 +11,15 @@ class User(Base):
     phone = Column(String(11))
     clientKey = Column(String(120))
     userip = Column(String(20))
-    def __init__(self, name=None, email=None, passwd=None, phone=None, clientKey=None, userip=None):
+    usertype = Column(String(2))
+    def __init__(self, name=None, email=None, passwd=None, phone=None, clientKey=None, userip=None, usertype=0):
         self.name = name
         self.email = email
         self.passwd = passwd
         self.phone = phone
         self.clientKey = clientKey
         self.userip = userip
+        self.usertype = usertype
 
     def __repr__(self):
         return '<User %r>' % (self.name)
