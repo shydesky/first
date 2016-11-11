@@ -33,7 +33,7 @@ class VerifyCode(Base):
     code = Column(String(50))
     create_time = Column(DateTime, default=time.time())
     
-    def __init__(self, userid=0, code='000000', create_time=datetime.datetime.now):
+    def __init__(self, userid=0, code='000000', create_time=time.time()):
         self.userid = userid
         self.code = code
         self.create_time = create_time
