@@ -1,6 +1,6 @@
 from model import *
 import hashlib
-import time
+import datetime
 USER_FUNCTION = ['SIGNUP','SIGNIN','RESETPWD','SENDCODE']
 
 def process_user(kwargs):
@@ -79,7 +79,7 @@ def op_resetpwd(kwargs):
     verifycode = kwargs.args.get('verifycode','')
 
     code = VerifyCode.query.filter(and_(VerifyCode.email==email,User.code==verifycode)).first()
-    if code and (time.time() - code.create_time < 600):
+    if code and ((datetime.datetime.now() - code.create_time).seconds < 600):
         user = User.query.filter(User.email==email).first()
         user.passwd = passwd
         db_session.commit()
