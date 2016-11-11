@@ -4,12 +4,12 @@ import datetime
 from decorator import permission_check_admin
 
 USER_FUNCTION = ['SIGNUP','SIGNIN','RESETPWD','SENDCODE','GETUSERS']
-ADMIN_FUNCTION = ['ADMINLOGIN']
+ADMIN_FUNCTION = ['ADMINLOGIN','GETUSERS']
 def process_admin(kwargs):
     ret = {}
     data = {}
     function = kwargs.args.get('function','').upper()
-    if function not in USER_FUNCTION:
+    if function not in ADMIN_FUNCTION:
         ret['msg'] = 'param is wrong'
         ret ['data'] = data
         return ret
