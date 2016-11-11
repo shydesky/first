@@ -56,3 +56,19 @@ class Deposit(Base):
 
     def __repr__(self):
         return '<Deposit %r>' % (self.userid)
+
+
+class AdminUser(Base):
+    __tablename__ = 'adminusers'
+    id = Column(Integer, primary_key=True) 
+    name = Column(String(50))
+    passwd = Column(String(120))
+    key = Column(String(120))
+
+    def __init__(self, name=None, passwd=None):
+        self.name = name
+        self.passwd = passwd
+        self.key = key
+
+    def __repr__(self):
+        return '<AdminUser %r>' % (self.name)

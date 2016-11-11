@@ -2,7 +2,21 @@ from model import *
 import hashlib
 import datetime
 USER_FUNCTION = ['SIGNUP','SIGNIN','RESETPWD','SENDCODE','GETUSERS']
+ADMIN_FUNCTION = ['ADMINLOGIN']
+def process_admin(kwargs):
+    ret = {}
+    data = {}
+    function = kwargs.args.get('function','').upper()
+    if function not in USER_FUNCTION:
+        ret['msg'] = 'param is wrong'
+        ret ['data'] = data
+        return ret
+    elif function == 'GETUSERS':
+        ret = op_get_all_user()
+    elif function == 'ADMINLOGIN':
+        ret = op_admin_login(kwargs)
 
+    return ret
 def process_user(kwargs):
     ret = {}
     data = {}
@@ -19,8 +33,7 @@ def process_user(kwargs):
         ret = op_resetpwd(kwargs)
     elif function == 'SENDCODE':
         ret = op_send_verifycode(kwargs)
-    elif function == 'GETUSERS':
-        ret = op_get_all_user()
+
     return ret
 
 
@@ -178,4 +191,25 @@ def op_get_all_user():
         data.append(d)
     ret['msg'] = 'Success'
     ret['users'] = data
+    return ret
+
+def op_admin_login(kwargs):
+    ret = {}
+    data = {}
+    name = kwargs.args.get('name','')
+    passwd = kwargs.args.get('passwd','')
+    admin = User.query.filter(and_(AdminUser.name == name,AdminUser.passwd==passwd)).first()
+    if not admin:
+        ret['msg'] = 'Admin User Not Exist'
+        ret['data'] = {}
+    else:
+        hash_md5 = hashlib.md5(name + str(time.time()))
+        hash_md5 = hash_md5.hexdigest()
+        admin.key = hash_md5
+        db_session.commit()
+        db_session.close()
+        
+        data['key'] = hash_md5
+        ret['msg'] = 'Admin User Login'
+        ret['data'] = data
     return ret
