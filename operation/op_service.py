@@ -1,7 +1,7 @@
 from model import *
 import hashlib
 import time
-USER_FUNCTION = ['SIGNUP','SIGNIN']
+USER_FUNCTION = ['SIGNUP','SIGNIN','RESETPWD','SENDCODE']
 
 def process_user(kwargs):
     ret = {}
@@ -15,7 +15,10 @@ def process_user(kwargs):
         ret = op_signup(kwargs)
     elif function == 'SIGNIN':
         ret = op_signin(kwargs)
-
+    elif function == 'RESETPWD':
+        ret = op_resetpwd(kwargs)
+    elif function == 'SENDCODE':
+        ret = op_send_verifycode(kwargs)
     return ret
 
 
@@ -67,6 +70,42 @@ def op_signin(kwargs):
         ret['msg'] = 'Signin Success'
         ret['data'] = data
         return ret
+
+def op_resetpwd(kwargs):
+    ret = {}
+    data = {}
+    email = kwargs.args.get('email','')
+    passwd = kwargs.args.get('passwd','')
+    verifycode = kwargs.args.get('verifycode','')
+
+    code = VerifyCode.query.filter(and_(VerifyCode.email==email,User.code==verifycode)).first()
+    if code and (time.time() - code.create_time < 600):
+        user = User.query.filter(User.email==email).first()
+        user.passwd = passwd
+        db_session.commit()
+        ret['msg'] = 'Password Reset Success'
+        ret['data'] = data
+    else:
+        ret['msg'] = 'Verifycode is invalid'
+        ret['data'] = data
+    return ret
+
+def op_send_verifycode(kwargs):
+    ret={}
+    email = kwargs.args.get('email','')
+    code='000000'
+    user = User.query.filter(User.email==email).first()
+
+    if not user:
+       ret['msg'] = 'User not Exist'
+       return ret
+
+    id = VerifyCode(userid=user.id, code=code)
+    db_session.commit()
+    ret['msg'] = 'Verifycode is Send'
+    ret['data'] = {}
+
+    return ret
 
 def process_calc(kwargs):
     arg1 = kwargs.args.get('arg1',0)

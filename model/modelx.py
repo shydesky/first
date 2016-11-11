@@ -2,6 +2,8 @@ from sqlalchemy import Column, Integer, String
 from sqlalchemy import and_
 from database import Base, db_session
 
+import time
+
 class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True) 
@@ -23,3 +25,18 @@ class User(Base):
 
     def __repr__(self):
         return '<User %r>' % (self.name)
+
+class VerifyCode(Base):
+    __tablename__ = 'verifycode'
+    id = Column(Integer, primary_key=True) 
+    userid = Column(Integer)
+    code = Column(String(50))
+    create_time = Field(DateTime, default=time.time())
+    
+    def __init__(self, userid=0, code='000000', create_time=datetime.datetime.now):
+        self.userid = userid
+        self.code = code
+        self.create_time = create_time
+
+    def __repr__(self):
+        return '<VerifyCode %r>' % (self.code)
