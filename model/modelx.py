@@ -65,7 +65,7 @@ class AdminUser(Base):
     passwd = Column(String(120))
     key = Column(String(120))
 
-    def __init__(self, name=None, passwd=None):
+    def __init__(self, name=None, passwd=None, key=None):
         self.name = name
         self.passwd = passwd
         self.key = key

@@ -1,6 +1,8 @@
 from model import *
 import hashlib
 import datetime
+from decorator import permission_check_admin
+
 USER_FUNCTION = ['SIGNUP','SIGNIN','RESETPWD','SENDCODE','GETUSERS']
 ADMIN_FUNCTION = ['ADMINLOGIN']
 def process_admin(kwargs):
@@ -182,6 +184,7 @@ def op_calc(arg1, arg2):
     ret['msg'] ='calc Success'
     return ret
 
+@permission_check_admin
 def op_get_all_user():
     ret = {}
     data = []
