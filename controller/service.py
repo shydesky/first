@@ -18,9 +18,7 @@ def process():
 
 @permission_check
 def process_calc():
-    resp = make_response()
     ret = op_service.process_calc(request)
-    resp.set_cookie('user', ret.get('data').get('key'))
     return ret
 
 def process_user():
@@ -29,5 +27,7 @@ def process_user():
 
 
 def process_admin():
+	resp = make_response()
     ret = op_service.process_admin(request)
+    resp.set_cookie('user', ret.get('data').get('key'))
     return ret
