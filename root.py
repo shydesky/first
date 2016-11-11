@@ -14,6 +14,10 @@ def hello():
 def service_adapter():
     return service.process()
 
+@app.route("/admin", methods=['POST', 'GET'])
+def service_adapter2():
+    return service.process()
+
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     db_session.remove()
