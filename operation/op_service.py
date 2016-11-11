@@ -1,6 +1,6 @@
 from model import *
 import hashlib
-import datetime
+import datetime,time
 from decorator import permission_check_admin
 
 USER_FUNCTION = ['SIGNUP','SIGNIN','RESETPWD','SENDCODE','GETUSERS']
