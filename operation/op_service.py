@@ -95,7 +95,7 @@ def op_resetpwd(kwargs):
         ret['data'] = data
     return ret
 
-def op_send_verifycode(kwargs):\
+def op_send_verifycode(kwargs):
     import random,string
     ret={}
     email = kwargs.args.get('email','')
