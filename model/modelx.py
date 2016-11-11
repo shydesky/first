@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy import and_
+from sqlalchemy import desc
 from database import Base, db_session
 
 import datetime

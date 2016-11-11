@@ -78,7 +78,12 @@ def op_resetpwd(kwargs):
     passwd = kwargs.args.get('passwd','')
     verifycode = kwargs.args.get('verifycode','')
 
-    code = VerifyCode.query.filter(and_(VerifyCode.email==email,User.code==verifycode)).first()
+    user = User.query.filter(User.email==email).first()
+    if not user:
+       ret['msg'] = 'User not Exist'
+       return ret
+
+    code = VerifyCode.query.filter(and_(VerifyCode.userid==user.id,User.code==verifycode)).order_by(desc(VerifyCode.create_time)).first()
     if code and ((datetime.datetime.now() - code.create_time).seconds < 600):
         user = User.query.filter(User.email==email).first()
         user.passwd = passwd
@@ -90,10 +95,11 @@ def op_resetpwd(kwargs):
         ret['data'] = data
     return ret
 
-def op_send_verifycode(kwargs):
+def op_send_verifycode(kwargs):\
+    import random,string
     ret={}
     email = kwargs.args.get('email','')
-    code='000000'
+    code = ''.join(random.sample(string.ascii_letters + string.digits, 6))
     user = User.query.filter(User.email==email).first()
 
     if not user:
