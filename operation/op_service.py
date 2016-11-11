@@ -83,7 +83,7 @@ def op_resetpwd(kwargs):
        ret['msg'] = 'User not Exist'
        return ret
 
-    code = VerifyCode.query.filter(and_(VerifyCode.userid==user.id,User.code==verifycode)).order_by(desc(VerifyCode.create_time)).first()
+    code = VerifyCode.query.filter(and_(VerifyCode.userid==user.id,VerifyCode.code==verifycode)).order_by(desc(VerifyCode.create_time)).first()
     if code and ((datetime.datetime.now() - code.create_time).seconds < 600):
         user = User.query.filter(User.email==email).first()
         user.passwd = passwd
