@@ -41,3 +41,18 @@ class VerifyCode(Base):
 
     def __repr__(self):
         return '<VerifyCode %r>' % (self.code)
+
+class Deposit(Base):
+    __tablename__ = 'deposit'
+    id = Column(Integer, primary_key=True) 
+    userid = Column(Integer)
+    type = Column(String(10))
+    create_time = Column(DateTime, default=datetime.datetime.now())
+    
+    def __init__(self, userid=0, type='month', create_time=datetime.datetime.now()):
+        self.userid = userid
+        self.type = type
+        self.create_time = create_time
+
+    def __repr__(self):
+        return '<Deposit %r>' % (self.userid)

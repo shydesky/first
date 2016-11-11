@@ -1,7 +1,7 @@
 from model import *
 import hashlib
 import datetime
-USER_FUNCTION = ['SIGNUP','SIGNIN','RESETPWD','SENDCODE']
+USER_FUNCTION = ['SIGNUP','SIGNIN','RESETPWD','SENDCODE','GETUSERS']
 
 def process_user(kwargs):
     ret = {}
@@ -19,6 +19,8 @@ def process_user(kwargs):
         ret = op_resetpwd(kwargs)
     elif function == 'SENDCODE':
         ret = op_send_verifycode(kwargs)
+    elif function == 'GETUSERS':
+        ret = op_get_all_user()
     return ret
 
 
@@ -66,6 +68,8 @@ def op_signin(kwargs):
         db_session.commit()
         db_session.close()
         data['token'] = hash_md5
+        data['email'] = user.email
+        data['usertype'] = user.usertype
 
         ret['msg'] = 'Signin Success'
         ret['data'] = data
@@ -114,12 +118,30 @@ def op_send_verifycode(kwargs):
 
     return ret
 
+def op_deposit(kwargs):
+    ret={}
+    email = kwargs.args.get('email','')
+    deposit_type = kwargs.args.get('deposit_type','')
+    user = User.query.filter(User.email==email).first()
+    if not user:
+       ret['msg'] = 'User not Exist'
+       return ret
+
+    ins = Deposit(userid=user.id, type=deposit_type)
+    db_session.add(ins)
+    db_session.commit()
+    
+    ret['msg'] = 'Deposit Success'
+    ret['data'] = {}
+
+    return ret
+
 def process_calc(kwargs):
     arg1 = kwargs.args.get('arg1',0)
     arg2 = kwargs.args.get('arg2',0)
     return op_calc(float(arg1), float(arg2))
 
-
+    
 
 def op_calc(arg1, arg2):
     ret = {}
@@ -145,4 +167,15 @@ def op_calc(arg1, arg2):
 
     ret['data'] = data
     ret['msg'] ='calc Success'
+    return ret
+
+def op_get_all_user():
+    ret = {}
+    data = []
+    users = User.query.all()
+    for user in users:
+        d = {'id':user.id,'email':user.email,'usertype':user.usertype}
+        data.append(d)
+    ret['msg'] = 'Success'
+    ret['users'] = data
     return ret
