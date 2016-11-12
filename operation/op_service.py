@@ -57,7 +57,6 @@ def op_signup(kwargs):
     user = User(name=name,email=email,phone=phone,passwd=passwd,clientKey='',usertype=usertype)
     db_session.add(user)
     db_session.commit()
-    db_session.close()
     
     ret['msg'] = 'Signup Success'
     ret['data'] = data
@@ -81,7 +80,6 @@ def op_signin(kwargs):
         user.clientKey = hash_md5
         user.userip = userip
         db_session.commit()
-        db_session.close()
         data['token'] = hash_md5
         data['email'] = user.email
         data['usertype'] = user.usertype
