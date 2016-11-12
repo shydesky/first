@@ -9,12 +9,12 @@ class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True) 
     email = Column(String(120), unique=True)
-    name = Column(String(50))
-    passwd = Column(String(120))
-    phone = Column(String(11))
-    clientKey = Column(String(120))
-    userip = Column(String(20))
-    usertype = Column(String(2))
+    name = Column(String(50),default='')
+    passwd = Column(String(120),default='')
+    phone = Column(String(11),default='')
+    clientKey = Column(String(120),default='')
+    userip = Column(String(20),default='')
+    usertype = Column(String(2),default='0')
     def __init__(self, name=None, email=None, passwd=None, phone=None, clientKey=None, userip=None, usertype=0):
         self.name = name
         self.email = email
