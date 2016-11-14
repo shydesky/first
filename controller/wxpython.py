@@ -5,11 +5,11 @@ import wx
 import json
 import re
 from wx.lib.wordwrap import wordwrap
-
+URL_PREFIX = 'http://101.200.151.176:5000'
 class MyApp(wx.App):
    def __init__(self, redirect=False, filename=None):
        wx.App.__init__(self, redirect, filename)
-       self.frame = wx.Frame(None, wx.ID_ANY, title='My Title')
+       self.frame = wx.Frame(None, wx.ID_ANY, title='My Title', style=wx.DEFAULT_FRAME_STYLE)
        w, h = wx.DisplaySize()
        line_px = w/10
        line_py = 0
@@ -188,7 +188,7 @@ class MyApp(wx.App):
        #import pdb;pdb.set_trace()
        token = '5579952ae15784866650deb1b108b9bf'
        email = 'l@l.com'
-       url = 'http://www.shydesky.top:5000/service?service=calc&arg1=%s&arg2=%s&email=%s&token=%s'
+       url = URL_PREFIX + '/service?service=calc&arg1=%s&arg2=%s&email=%s&token=%s'
        url = url % (self.param1.GetValue(),self.param2.GetValue(),email,token)
        print url
        response = requests.get(url).json()
@@ -213,10 +213,11 @@ class MyApp(wx.App):
        self.dout7.SetValue(str(data.get('Y7')))
        self.dout8.SetValue(str(data.get('Y8')))
        self.statusbar.SetStatusText(str(msg), 0)
+
    def op_signin(self):
        email = self.email_signin.GetValue()
        passwd = self.passwd_signin.GetValue()
-       url = 'http://www.shydesky.top:5000/service?service=user&function=signin&email=%s&passwd=%s'
+       url = URL_PREFIX + '/service?service=user&function=signin&email=%s&passwd=%s'
        url = url % (email,passwd)
        
        response = requests.get(url).json()
@@ -246,7 +247,7 @@ class MyApp(wx.App):
        if passwd != passwd_confirm:
        	   self.statusbar.SetStatusText(u'密码输入不一致！', 0)
            return
-       url = 'http://www.shydesky.top:5000/service?service=user&function=signup&email=%s&passwd=%s&phone=%s'
+       url = URL_PREFIX + '/service?service=user&function=signup&email=%s&passwd=%s&phone=%s'
        url = url % (email, passwd, phone)
        response = requests.get(url).json()
 
