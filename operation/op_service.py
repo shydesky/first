@@ -47,7 +47,7 @@ def op_signup(kwargs):
     phone = kwargs.args.get('phone','')
     passwd = kwargs.args.get('passwd','')
     name = kwargs.args.get('name','')
-    usertype = kwargs.args.get('usertype','')
+    usertype = kwargs.args.get('usertype','0')
     users = User.query.filter_by(email=email).all()
 
     if users:
@@ -59,7 +59,7 @@ def op_signup(kwargs):
     db_session.add(user)
     db_session.commit()
     
-    ret['msg'] = SIGNUP SUCCESS
+    ret['msg'] = SIGNUP_SUCCESS
     ret['data'] = data
     return ret
 

@@ -192,6 +192,7 @@ class MyApp(wx.App):
        url = url % (self.param1.GetValue(),self.param2.GetValue(),email_g,TOKEN)
        print url
        response = requests.get(url).json()
+       #import pdb;pdb.set_trace()
        #print self.param1.GetValue() + self.param2.GetValue()
        msg = response.get('msg')
        data = response.get('data')
@@ -212,7 +213,7 @@ class MyApp(wx.App):
        self.dout6.SetValue(str(data.get('Y6')))
        self.dout7.SetValue(str(data.get('Y7')))
        self.dout8.SetValue(str(data.get('Y8')))
-       self.statusbar.SetStatusText(str(msg), 0)
+       self.statusbar.SetStatusText(msg, 0)
 
    def op_signin(self):
        global email_g , TOKEN
@@ -228,7 +229,7 @@ class MyApp(wx.App):
        TOKEN = str(response.get('data').get('token'))
        self.account.SetLabel(email_g)
        self.usertype.SetLabel(str(response.get('data').get('usertype')))
-       self.statusbar.SetStatusText(TOKEN, 0)
+       self.statusbar.SetStatusText(msg, 0)
 
    def op_signup(self):
        phone = self.phone.GetValue()
@@ -255,7 +256,7 @@ class MyApp(wx.App):
        response = requests.get(url).json()
 
        msg = response.get('msg')
-       self.statusbar.SetStatusText(str(msg), 0)
+       self.statusbar.SetStatusText(msg, 0)
 
 if __name__ == '__main__':
    app = MyApp()
