@@ -2,16 +2,18 @@
 # -*- coding: utf-8 -*-
 import requests
 import wx
+import hashlib
 import json
 import re
 from wx.lib.wordwrap import wordwrap
 URL_PREFIX = 'http://101.200.151.176:5000'
+PWD_PREFIX = 'MDF'
 TOKEN = ''
 email_g = ''
 class MyApp(wx.App):
    def __init__(self, redirect=False, filename=None):
        wx.App.__init__(self, redirect, filename)
-       self.frame = wx.Frame(None, wx.ID_ANY, title='My Title', style=wx.DEFAULT_FRAME_STYLE)
+       self.frame = wx.Frame(None, wx.ID_ANY, title=u'计算器', style=wx.DEFAULT_FRAME_STYLE)
        w, h = wx.DisplaySize()
        line_px = w/10
        line_py = 0
@@ -45,10 +47,10 @@ class MyApp(wx.App):
        self.phone = wx.TextCtrl(self.panel_left_1, -1, pos=(65,50), size=wx.DefaultSize, style=0, name="uout1")
        
        wx.StaticText(self.panel_left_1, -1, u'密码：', pos=(20,80), size=wx.DefaultSize, style=0)
-       self.passwd = wx.TextCtrl(self.panel_left_1, -1, pos=(65,80), size=wx.DefaultSize, style=0, name="uout2")
+       self.passwd = wx.TextCtrl(self.panel_left_1, -1, pos=(65,80), size=wx.DefaultSize, style=wx.TE_PASSWORD)
        
        wx.StaticText(self.panel_left_1, -1, u'密码：', pos=(20,110), size=wx.DefaultSize, style=0)
-       self.passwd_confirm = wx.TextCtrl(self.panel_left_1, -1, pos=(65,110), size=wx.DefaultSize, style=0, name="uout2")
+       self.passwd_confirm = wx.TextCtrl(self.panel_left_1, -1, pos=(65,110), size=wx.DefaultSize, style=wx.TE_PASSWORD)
 
        bSignup = wx.Button(self.panel_left_1, -1, u"提交", pos=(50,150), size=wx.DefaultSize, name='bSignup')
        self.Bind(wx.EVT_BUTTON, self.OnButton, bSignup)
@@ -70,7 +72,7 @@ class MyApp(wx.App):
        self.email_signin = wx.TextCtrl(self.panel_left_3, -1, pos=(65,50), size=wx.DefaultSize, style=0)
        
        wx.StaticText(self.panel_left_3, -1, u'密码：', pos=(20,80), size=wx.DefaultSize, style=0)
-       self.passwd_signin = wx.TextCtrl(self.panel_left_3, -1, pos=(65,80), size=wx.DefaultSize, style=0)
+       self.passwd_signin = wx.TextCtrl(self.panel_left_3, -1, pos=(65,80), size=wx.DefaultSize, style=wx.TE_PASSWORD)
        
        bSignin = wx.Button(self.panel_left_3, -1, u"新用户？", pos=(50,170), size=wx.DefaultSize, name='bNewUser')
        self.Bind(wx.EVT_BUTTON, self.OnButton, bSignin)
@@ -161,6 +163,8 @@ class MyApp(wx.App):
        #self.panel_left.Hide()
        self.frame.SetMenuBar( menubar )
        self.frame.SetSize( wx.Size( w/2,h/2 ))
+       self.frame.SetMaxSize(wx.Size( w/2,h/2 ))
+       self.frame.SetMinSize(wx.Size( w/2,h/2 ))
        self.frame.Centre()
        self.frame.Show()
     
@@ -218,7 +222,7 @@ class MyApp(wx.App):
    def op_signin(self):
        global email_g , TOKEN
        email = self.email_signin.GetValue()
-       passwd = self.passwd_signin.GetValue()
+       passwd = hashlib.md5(PWD_PREFIX + self.passwd_signin.GetValue()).hexdigest()
        url = URL_PREFIX + '/service?service=user&function=signin&email=%s&passwd=%s'
        url = url % (email,passwd)
        
@@ -246,8 +250,8 @@ class MyApp(wx.App):
            self.statusbar.SetStatusText(u'邮箱格式无效！', 0)
            return
 
-       passwd = self.passwd.GetValue()
-       passwd_confirm = self.passwd_confirm.GetValue()
+       passwd = hashlib.md5(PWD_PREFIX + self.passwd.GetValue()).hexdigest()
+       passwd_confirm = hashlib.md5(PWD_PREFIX + self.passwd_confirm.GetValue()).hexdigest()
        if passwd != passwd_confirm:
        	   self.statusbar.SetStatusText(u'密码输入不一致！', 0)
            return
