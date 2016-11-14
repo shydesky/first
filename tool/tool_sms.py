@@ -1,3 +1,4 @@
+#-*- coding:utf-8 -*-
 import requests;
 import json;
 def send_messag_example():
