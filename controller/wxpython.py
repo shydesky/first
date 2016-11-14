@@ -215,7 +215,7 @@ class MyApp(wx.App):
        self.statusbar.SetStatusText(str(msg), 0)
 
    def op_signin(self):
-   	   global email_g , TOKEN
+       global email_g , TOKEN
        email = self.email_signin.GetValue()
        passwd = self.passwd_signin.GetValue()
        url = URL_PREFIX + '/service?service=user&function=signin&email=%s&passwd=%s'

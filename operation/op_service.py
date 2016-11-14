@@ -2,6 +2,7 @@ from model import *
 import hashlib
 import datetime,time
 from decorator import permission_check_admin
+from constant import *
 
 USER_FUNCTION = ['SIGNUP','SIGNIN','RESETPWD','SENDCODE','GETUSERS']
 ADMIN_FUNCTION = ['ADMINLOGIN','GETUSERS']
@@ -50,7 +51,7 @@ def op_signup(kwargs):
     users = User.query.filter_by(email=email).all()
 
     if users:
-        ret['msg'] = 'User exist'
+        ret['msg'] = USER_EXIST
         ret['data'] = data
         return ret
 
@@ -58,7 +59,7 @@ def op_signup(kwargs):
     db_session.add(user)
     db_session.commit()
     
-    ret['msg'] = 'Signup Success'
+    ret['msg'] = SIGNUP SUCCESS
     ret['data'] = data
     return ret
 
@@ -71,7 +72,7 @@ def op_signin(kwargs):
     user = User.query.filter(and_(User.email==email,User.passwd==passwd)).first()
     
     if not user:
-        ret['msg'] = 'User not exist'
+        ret['msg'] = USER_NOT_EXIST
         ret['data'] = {}
         return ret
     else:
@@ -84,7 +85,7 @@ def op_signin(kwargs):
         data['email'] = user.email
         data['usertype'] = user.usertype
 
-        ret['msg'] = 'Signin Success'
+        ret['msg'] = SIGNIN_SUCCESS
         ret['data'] = data
         return ret
 
@@ -97,7 +98,7 @@ def op_resetpwd(kwargs):
 
     user = User.query.filter(User.email==email).first()
     if not user:
-       ret['msg'] = 'User not Exist'
+       ret['msg'] = USER_NOT_EXIST
        return ret
 
     vcode = VerifyCode.query.filter(VerifyCode.userid==user.id).order_by(desc(VerifyCode.create_time)).first()
@@ -105,10 +106,10 @@ def op_resetpwd(kwargs):
         user = User.query.filter(User.email==email).first()
         user.passwd = passwd
         db_session.commit()
-        ret['msg'] = 'Password Reset Success'
+        ret['msg'] = PASSWORD_RESET_SUCCESS
         ret['data'] = data
     else:
-        ret['msg'] = 'Verifycode is invalid'
+        ret['msg'] = VERIFYCODE_IS_INVALID
         ret['data'] = data
     return ret
 
@@ -120,13 +121,13 @@ def op_send_verifycode(kwargs):
     user = User.query.filter(User.email==email).first()
 
     if not user:
-       ret['msg'] = 'User not Exist'
+       ret['msg'] = USER_NOT_EXIST
        return ret
 
     ins = VerifyCode(userid=user.id, code=code)
     db_session.add(ins)
     db_session.commit()
-    ret['msg'] = 'Verifycode is Send'
+    ret['msg'] = VERIFYCODE_IS_SEND
     ret['data'] = {}
 
     return ret
@@ -137,14 +138,14 @@ def op_deposit(kwargs):
     deposit_type = kwargs.args.get('deposit_type','')
     user = User.query.filter(User.email==email).first()
     if not user:
-       ret['msg'] = 'User not Exist'
+       ret['msg'] = USER_NOT_EXIST
        return ret
 
     ins = Deposit(userid=user.id, type=deposit_type)
     db_session.add(ins)
     db_session.commit()
     
-    ret['msg'] = 'Deposit Success'
+    ret['msg'] = DEPOSIT_SUCCESS
     ret['data'] = {}
 
     return ret
@@ -179,7 +180,7 @@ def op_calc(arg1, arg2):
     data['Y8'] = round(arg2/(arg2/arg1*9.0-8), 5)
 
     ret['data'] = data
-    ret['msg'] ='calc Success'
+    ret['msg'] = CALC_SUCCESS
     return ret
 
 @permission_check_admin
@@ -190,7 +191,7 @@ def op_get_all_user():
     for user in users:
         d = {'id':user.id,'email':user.email,'usertype':user.usertype}
         data.append(d)
-    ret['msg'] = 'Success'
+    ret['msg'] = SUCCESS
     ret['users'] = data
     return ret
 
@@ -201,7 +202,7 @@ def op_admin_login(kwargs):
     passwd = kwargs.args.get('passwd','')
     admin = User.query.filter(and_(AdminUser.name == name,AdminUser.passwd==passwd)).first()
     if not admin:
-        ret['msg'] = 'Admin User Not Exist'
+        ret['msg'] = ADMIN_USER_NOT_EXIST
         ret['data'] = {}
     else:
         hash_md5 = hashlib.md5(name + str(time.time()))
@@ -211,6 +212,6 @@ def op_admin_login(kwargs):
         db_session.close()
         
         data['key'] = hash_md5
-        ret['msg'] = 'Admin User Login'
+        ret['msg'] = ADMIN_USER_LOGIN
         ret['data'] = data
     return ret
