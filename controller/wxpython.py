@@ -6,6 +6,8 @@ import json
 import re
 from wx.lib.wordwrap import wordwrap
 URL_PREFIX = 'http://101.200.151.176:5000'
+TOKEN = ''
+email_g = ''
 class MyApp(wx.App):
    def __init__(self, redirect=False, filename=None):
        wx.App.__init__(self, redirect, filename)
@@ -186,10 +188,8 @@ class MyApp(wx.App):
 
    def op_calc(self):
        #import pdb;pdb.set_trace()
-       token = '5579952ae15784866650deb1b108b9bf'
-       email = 'l@l.com'
        url = URL_PREFIX + '/service?service=calc&arg1=%s&arg2=%s&email=%s&token=%s'
-       url = url % (self.param1.GetValue(),self.param2.GetValue(),email,token)
+       url = url % (self.param1.GetValue(),self.param2.GetValue(),email_g,TOKEN)
        print url
        response = requests.get(url).json()
        #print self.param1.GetValue() + self.param2.GetValue()
@@ -215,6 +215,7 @@ class MyApp(wx.App):
        self.statusbar.SetStatusText(str(msg), 0)
 
    def op_signin(self):
+   	   global email_g , TOKEN
        email = self.email_signin.GetValue()
        passwd = self.passwd_signin.GetValue()
        url = URL_PREFIX + '/service?service=user&function=signin&email=%s&passwd=%s'
@@ -223,9 +224,11 @@ class MyApp(wx.App):
        response = requests.get(url).json()
        msg = response.get('msg')
        print response
-       self.account.SetLabel(str(response.get('data').get('email')))
+       email_g = str(response.get('data').get('email'))
+       TOKEN = str(response.get('data').get('token'))
+       self.account.SetLabel(email_g)
        self.usertype.SetLabel(str(response.get('data').get('usertype')))
-       self.statusbar.SetStatusText(str(response.get('data').get('token')), 0)
+       self.statusbar.SetStatusText(TOKEN, 0)
 
    def op_signup(self):
        phone = self.phone.GetValue()
