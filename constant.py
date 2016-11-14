@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 SUCCESS='成功'
 SIGNUP_SUCCESS='注册成功'
+SIGNIN_SUCCESS='登录成功'
 USER_EXIST='此用户已存在'
 USER_NOT_EXIST='此用户不存在'
 PASSWORD_RESET_SUCCESS='密码重置成功'
