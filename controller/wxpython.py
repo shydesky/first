@@ -328,6 +328,7 @@ class MyApp(wx.App):
         flag = response.get('code')
         self.statusbar.SetStatusText(msg, 0)
         if flag:
+            self.passwd_signin.SetValue('') 
             return True
         else:
             return False

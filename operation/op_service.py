@@ -131,12 +131,12 @@ def op_send_verifycode(kwargs):
     email = kwargs.args.get('email','')
     code = ''.join(random.sample(string.ascii_letters + string.digits, 6))
     user = User.query.filter(User.email==email).first()
-
+    
     if not user:
        ret['msg'] = USER_NOT_EXIST
        ret['code'] = 0
        return ret
-
+    result = send_message_example(code,phone)
     ins = VerifyCode(userid=user.id, code=code, create_time=datetime.datetime.now())
     db_session.add(ins)
     db_session.commit()
