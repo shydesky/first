@@ -135,9 +135,15 @@ def op_send_verifycode(kwargs):
     
     if not user:
        ret['msg'] = USER_NOT_EXIST
+       ret['data'] = {}
        ret['code'] = 0
        return ret
     result = send_message_example(code, user.phone)
+    if result.get('code') != 0:
+        ret['msg'] = '当前验证码服务不可用，请稍后再试。'
+        ret['data'] = {}
+        ret['code'] = 0
+        return ret
     ins = VerifyCode(userid=user.id, code=code, create_time=datetime.datetime.now())
     db_session.add(ins)
     db_session.commit()

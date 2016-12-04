@@ -13,3 +13,4 @@ def send_message_example(code,phone):
     },timeout=3 , verify=False);
     result =  json.loads( resp.content )
     print result
+    return result
