@@ -4,7 +4,7 @@ import datetime,time
 from decorator import permission_check_admin
 from constant import *
 
-USER_FUNCTION = ['SIGNUP','SIGNIN','RESETPWD','SENDCODE','GETUSERS']
+USER_FUNCTION = ['SIGNUP','SIGNIN','RESETPWD','GETCODE','GETUSERS']
 ADMIN_FUNCTION = ['ADMINLOGIN','GETUSERS']
 def process_admin(kwargs):
     ret = {}
@@ -34,7 +34,7 @@ def process_user(kwargs):
         ret = op_signin(kwargs)
     elif function == 'RESETPWD':
         ret = op_resetpwd(kwargs)
-    elif function == 'SENDCODE':
+    elif function == 'GETCODE':
         ret = op_send_verifycode(kwargs)
 
     return ret
@@ -58,7 +58,7 @@ def op_signup(kwargs):
     user = User(name=name,email=email,phone=phone,passwd=passwd,clientKey='',usertype=usertype)
     db_session.add(user)
     db_session.commit()
-    
+
     ret['msg'] = SIGNUP_SUCCESS
     ret['data'] = data
     return ret
