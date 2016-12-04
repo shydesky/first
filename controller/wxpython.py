@@ -83,11 +83,11 @@ class MyApp(wx.App):
         bSignin = wx.Button(self.panel_left_3, -1, u"登录", pos=(50,120), size=wx.DefaultSize, name='bSignin')
         self.Bind(wx.EVT_BUTTON, self.OnButton, bSignin)
 
-        bResetPwd = wx.Button(self.panel_left_3, -1, u"忘记密码", pos=(50,220), size=wx.DefaultSize, name='bResetPwd')
-        self.Bind(wx.EVT_BUTTON, self.OnButton, bResetPwd)
+        bForgetPwd = wx.Button(self.panel_left_3, -1, u"忘记密码", pos=(50,220), size=wx.DefaultSize, name='bForgetPwd')
+        self.Bind(wx.EVT_BUTTON, self.OnButton, bForgetPwd)
         # panel_left_4
         wx.StaticText(self.panel_left_4, -1, u'账号：', pos=(20,50), size=wx.DefaultSize, style=0)
-        self.email_signin = wx.TextCtrl(self.panel_left_4, -1, pos=(65,50), size=wx.DefaultSize, style=0)
+        self.email_resetpwd = wx.TextCtrl(self.panel_left_4, -1, pos=(65,50), size=wx.DefaultSize, style=0)
         
         wx.StaticText(self.panel_left_4, -1, u'新密码：', pos=(20,100), size=wx.DefaultSize, style=0)
         self.newpasswd = wx.TextCtrl(self.panel_left_4, -1, pos=(65,100), size=wx.DefaultSize, style=0)
@@ -217,13 +217,15 @@ class MyApp(wx.App):
             print 'TOKEN,email_g', TOKEN,email_g
             self.panel_left_3.Show()
             self.panel_left_2.Hide()
-        elif name == 'bResetPwd':
+        elif name == 'bForgetPwd':
             self.panel_left_3.Hide()
             self.panel_left_4.Show()
         elif name == 'bGetCode':
             self.op_get_code()
         elif name == 'bResetPwd':
-            self.op_reset_passwd()
+            if self.op_reset_passwd():
+                self.panel_left_3.Show()
+                self.panel_left_4.Hide()
 
     def op_calc(self):
         #import pdb;pdb.set_trace()
@@ -307,21 +309,25 @@ class MyApp(wx.App):
         self.statusbar.SetStatusText(u'您已成功退出', 0)
 
     def op_reset_passwd(self):
-        url = URL_PREFIX + '/service?service=user&function=resetpwd&email=%s&code=%s&passwd=%s'
-        email = self.email_signin.GetValue()
+        url = URL_PREFIX + '/service?service=user&function=resetpwd&email=%s&verifycode=%s&passwd=%s'
+        email = self.email_resetpwd.GetValue()
         code = self.reset_code.GetValue()
         newpasswd = hashlib.md5(PWD_PREFIX + self.newpasswd.GetValue()).hexdigest()
         url = url % (email, code, newpasswd)
         response = requests.get(url).json()
+        
         msg = response.get('msg')
+        self.statusbar.SetStatusText(msg, 0)
+        return True
+
 
     def op_get_code(self):
         url = URL_PREFIX + '/service?service=user&function=getcode&email=%s'
-        email = self.email_signin.GetValue()
+        email = self.email_resetpwd.GetValue()
         url = url % (email)
         response = requests.get(url).json()
         msg = response.get('msg')
-        print msg
+        self.statusbar.SetStatusText(msg, 0)
 
 if __name__ == '__main__':
     app = MyApp()

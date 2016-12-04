@@ -124,7 +124,7 @@ def op_send_verifycode(kwargs):
        ret['msg'] = USER_NOT_EXIST
        return ret
 
-    ins = VerifyCode(userid=user.id, code=code)
+    ins = VerifyCode(userid=user.id, code=code, create_time=datetime.datetime.now())
     db_session.add(ins)
     db_session.commit()
     ret['msg'] = VERIFYCODE_IS_SEND
