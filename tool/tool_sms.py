@@ -8,7 +8,7 @@ def send_message_example(code,phone):
         "uid": "RZPs22UzQTTU",
         "pas": "5fuuy4kd",
         "mob": phone,
-        "con": code,
+        "con": '【微米】您的验证码是：%s，10分钟内有效。如非您本人操作，可忽略本消息。' % code,
         "type": "json"
     },timeout=3 , verify=False);
     result =  json.loads( resp.content )
