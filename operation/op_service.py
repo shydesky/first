@@ -127,6 +127,7 @@ def op_resetpwd(kwargs):
 
 def op_send_verifycode(kwargs):
     import random,string
+    from tool.tool_sms import send_message_example
     ret={}
     email = kwargs.args.get('email','')
     code = ''.join(random.sample(string.ascii_letters + string.digits, 6))
