@@ -140,7 +140,7 @@ def op_send_verifycode(kwargs):
        return ret
     result = send_message_example(code, user.phone)
     if result.get('code') != 0:
-        ret['msg'] = '当前验证码服务不可用，请稍后再试。'
+        ret['msg'] = CODE_SERVICE_WRONG
         ret['data'] = {}
         ret['code'] = 0
         return ret
