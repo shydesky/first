@@ -100,6 +100,9 @@ class MyApp(wx.App):
         
         bResetPwd = wx.Button(self.panel_left_4, -1, u"重置密码", pos=(50,250), size=wx.DefaultSize, name='bResetPwd')
         self.Bind(wx.EVT_BUTTON, self.OnButton, bResetPwd)
+
+        bBack = wx.Button(self.panel_left_1, -1, u"返回登录", pos=(50,300), size=wx.DefaultSize, name='bBack')
+        self.Bind(wx.EVT_BUTTON, self.OnButton, bBack)
         #right panel
         #first row
         FIRST_H = 20
@@ -196,16 +199,16 @@ class MyApp(wx.App):
         event.Skip()
 
     def OnButton(self, evt):
-        global TOKEN,email_g
+        #Button的响应事件
         name = evt.GetEventObject().GetName()
         if name == 'bCalc':
             self.op_calc()
         elif name == 'bSignup': #用户注册panel
             self.op_signup()
         elif name == 'bSignin': #用户登入panel
-            self.op_signin()
-            self.panel_left_2.Show()
-            self.panel_left_3.Hide()
+            if self.op_signin():
+                self.panel_left_2.Show()
+                self.panel_left_3.Hide()
         elif name == 'bNewUser':
             self.panel_left_3.Hide()
             self.panel_left_1.Show()
@@ -214,7 +217,6 @@ class MyApp(wx.App):
             self.panel_left_1.Hide()
         elif name == 'bLogout':
             self.op_logout()
-            print 'TOKEN,email_g', TOKEN,email_g
             self.panel_left_3.Show()
             self.panel_left_2.Hide()
         elif name == 'bForgetPwd':
@@ -266,12 +268,17 @@ class MyApp(wx.App):
        
         response = requests.get(url).json()
         msg = response.get('msg')
-        print response
-        email_g = str(response.get('data').get('email'))
-        TOKEN = str(response.get('data').get('token'))
-        self.account.SetLabel(email_g)
-        self.usertype.SetLabel(str(response.get('data').get('usertype')))
+        flag = response.get('code')
         self.statusbar.SetStatusText(msg, 0)
+        print response
+        if flag:
+            email_g = str(response.get('data').get('email'))
+            TOKEN = str(response.get('data').get('token'))
+            self.account.SetLabel(email_g)
+            self.usertype.SetLabel(str(response.get('data').get('usertype')))
+            return True
+        else:
+            return False
 
     #注册
     def op_signup(self):
@@ -306,6 +313,7 @@ class MyApp(wx.App):
         global email_g , TOKEN
         email_g = ''
         TOKEN = ''
+        self.passwd_signin.SetValue('') 
         self.statusbar.SetStatusText(u'您已成功退出', 0)
 
     def op_reset_passwd(self):
@@ -317,9 +325,12 @@ class MyApp(wx.App):
         response = requests.get(url).json()
         
         msg = response.get('msg')
+        flag = response.get('code')
         self.statusbar.SetStatusText(msg, 0)
-        return True
-
+        if flag:
+            return True
+        else:
+            return False
 
     def op_get_code(self):
         url = URL_PREFIX + '/service?service=user&function=getcode&email=%s'

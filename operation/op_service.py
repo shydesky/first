@@ -53,6 +53,7 @@ def op_signup(kwargs):
     if users:
         ret['msg'] = USER_EXIST
         ret['data'] = data
+        ret['code'] = 0
         return ret
 
     user = User(name=name,email=email,phone=phone,passwd=passwd,clientKey='',usertype=usertype)
@@ -61,6 +62,7 @@ def op_signup(kwargs):
 
     ret['msg'] = SIGNUP_SUCCESS
     ret['data'] = data
+    ret['code'] = 1
     return ret
 
 def op_signin(kwargs):
@@ -69,13 +71,19 @@ def op_signin(kwargs):
     email = kwargs.args.get('email','')
     passwd = kwargs.args.get('passwd','')
     userip = kwargs.remote_addr
-    user = User.query.filter(and_(User.email==email,User.passwd==passwd)).first()
-    
+    user = User.query.filter(User.email==email).first()
+
     if not user:
         ret['msg'] = USER_NOT_EXIST
         ret['data'] = {}
+        ret['code'] = 0
         return ret
     else:
+        if User.passwd != passwd:
+            ret['msg'] = USER_PASSWD_WRONG
+            ret['data'] = {}
+            ret['code'] = 0
+            return ret
         hash_md5 = hashlib.md5(email + str(time.time()))
         hash_md5 = hash_md5.hexdigest()
         user.clientKey = hash_md5
@@ -87,6 +95,7 @@ def op_signin(kwargs):
 
         ret['msg'] = SIGNIN_SUCCESS
         ret['data'] = data
+        ret['code'] = 1
         return ret
 
 def op_resetpwd(kwargs):
@@ -99,6 +108,7 @@ def op_resetpwd(kwargs):
     user = User.query.filter(User.email==email).first()
     if not user:
        ret['msg'] = USER_NOT_EXIST
+       ret['code'] = 0
        return ret
 
     vcode = VerifyCode.query.filter(VerifyCode.userid==user.id).order_by(desc(VerifyCode.create_time)).first()
@@ -108,9 +118,11 @@ def op_resetpwd(kwargs):
         db_session.commit()
         ret['msg'] = PASSWORD_RESET_SUCCESS
         ret['data'] = data
+        ret['code'] = 1
     else:
         ret['msg'] = VERIFYCODE_IS_INVALID
         ret['data'] = data
+        ret['code'] = 0
     return ret
 
 def op_send_verifycode(kwargs):
@@ -122,6 +134,7 @@ def op_send_verifycode(kwargs):
 
     if not user:
        ret['msg'] = USER_NOT_EXIST
+       ret['code'] = 0
        return ret
 
     ins = VerifyCode(userid=user.id, code=code, create_time=datetime.datetime.now())
@@ -129,7 +142,7 @@ def op_send_verifycode(kwargs):
     db_session.commit()
     ret['msg'] = VERIFYCODE_IS_SEND
     ret['data'] = {}
-
+    ret['code'] = 1
     return ret
 
 def op_deposit(kwargs):
@@ -210,7 +223,7 @@ def op_admin_login(kwargs):
         admin.key = hash_md5
         db_session.commit()
         db_session.close()
-        
+
         data['key'] = hash_md5
         ret['msg'] = ADMIN_USER_LOGIN
         ret['data'] = data
