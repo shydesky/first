@@ -79,7 +79,7 @@ def op_signin(kwargs):
         ret['code'] = 0
         return ret
     else:
-        if User.passwd != passwd:
+        if user.passwd != passwd:
             ret['msg'] = USER_PASSWD_WRONG
             ret['data'] = {}
             ret['code'] = 0
