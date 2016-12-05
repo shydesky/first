@@ -33,13 +33,16 @@ class MyApp(wx.App):
         menubar = wx.MenuBar()
         file = wx.Menu()
         help = wx.Menu()
-        file.Append(wx.ID_ABOUT, "&About"," Information about this program")
+        file.Append(wx.ID_ABOUT, "&About\tCtrl+A", u"关于我们")
         file.AppendSeparator()
-        file.Append(wx.ID_EXIT,"&Exit"," Terminate the program")
+        file.Append(wx.ID_EXIT,"&Quit\tCtrl+Q", u"退出程序")
         file.AppendSeparator()
         menubar.Append( file, '&File' )
         menubar.Append( help, '&Help' )
 
+        self.frame.Bind(wx.EVT_MENU, self.OnQuit, id=wx.ID_EXIT)
+        self.frame.Bind(wx.EVT_MENU, self.OnAbout, id=wx.ID_ABOUT)
+        
        # panel_left_1
         wx.StaticText(self.panel_left_1, -1, u'邮箱：', pos=(20,20), size=wx.DefaultSize, style=0)
         self.email = wx.TextCtrl(self.panel_left_1, -1, pos=(65,20), size=wx.DefaultSize, style=0, name="uout1")
@@ -101,8 +104,8 @@ class MyApp(wx.App):
         bResetPwd = wx.Button(self.panel_left_4, -1, u"重置密码", pos=(50,250), size=wx.DefaultSize, name='bResetPwd')
         self.Bind(wx.EVT_BUTTON, self.OnButton, bResetPwd)
 
-        bBack = wx.Button(self.panel_left_1, -1, u"返回登录", pos=(50,300), size=wx.DefaultSize, name='bBack')
-        self.Bind(wx.EVT_BUTTON, self.OnButton, bBack)
+        bBack_4 = wx.Button(self.panel_left_4, -1, u"返回登录", pos=(50,300), size=wx.DefaultSize, name='bBack_4')
+        self.Bind(wx.EVT_BUTTON, self.OnButton, bBack_4)
         #right panel
         #first row
         FIRST_H = 20
@@ -192,7 +195,14 @@ class MyApp(wx.App):
         self.frame.SetMinSize(wx.Size( w/2,h/2 ))
         self.frame.Centre()
         self.frame.Show()
-    
+
+    def OnQuit(self, event):
+        self.frame.Close()
+
+    def OnAbout(self, event):
+        dlg = wx.MessageDialog(parent=None, message=u"关于我们", caption=u"关于我们", style=wx.YES_NO)
+        dlg.ShowModal()
+
     def OnPaintMotion(self, event):
         #设置状态栏1内容
         self.statusbar.SetStatusText(u"鼠标位置：" + str(event.GetPositionTuple()), 0)             
@@ -228,12 +238,15 @@ class MyApp(wx.App):
             if self.op_reset_passwd():
                 self.panel_left_3.Show()
                 self.panel_left_4.Hide()
+        elif name == 'bBack_4':
+            self.panel_left_3.Show()
+            self.panel_left_4.Hide()
 
     def op_calc(self):
         #import pdb;pdb.set_trace()
         url = URL_PREFIX + '/service?service=calc&arg1=%s&arg2=%s&email=%s&token=%s'
         url = url % (self.param1.GetValue(),self.param2.GetValue(),email_g,TOKEN)
-        print url
+        #print url
         response = requests.get(url).json()
         #import pdb;pdb.set_trace()
         #print self.param1.GetValue() + self.param2.GetValue()
@@ -270,7 +283,7 @@ class MyApp(wx.App):
         msg = response.get('msg')
         flag = response.get('code')
         self.statusbar.SetStatusText(msg, 0)
-        print response
+        #print response
         if flag:
             email_g = str(response.get('data').get('email'))
             TOKEN = str(response.get('data').get('token'))
