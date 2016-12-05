@@ -343,7 +343,7 @@ class MyApp(wx.App):
         if not newpasswd:
             self.statusbar.SetStatusText(u'请填写新密码！', 0)
             return False
-        hashlib.md5(PWD_PREFIX + newpasswd).hexdigest()
+        newpasswd = hashlib.md5(PWD_PREFIX + newpasswd).hexdigest()
         url = url % (email, code, newpasswd)
         response = requests.get(url).json()
 
