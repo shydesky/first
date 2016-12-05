@@ -182,14 +182,14 @@ def op_calc(arg1, arg2):
     ret = {}
     data = {}
 
-    data['X1'] = round((arg2/arg1*2.0-1)*arg1, 5)
-    data['X2'] = round((arg2/arg1*3.0-2)*arg1, 5)
-    data['X3'] = round((arg2/arg1*4.0-3)*arg1, 5)
-    data['X4'] = round((arg2/arg1*5.0-4)*arg1, 5)
-    data['X5'] = round((arg2/arg1*6.0-5)*arg1, 5)
-    data['X6'] = round((arg2/arg1*7.0-6)*arg1, 5)
-    data['X7'] = round((arg2/arg1*8.0-7)*arg1, 5)
-    data['X8'] = round((arg2/arg1*9.0-8)*arg1, 5)
+    data['X1'] = "%.5f" % round((arg2/arg1*2.0-1)*arg1, 5)
+    data['X2'] = "%.5f" % round((arg2/arg1*3.0-2)*arg1, 5)
+    data['X3'] = "%.5f" % round((arg2/arg1*4.0-3)*arg1, 5)
+    data['X4'] = "%.5f" % round((arg2/arg1*5.0-4)*arg1, 5)
+    data['X5'] = "%.5f" % round((arg2/arg1*6.0-5)*arg1, 5)
+    data['X6'] = "%.5f" % round((arg2/arg1*7.0-6)*arg1, 5)
+    data['X7'] = "%.5f" % round((arg2/arg1*8.0-7)*arg1, 5)
+    data['X8'] = "%.5f" % round((arg2/arg1*9.0-8)*arg1, 5)
 
     data['Y1'] = round(arg2/(arg2/arg1*2.0-1), 5)
     data['Y2'] = round(arg2/(arg2/arg1*3.0-2), 5)
