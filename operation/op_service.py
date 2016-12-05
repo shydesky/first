@@ -132,7 +132,7 @@ def op_send_verifycode(kwargs):
     email = kwargs.args.get('email','')
     code = ''.join(random.sample(string.ascii_letters + string.digits, 6))
     user = User.query.filter(User.email==email).first()
-    
+
     if not user:
        ret['msg'] = USER_NOT_EXIST
        ret['data'] = {}
@@ -144,6 +144,7 @@ def op_send_verifycode(kwargs):
         ret['data'] = {}
         ret['code'] = 0
         return ret
+    code = '000000' #temp code
     ins = VerifyCode(userid=user.id, code=code, create_time=datetime.datetime.now())
     db_session.add(ins)
     db_session.commit()
@@ -164,7 +165,7 @@ def op_deposit(kwargs):
     ins = Deposit(userid=user.id, type=deposit_type)
     db_session.add(ins)
     db_session.commit()
-    
+
     ret['msg'] = DEPOSIT_SUCCESS
     ret['data'] = {}
 
