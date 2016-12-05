@@ -191,14 +191,14 @@ def op_calc(arg1, arg2, index):
         data['X7'] = "%.5f" % round((arg2/arg1*8.0-7)*arg1, 5)
         data['X8'] = "%.5f" % round((arg2/arg1*9.0-8)*arg1, 5)
     elif index == '2':
-        data['Y1'] = round(arg2/(arg2/arg1*2.0-1), 5)
-        data['Y2'] = round(arg2/(arg2/arg1*3.0-2), 5)
-        data['Y3'] = round(arg2/(arg2/arg1*4.0-3), 5)
-        data['Y4'] = round(arg2/(arg2/arg1*5.0-4), 5)
-        data['Y5'] = round(arg2/(arg2/arg1*6.0-5), 5)
-        data['Y6'] = round(arg2/(arg2/arg1*7.0-6), 5)
-        data['Y7'] = round(arg2/(arg2/arg1*8.0-7), 5)
-        data['Y8'] = round(arg2/(arg2/arg1*9.0-8), 5)
+        data['Y1'] = "%.5f" % round(arg2/(arg2/arg1*2.0-1), 5)
+        data['Y2'] = "%.5f" % round(arg2/(arg2/arg1*3.0-2), 5)
+        data['Y3'] = "%.5f" % round(arg2/(arg2/arg1*4.0-3), 5)
+        data['Y4'] = "%.5f" % round(arg2/(arg2/arg1*5.0-4), 5)
+        data['Y5'] = "%.5f" % round(arg2/(arg2/arg1*6.0-5), 5)
+        data['Y6'] = "%.5f" % round(arg2/(arg2/arg1*7.0-6), 5)
+        data['Y7'] = "%.5f" % round(arg2/(arg2/arg1*8.0-7), 5)
+        data['Y8'] = "%.5f" % round(arg2/(arg2/arg1*9.0-8), 5)
 
     ret['data'] = data
     ret['msg'] = CALC_SUCCESS

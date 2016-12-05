@@ -8,7 +8,7 @@ def process():
     service_name = request.args.get('service','')
     if not service_name:
         return ret
-    elif service_name[0:3] == 'calc':
+    elif service_name[0:4] == 'calc':
         ret = process_calc(service_name[4:])
     elif service_name == 'user':
         ret = process_user()
