@@ -171,34 +171,34 @@ def op_deposit(kwargs):
 
     return ret
 
-def process_calc(kwargs):
+def process_calc(kwargs, index):
     arg1 = kwargs.args.get('arg1',0)
     arg2 = kwargs.args.get('arg2',0)
-    return op_calc(float(arg1), float(arg2))
+    return op_calc(float(arg1), float(arg2), index)
 
     
 
-def op_calc(arg1, arg2):
+def op_calc(arg1, arg2, index):
     ret = {}
     data = {}
-
-    data['X1'] = "%.5f" % round((arg2/arg1*2.0-1)*arg1, 5)
-    data['X2'] = "%.5f" % round((arg2/arg1*3.0-2)*arg1, 5)
-    data['X3'] = "%.5f" % round((arg2/arg1*4.0-3)*arg1, 5)
-    data['X4'] = "%.5f" % round((arg2/arg1*5.0-4)*arg1, 5)
-    data['X5'] = "%.5f" % round((arg2/arg1*6.0-5)*arg1, 5)
-    data['X6'] = "%.5f" % round((arg2/arg1*7.0-6)*arg1, 5)
-    data['X7'] = "%.5f" % round((arg2/arg1*8.0-7)*arg1, 5)
-    data['X8'] = "%.5f" % round((arg2/arg1*9.0-8)*arg1, 5)
-
-    data['Y1'] = round(arg2/(arg2/arg1*2.0-1), 5)
-    data['Y2'] = round(arg2/(arg2/arg1*3.0-2), 5)
-    data['Y3'] = round(arg2/(arg2/arg1*4.0-3), 5)
-    data['Y4'] = round(arg2/(arg2/arg1*5.0-4), 5)
-    data['Y5'] = round(arg2/(arg2/arg1*6.0-5), 5)
-    data['Y6'] = round(arg2/(arg2/arg1*7.0-6), 5)
-    data['Y7'] = round(arg2/(arg2/arg1*8.0-7), 5)
-    data['Y8'] = round(arg2/(arg2/arg1*9.0-8), 5)
+    if index == '1':
+        data['X1'] = "%.5f" % round((arg2/arg1*2.0-1)*arg1, 5)
+        data['X2'] = "%.5f" % round((arg2/arg1*3.0-2)*arg1, 5)
+        data['X3'] = "%.5f" % round((arg2/arg1*4.0-3)*arg1, 5)
+        data['X4'] = "%.5f" % round((arg2/arg1*5.0-4)*arg1, 5)
+        data['X5'] = "%.5f" % round((arg2/arg1*6.0-5)*arg1, 5)
+        data['X6'] = "%.5f" % round((arg2/arg1*7.0-6)*arg1, 5)
+        data['X7'] = "%.5f" % round((arg2/arg1*8.0-7)*arg1, 5)
+        data['X8'] = "%.5f" % round((arg2/arg1*9.0-8)*arg1, 5)
+    elif index == '2':
+        data['Y1'] = round(arg2/(arg2/arg1*2.0-1), 5)
+        data['Y2'] = round(arg2/(arg2/arg1*3.0-2), 5)
+        data['Y3'] = round(arg2/(arg2/arg1*4.0-3), 5)
+        data['Y4'] = round(arg2/(arg2/arg1*5.0-4), 5)
+        data['Y5'] = round(arg2/(arg2/arg1*6.0-5), 5)
+        data['Y6'] = round(arg2/(arg2/arg1*7.0-6), 5)
+        data['Y7'] = round(arg2/(arg2/arg1*8.0-7), 5)
+        data['Y8'] = round(arg2/(arg2/arg1*9.0-8), 5)
 
     ret['data'] = data
     ret['msg'] = CALC_SUCCESS

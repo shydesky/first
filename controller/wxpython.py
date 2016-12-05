@@ -15,9 +15,11 @@ class MyApp(wx.App):
         wx.App.__init__(self, redirect, filename)
         self.frame = wx.Frame(None, wx.ID_ANY, title=u'外汇计算器', style=wx.SYSTEM_MENU|wx.MINIMIZE_BOX|wx.CLOSE_BOX|wx.CAPTION|wx.RESIZE_BORDER)
         w, h = wx.DisplaySize()
-        line_px = w/10
+        w = 1440
+        h = 900
+        line_px = 200
         line_py = 0
-        line_sx = 5
+        line_sx = 1
         line_sy = h
         self.panel = wx.Panel(self.frame, wx.ID_ANY, size=(w-line_px,h), pos=(line_px,0))
         self.panel_left_1 = wx.Panel(self.frame, wx.ID_ANY, size=(line_px-line_sx,h), pos=(0,0))
@@ -43,7 +45,7 @@ class MyApp(wx.App):
         self.frame.Bind(wx.EVT_MENU, self.OnQuit, id=wx.ID_EXIT)
         self.frame.Bind(wx.EVT_MENU, self.OnAbout, id=wx.ID_ABOUT)
 
-       # panel_left_1
+        # panel_left_1
         wx.StaticText(self.panel_left_1, -1, u'邮箱：', pos=(20,20), size=wx.DefaultSize, style=0)
         self.email = wx.TextCtrl(self.panel_left_1, -1, pos=(65,20), size=wx.DefaultSize, style=0, name="uout1")
 
@@ -113,8 +115,9 @@ class MyApp(wx.App):
         wx.StaticText(self.panel, -1, u'参数2', pos=(270,FIRST_H), size=wx.DefaultSize, style=0)
         self.param1 = wx.TextCtrl(self.panel, -1, pos=(120,FIRST_H), size=wx.DefaultSize, style=0, name="param1")
         self.param2 = wx.TextCtrl(self.panel, -1, pos=(320,FIRST_H), size=wx.DefaultSize, style=0, name="param2")
-        bCalc = wx.Button(self.panel, -1, u"计算", pos=(570,FIRST_H), size=wx.DefaultSize, name='bCalc')
-        self.Bind(wx.EVT_BUTTON, self.OnButton, bCalc)
+        bCalc1 = wx.Button(self.panel, -1, u"计算", pos=(570,FIRST_H), size=wx.DefaultSize, name='bCalc1')
+        self.Bind(wx.EVT_BUTTON, self.OnButton, bCalc1)
+
         #second row
         SENCOND_H = 80
         right_base_x = 35
@@ -147,31 +150,40 @@ class MyApp(wx.App):
 
         #forth row
         FORTH_H = 180
-        wx.StaticText(self.panel, -1, u'结果1', pos=(right_base_x,FORTH_H), size=wx.DefaultSize, style=0)
-        self.dout1 = wx.TextCtrl(self.panel, -1, pos=(right_base_x+tc_delta,FORTH_H), size=wx.DefaultSize, style=0, name="dout1")
-
-        wx.StaticText(self.panel, -1, u'结果2', pos=(right_base_x+175,FORTH_H), size=wx.DefaultSize, style=0)
-        self.dout2 = wx.TextCtrl(self.panel, -1, pos=(right_base_x+tc_delta+175,FORTH_H), size=wx.DefaultSize, style=0, name="dout2")
-
-        wx.StaticText(self.panel, -1, u'结果3', pos=(right_base_x+350,FORTH_H), size=wx.DefaultSize, style=0)
-        self.dout3 = wx.TextCtrl(self.panel, -1, pos=(right_base_x+tc_delta+350,FORTH_H), size=wx.DefaultSize, style=0, name="dout3")
-
-        wx.StaticText(self.panel, -1, u'结果4', pos=(right_base_x+525,FORTH_H), size=wx.DefaultSize, style=0)
-        self.dout4 = wx.TextCtrl(self.panel, -1, pos=(right_base_x+tc_delta+525,FORTH_H), size=wx.DefaultSize, style=0, name="dout4")
-
+        wx.StaticText(self.panel, -1, u'参数3', pos=(20,FORTH_H), size=wx.DefaultSize, style=0)
+        wx.StaticText(self.panel, -1, u'参数4', pos=(270,FORTH_H), size=wx.DefaultSize, style=0)
+        self.param3 = wx.TextCtrl(self.panel, -1, pos=(120,FORTH_H), size=wx.DefaultSize, style=0, name="param1")
+        self.param4 = wx.TextCtrl(self.panel, -1, pos=(320,FORTH_H), size=wx.DefaultSize, style=0, name="param2")
+        
+        bCalc2 = wx.Button(self.panel, -1, u"计算", pos=(570,FORTH_H), size=wx.DefaultSize, name='bCalc2')
+        self.Bind(wx.EVT_BUTTON, self.OnButton, bCalc2)
         #fifth row
-        FIFTH_H = 220
-        wx.StaticText(self.panel, -1, u'结果5', pos=(right_base_x,FIFTH_H), size=wx.DefaultSize, style=0)
-        self.dout5 = wx.TextCtrl(self.panel, -1, pos=(right_base_x+tc_delta,FIFTH_H), size=wx.DefaultSize, style=0, name="dout5")
+        FIFTH_H =220
+        wx.StaticText(self.panel, -1, u'结果1', pos=(right_base_x,FIFTH_H), size=wx.DefaultSize, style=0)
+        self.dout1 = wx.TextCtrl(self.panel, -1, pos=(right_base_x+tc_delta,FIFTH_H), size=wx.DefaultSize, style=0, name="dout1")
 
-        wx.StaticText(self.panel, -1, u'结果6', pos=(right_base_x+175,FIFTH_H), size=wx.DefaultSize, style=0)
-        self.dout6 = wx.TextCtrl(self.panel, -1, pos=(right_base_x+tc_delta+175,FIFTH_H), size=wx.DefaultSize, style=0, name="dout6")
+        wx.StaticText(self.panel, -1, u'结果2', pos=(right_base_x+175,FIFTH_H), size=wx.DefaultSize, style=0)
+        self.dout2 = wx.TextCtrl(self.panel, -1, pos=(right_base_x+tc_delta+175,FIFTH_H), size=wx.DefaultSize, style=0, name="dout2")
 
-        wx.StaticText(self.panel, -1, u'结果7', pos=(right_base_x+350,FIFTH_H), size=wx.DefaultSize, style=0)
-        self.dout7 = wx.TextCtrl(self.panel, -1, pos=(right_base_x+tc_delta+350,FIFTH_H), size=wx.DefaultSize, style=0, name="dout7")
+        wx.StaticText(self.panel, -1, u'结果3', pos=(right_base_x+350,FIFTH_H), size=wx.DefaultSize, style=0)
+        self.dout3 = wx.TextCtrl(self.panel, -1, pos=(right_base_x+tc_delta+350,FIFTH_H), size=wx.DefaultSize, style=0, name="dout3")
 
-        wx.StaticText(self.panel, -1, u'结果8', pos=(right_base_x+525,FIFTH_H), size=wx.DefaultSize, style=0)
-        self.dout8 = wx.TextCtrl(self.panel, -1, pos=(right_base_x+tc_delta+525,FIFTH_H), size=wx.DefaultSize, style=0, name="dout8")
+        wx.StaticText(self.panel, -1, u'结果4', pos=(right_base_x+525,FIFTH_H), size=wx.DefaultSize, style=0)
+        self.dout4 = wx.TextCtrl(self.panel, -1, pos=(right_base_x+tc_delta+525,FIFTH_H), size=wx.DefaultSize, style=0, name="dout4")
+
+        #sixth row
+        SIXTH_H = 280
+        wx.StaticText(self.panel, -1, u'结果5', pos=(right_base_x,SIXTH_H), size=wx.DefaultSize, style=0)
+        self.dout5 = wx.TextCtrl(self.panel, -1, pos=(right_base_x+tc_delta,SIXTH_H), size=wx.DefaultSize, style=0, name="dout5")
+
+        wx.StaticText(self.panel, -1, u'结果6', pos=(right_base_x+175,SIXTH_H), size=wx.DefaultSize, style=0)
+        self.dout6 = wx.TextCtrl(self.panel, -1, pos=(right_base_x+tc_delta+175,SIXTH_H), size=wx.DefaultSize, style=0, name="dout6")
+
+        wx.StaticText(self.panel, -1, u'结果7', pos=(right_base_x+350,SIXTH_H), size=wx.DefaultSize, style=0)
+        self.dout7 = wx.TextCtrl(self.panel, -1, pos=(right_base_x+tc_delta+350,SIXTH_H), size=wx.DefaultSize, style=0, name="dout7")
+
+        wx.StaticText(self.panel, -1, u'结果8', pos=(right_base_x+525,SIXTH_H), size=wx.DefaultSize, style=0)
+        self.dout8 = wx.TextCtrl(self.panel, -1, pos=(right_base_x+tc_delta+525,SIXTH_H), size=wx.DefaultSize, style=0, name="dout8")
 
         self.frame.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
         # StatusBar
@@ -211,8 +223,10 @@ class MyApp(wx.App):
     def OnButton(self, evt):
         #Button的响应事件
         name = evt.GetEventObject().GetName()
-        if name == 'bCalc':
-            self.op_calc()
+        if name == 'bCalc1':
+            self.op_calc1()
+        elif name == 'bCalc2':
+            self.op_calc2()
         elif name == 'bSignup': #用户注册panel
             self.op_signup()
         elif name == 'bSignin': #用户登入panel
@@ -242,9 +256,9 @@ class MyApp(wx.App):
             self.panel_left_3.Show()
             self.panel_left_4.Hide()
 
-    def op_calc(self):
+    def op_calc1(self):
         #import pdb;pdb.set_trace()
-        url = URL_PREFIX + '/service?service=calc&arg1=%s&arg2=%s&email=%s&token=%s'
+        url = URL_PREFIX + '/service?service=calc1&arg1=%s&arg2=%s&email=%s&token=%s'
         url = url % (self.param1.GetValue(),self.param2.GetValue(),email_g,TOKEN)
         #print url
         response = requests.get(url).json()
@@ -260,6 +274,17 @@ class MyApp(wx.App):
         self.uout6.SetValue(str(data.get('X6')))
         self.uout7.SetValue(str(data.get('X7')))
         self.uout8.SetValue(str(data.get('X8')))
+        self.statusbar.SetStatusText(msg, 0)
+
+    def op_calc2(self):
+    	url = URL_PREFIX + '/service?service=calc2&arg1=%s&arg2=%s&email=%s&token=%s'
+        url = url % (self.param3.GetValue(),self.param4.GetValue(),email_g,TOKEN)
+        #print url
+        response = requests.get(url).json()
+        #import pdb;pdb.set_trace()
+        #print self.param1.GetValue() + self.param2.GetValue()
+        msg = response.get('msg')
+        data = response.get('data')
 
         self.dout1.SetValue(str(data.get('Y1')))
         self.dout2.SetValue(str(data.get('Y2')))

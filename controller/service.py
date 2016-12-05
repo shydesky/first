@@ -8,8 +8,8 @@ def process():
     service_name = request.args.get('service','')
     if not service_name:
         return ret
-    elif service_name == 'calc':
-        ret = process_calc()
+    elif service_name[0:3] == 'calc':
+        ret = process_calc(service_name[4:])
     elif service_name == 'user':
         ret = process_user()
     elif service_name == 'admin':
@@ -17,8 +17,8 @@ def process():
     return ret
 
 @permission_check
-def process_calc():
-    ret = op_service.process_calc(request)
+def process_calc(type):
+    ret = op_service.process_calc(request,type)
     return ret
 
 def process_user():
