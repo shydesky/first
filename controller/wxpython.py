@@ -332,16 +332,26 @@ class MyApp(wx.App):
     def op_reset_passwd(self):
         url = URL_PREFIX + '/service?service=user&function=resetpwd&email=%s&verifycode=%s&passwd=%s'
         email = self.email_resetpwd.GetValue()
+        if not email:
+            self.statusbar.SetStatusText(u'邮箱不能为空！', 0)
+            return False
         code = self.reset_code.GetValue()
-        newpasswd = hashlib.md5(PWD_PREFIX + self.newpasswd.GetValue()).hexdigest()
+        if not code:
+            self.statusbar.SetStatusText(u'验证码不能为空！', 0)
+            return False
+        newpasswd = self.newpasswd.GetValue()
+        if not newpasswd:
+            self.statusbar.SetStatusText(u'请填写新密码！', 0)
+            return False
+        hashlib.md5(PWD_PREFIX + newpasswd).hexdigest()
         url = url % (email, code, newpasswd)
         response = requests.get(url).json()
-        
+
         msg = response.get('msg')
         flag = response.get('code')
         self.statusbar.SetStatusText(msg, 0)
         if flag:
-            self.passwd_signin.SetValue('') 
+            self.passwd_signin.SetValue('')
             return True
         else:
             return False
