@@ -18,6 +18,11 @@ def service_adapter():
 def service_adapter2():
     return service.process()
 
+@app.route("/admin")
+def admin():
+    return render_template('admin.html')
+
+
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     db_session.remove()

@@ -5,7 +5,7 @@ from decorator import permission_check_admin
 from constant import *
 
 USER_FUNCTION = ['SIGNUP','SIGNIN','RESETPWD','GETCODE','GETUSERS']
-ADMIN_FUNCTION = ['ADMINLOGIN','GETUSERS']
+ADMIN_FUNCTION = ['ADMINLOGIN','GETUSERS','CHANGEUSERTYPE']
 def process_admin(kwargs):
     ret = {}
     data = {}
@@ -18,7 +18,8 @@ def process_admin(kwargs):
         ret = op_get_all_user()
     elif function == 'ADMINLOGIN':
         ret = op_admin_login(kwargs)
-
+    elif function == 'CHANGEUSERTYPE':
+        ret = op_admin_change_user_type(kwargs)
     return ret
 def process_user(kwargs):
     ret = {}
@@ -234,5 +235,22 @@ def op_admin_login(kwargs):
 
         data['key'] = hash_md5
         ret['msg'] = ADMIN_USER_LOGIN
+        ret['data'] = data
+    return ret
+
+def op_admin_change_user_type(kwargs):
+    ret = {}
+    data = {}
+    email = kwargs.args.get('email','')
+    usertype = kwargs.args.get('usertype','')
+    user = User.query.filter(User.email == email).first()
+    if not user:
+        ret['msg'] = USER_NOT_EXIST
+        ret['data'] = {}
+    else:
+        user.usertype = usertype
+        db_session.commit()
+        db_session.close()
+        ret['msg'] = SUCCESS
         ret['data'] = data
     return ret
