@@ -3,7 +3,7 @@ from flask import request
 from flask_jsontools import jsonapi
 from database import db_session
 from controller import service
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='')
 
 @app.route("/")
 def hello():
@@ -20,7 +20,7 @@ def service_adapter2():
 
 @app.route("/admin1")
 def admin():
-    return render_template('ss.html')
+    return  app.send_static_file('ss.html')
 
 
 @app.teardown_appcontext
