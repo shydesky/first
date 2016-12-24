@@ -1,0 +1,56 @@
+<html>
+<script src='knockout.js'></script>
+<h2>User</h2>
+<br/>
+<div id='usersList'>
+    <table class='contactsEditor'>
+        <tr>
+            <th>序号</th>
+            <th>姓名</th>
+            <th>联系电话</th>
+            <th>用户类型</th>
+        </tr>
+        <tbody data-bind="foreach: users">
+            <tr>
+                <td><input data-bind='value: id' readonly="readonly" /></td>
+                <td><input data-bind='value: name' readonly="readonly" /></td>
+                <td><input data-bind='value: mobile' readonly="readonly" /></td>
+                <td><select  data-bind='value: usertype' /> 
+                    <option value ="1">试用账户</option>
+                    <option value ="2">包月用户</option>
+                <td><div><a href='#' data-bind='click: $root.save'>保存</a></div></td> 
+            </tr>
+        </tbody>
+    </table>
+</div>
+</html>
+
+<script type="text/javascript">
+var initialData = [
+    { id: "1", name: "sunhaoyu", mobile:"15901009909", usertype:"1" },
+    { id: "2", name: "dudongmei", mobile:"15901009908", usertype:"2" }
+];
+
+var ContactsModel = function(users) {
+    var self = this;
+    self.users = ko.observableArray(ko.utils.arrayMap(users, function(user) {
+        return { id: user.id, name: user.name, mobile: user.mobile, usertype: user.usertype};
+    }));
+ 
+    self.addContact = function() {
+        self.users.push({
+            id: "",
+            name: "",
+            mobile: "",
+            usertype: ""
+        });
+    };
+
+    self.save = function(user) {
+        alert(user.id+ "  " +user.usertype)
+    };
+ 
+};
+ 
+ko.applyBindings(new ContactsModel(initialData));
+</script>
