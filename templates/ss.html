@@ -7,19 +7,19 @@
     <table class='contactsEditor'>
         <tr>
             <th>序号</th>
-            <th>姓名</th>
+            <th>邮箱</th>
             <th>联系电话</th>
             <th>用户类型</th>
         </tr>
         <tbody data-bind="foreach: users">
             <tr>
                 <td><input data-bind='value: id' readonly="readonly" /></td>
-                <td><input data-bind='value: name' readonly="readonly" /></td>
-                <td><input data-bind='value: mobile' readonly="readonly" /></td>
+                <td><input data-bind='value: email' readonly="readonly" /></td>
+                <td><input data-bind='value: phone' readonly="readonly" /></td>
                 <td><select  data-bind='value: usertype' /> 
                     <option value ="1">试用账户</option>
                     <option value ="2">包月用户</option>
-                <td><div><a href='#' data-bind='click: $root.save'>保存</a></div></td> 
+                <td><div><a href='#' data-bind='click: $root.save'>保存修改</a></div></td> 
             </tr>
         </tbody>
     </table>
@@ -28,8 +28,8 @@
 
 <script type="text/javascript">
 var initialData = [
-    { id: "1", name: "sunhaoyu", mobile:"15901009909", usertype:"1" },
-    { id: "2", name: "dudongmei", mobile:"15901009908", usertype:"2" }
+    { id: "1", email: "sunhaoyu", phone:"15901009909", usertype:"1" },
+    { id: "2", email: "dudongmei", phone:"15901009908", usertype:"2" }
 ];
 
 var UserModel = function(users) {
