@@ -31,5 +31,5 @@ def process_admin():
     ret = op_service.process_admin(request)
     if ret.get('key',None):
         resp.set_cookie('user', ret.get('key'))
-    return resp
+    return ret
 

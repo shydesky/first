@@ -48,7 +48,7 @@ var UserModel = function(users) {
             url:  "/admin?service=admin&function=getusers", //这里你需要有自己的web api 
             type: "Get",
             success: function (response) {
-                self.users(response.users);  // 加载结果入joinlist
+                self.users(response.data);  // 加载结果入joinlist
             }
         });
     }
