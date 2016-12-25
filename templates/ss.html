@@ -31,26 +31,28 @@ var initialData = [
     { id: "2", name: "dudongmei", mobile:"15901009908", usertype:"2" }
 ];
 
-var ContactsModel = function(users) {
+var UserModel = function(users) {
     var self = this;
-    self.users = ko.observableArray(ko.utils.arrayMap(users, function(user) {
+/*    self.users = ko.observableArray(ko.utils.arrayMap(users, function(user) {
         return { id: user.id, name: user.name, mobile: user.mobile, usertype: user.usertype};
-    }));
- 
-    self.addContact = function() {
-        self.users.push({
-            id: "",
-            name: "",
-            mobile: "",
-            usertype: ""
-        });
-    };
+    }));*/
+    self.users = ko.observableArray([]);
 
     self.save = function(user) {
         alert(user.id+ "  " +user.usertype)
     };
- 
+
+    self.loadData = function () {
+        $.ajax({
+            url:  "/admin?service=admin&function=getusers" //这里你需要有自己的web api 
+            type: "Get",
+            success: function (response) {
+                self.users(response.users);  // 加载结果入joinlist
+            }
+        });
+    }
 };
- 
-ko.applyBindings(new ContactsModel(initialData));
+usermodel = new UserModel(initialData)
+ko.applyBindings(usermodel);
+usermodel.loadData()
 </script>
