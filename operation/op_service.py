@@ -243,7 +243,7 @@ def op_admin_login(kwargs):
         ret['data'] = data
     return ret
 
-def op_admin_change_user_type(kwargs):
+def op_admin_change_user_type(request):
     ret = {}
     data = {}
     email = request.form['email']   
