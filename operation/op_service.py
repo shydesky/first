@@ -246,8 +246,8 @@ def op_admin_login(kwargs):
 def op_admin_change_user_type(kwargs):
     ret = {}
     data = {}
-    email = kwargs.args.get('email','')
-    usertype = kwargs.args.get('usertype','')
+    email = request.form['email']   
+    usertype = request.form['usertype']   
     user = User.query.filter(User.email == email).first()
     if not user:
         ret['msg'] = USER_NOT_EXIST
