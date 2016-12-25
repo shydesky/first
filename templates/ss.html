@@ -43,7 +43,7 @@ var UserModel = function(users) {
         $.ajax({
             url:  "/admin?service=admin&function=changeusertype", 
             type: "Post",
-            data: {'email':use.email,'usertype':user.usertype}
+            data: {'email':use.email,'usertype':user.usertype},
             success: function (response) {
                 alert('保存成功');
             }
