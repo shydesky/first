@@ -219,7 +219,7 @@ def op_get_all_user():
         d = {'id':user.id,'email':user.email,'usertype':user.usertype}
         data.append(d)
     ret['msg'] = SUCCESS
-    ret['users'] = data
+    ret['data'] = data
     return ret
 
 def op_admin_login(kwargs):
