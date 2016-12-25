@@ -20,7 +20,7 @@ def service_adapter2():
 
 @app.route("/admin1")
 def admin():
-    return  app.send_static_file('ss.html')
+    return  render_template('ss.html')
 
 
 @app.teardown_appcontext
