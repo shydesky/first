@@ -15,6 +15,7 @@ def service_adapter():
     return service.process()
 
 @app.route("/admin", methods=['POST', 'GET'])
+@jsonapi
 def service_adapter2():
     return service.process()
 
