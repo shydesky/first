@@ -40,7 +40,14 @@ var UserModel = function(users) {
     self.users = ko.observableArray([]);
 
     self.save = function(user) {
-        alert(user.id+ "  " +user.usertype)
+        $.ajax({
+            url:  "/admin?service=admin&function=changeusertype", 
+            type: "Post",
+            data: {'email':use.email,'usertype':user.usertype}
+            success: function (response) {
+                alert('保存成功');
+            }
+        });
     };
 
     self.loadData = function () {
