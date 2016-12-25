@@ -216,7 +216,7 @@ def op_get_all_user():
     data = []
     users = User.query.all()
     for user in users:
-        d = {'id':user.id,'email':user.email,'usertype':user.usertype}
+        d = {'id':user.id,'name':user.email,'mobile':user.phone,'usertype':user.usertype}
         data.append(d)
     ret['msg'] = SUCCESS
     ret['data'] = data
