@@ -14,101 +14,127 @@ class MyApp(wx.App):
     def __init__(self, redirect=False, filename=None):
         wx.App.__init__(self, redirect, filename)
         font = wx.Font(10, wx.DECORATIVE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
-        self.frame = wx.Frame(None, wx.ID_ANY, title=u'外汇计算器', style=wx.SYSTEM_MENU|wx.MINIMIZE_BOX|wx.CLOSE_BOX|wx.CAPTION|wx.RESIZE_BORDER)
+        self.frame = wx.Frame(None, wx.ID_ANY, title=u'风暴眼v0.1', style=wx.SYSTEM_MENU|wx.MINIMIZE_BOX|wx.CLOSE_BOX|wx.CAPTION|wx.RESIZE_BORDER)
         w, h = wx.DisplaySize()
-        w = 1500
-        h = 900
+        self.w = w = 1500
+        self.h = h = 900
         line_px = 220
         line_py = 0
         line_sx = 1
         line_sy = h
         self.panel = wx.Panel(self.frame, wx.ID_ANY, size=(w-line_px,h), pos=(line_px,0))
-        self.panel_left_1 = wx.Panel(self.frame, wx.ID_ANY, size=(line_px-line_sx,h), pos=(0,0))
-        self.panel_left_2 = wx.Panel(self.frame, wx.ID_ANY, size=(line_px-line_sx,h), pos=(0,0))
-        self.panel_left_3 = wx.Panel(self.frame, wx.ID_ANY, size=(line_px-line_sx,h), pos=(0,0))
-        self.panel_left_4 = wx.Panel(self.frame, wx.ID_ANY, size=(line_px-line_sx,h), pos=(0,0))
+        #self.panel_left_1 = wx.Panel(self.frame, wx.ID_ANY, size=(line_px-line_sx,h), pos=(0,0))
+        #self.panel_left_2 = wx.Panel(self.frame, wx.ID_ANY, size=(line_px-line_sx,h), pos=(0,0))
+        #self.panel_left_3 = wx.Panel(self.frame, wx.ID_ANY, size=(line_px-line_sx,h), pos=(0,0))
+        #self.panel_left_4 = wx.Panel(self.frame, wx.ID_ANY, size=(line_px-line_sx,h), pos=(0,0))
 
         # copy the code for the AboutBox
 
         # change the button's parent to refer to my panel
-
+ 
         # menu
+        # 一级菜单
         menubar = wx.MenuBar()
         file = wx.Menu()
+        function = wx.Menu()
+        information = wx.Menu()
         help = wx.Menu()
-        file.Append(wx.ID_ABOUT, "&About\tCtrl+A", u"关于我们")
+
+        # 二级菜单
+        wx.ID_KJYC = 201
+        wx.ID_CJZZ = 301
+        wx.ID_CJRL = 302
+        wx.ID_GY = 401
+        wx.ID_LXWM = 402
+        wx.ID_ZXGX = 403
+
+        file.Append(wx.ID_ABOUT, u"&登录", u"登录")
         file.AppendSeparator()
-        file.Append(wx.ID_EXIT,"&Quit\tCtrl+Q", u"退出程序")
+        file.Append(wx.ID_EXIT, u"&退出", u"退出")
         file.AppendSeparator()
-        menubar.Append( file, '&File' )
-        menubar.Append( help, '&Help' )
+        function.Append(wx.ID_KJYC, u"&空间预测", u"空间预测")
+        information.Append(wx.ID_CJZZ, u"&财经主站", u"财经主站")
+        information.Append(wx.ID_CJRL, u"&财经日历", u"财经日历")
+        help.Append(wx.ID_GY, u"&关于", u"关于")
+        help.Append(wx.ID_LXWM, u"&联系我们", u"联系我们")
+        help.Append(wx.ID_ZXGX, u"&在线更新", u"在线更新")
+
+        menubar.Append( file, u'&系统' )
+        menubar.Append( function, u'&功能' )
+        menubar.Append( information, u'&资讯' )
+        menubar.Append( help, u'&帮助' )
 
         self.frame.Bind(wx.EVT_MENU, self.OnQuit, id=wx.ID_EXIT)
-        self.frame.Bind(wx.EVT_MENU, self.OnAbout, id=wx.ID_ABOUT)
+        self.frame.Bind(wx.EVT_MENU, self.OnKJYC, id=wx.ID_KJYC)
+        self.frame.Bind(wx.EVT_MENU, self.OnCJZZ, id=wx.ID_CJZZ)
+        self.frame.Bind(wx.EVT_MENU, self.OnCJRL, id=wx.ID_CJRL)
+        self.frame.Bind(wx.EVT_MENU, self.OnGY, id=wx.ID_GY)
+        self.frame.Bind(wx.EVT_MENU, self.OnLXWM, id=wx.ID_LXWM)
+        self.frame.Bind(wx.EVT_MENU, self.OnZXGX, id=wx.ID_ZXGX)
 
-        # panel_left_1
-        wx.StaticText(self.panel_left_1, -1, u'邮箱：', pos=(20,20), size=wx.DefaultSize, style=0)
-        self.email = wx.TextCtrl(self.panel_left_1, -1, pos=(85,20), size=wx.DefaultSize, style=0, name="uout1")
+        # # panel_left_1
+        # wx.StaticText(self.panel_left_1, -1, u'邮箱：', pos=(20,20), size=wx.DefaultSize, style=0)
+        # self.email = wx.TextCtrl(self.panel_left_1, -1, pos=(85,20), size=wx.DefaultSize, style=0, name="uout1")
 
-        wx.StaticText(self.panel_left_1, -1, u'手机：', pos=(20,60), size=wx.DefaultSize, style=0)
-        self.phone = wx.TextCtrl(self.panel_left_1, -1, pos=(85,60), size=wx.DefaultSize, style=0, name="uout1")
+        # wx.StaticText(self.panel_left_1, -1, u'手机：', pos=(20,60), size=wx.DefaultSize, style=0)
+        # self.phone = wx.TextCtrl(self.panel_left_1, -1, pos=(85,60), size=wx.DefaultSize, style=0, name="uout1")
 
-        wx.StaticText(self.panel_left_1, -1, u'密码：', pos=(20,100), size=wx.DefaultSize, style=0)
-        self.passwd = wx.TextCtrl(self.panel_left_1, -1, pos=(85,100), size=wx.DefaultSize, style=wx.TE_PASSWORD)
+        # wx.StaticText(self.panel_left_1, -1, u'密码：', pos=(20,100), size=wx.DefaultSize, style=0)
+        # self.passwd = wx.TextCtrl(self.panel_left_1, -1, pos=(85,100), size=wx.DefaultSize, style=wx.TE_PASSWORD)
 
-        wx.StaticText(self.panel_left_1, -1, u'密码：', pos=(20,140), size=wx.DefaultSize, style=0)
-        self.passwd_confirm = wx.TextCtrl(self.panel_left_1, -1, pos=(85,140), size=wx.DefaultSize, style=wx.TE_PASSWORD)
+        # wx.StaticText(self.panel_left_1, -1, u'密码：', pos=(20,140), size=wx.DefaultSize, style=0)
+        # self.passwd_confirm = wx.TextCtrl(self.panel_left_1, -1, pos=(85,140), size=wx.DefaultSize, style=wx.TE_PASSWORD)
 
-        bSignup = wx.Button(self.panel_left_1, -1, u"提交", pos=(50,180), size=wx.DefaultSize, name='bSignup')
-        self.Bind(wx.EVT_BUTTON, self.OnButton, bSignup)
+        # bSignup = wx.Button(self.panel_left_1, -1, u"提交", pos=(50,180), size=wx.DefaultSize, name='bSignup')
+        # self.Bind(wx.EVT_BUTTON, self.OnButton, bSignup)
 
-        bBack = wx.Button(self.panel_left_1, -1, u"返回登录", pos=(50,230), size=wx.DefaultSize, name='bBack')
-        self.Bind(wx.EVT_BUTTON, self.OnButton, bBack)
+        # bBack = wx.Button(self.panel_left_1, -1, u"返回登录", pos=(50,230), size=wx.DefaultSize, name='bBack')
+        # self.Bind(wx.EVT_BUTTON, self.OnButton, bBack)
 
-        self.line = wx.StaticLine(self.panel_left_1, -1, pos=(line_px, line_py), size=(line_sx,line_sy))
-        self.line.SetBackgroundColour(wx.Colour(255, 0, 0))
-        # panel_left_2
-        wx.StaticText(self.panel_left_2, -1, u'账号：', pos=(20,50), size=wx.DefaultSize, style=0)
-        self.account = wx.StaticText(self.panel_left_2, -1, pos=(65,50), size=wx.DefaultSize, style=0)
+        # self.line = wx.StaticLine(self.panel_left_1, -1, pos=(line_px, line_py), size=(line_sx,line_sy))
+        # self.line.SetBackgroundColour(wx.Colour(255, 0, 0))
+        # # panel_left_2
+        # wx.StaticText(self.panel_left_2, -1, u'账号：', pos=(20,50), size=wx.DefaultSize, style=0)
+        # self.account = wx.StaticText(self.panel_left_2, -1, pos=(65,50), size=wx.DefaultSize, style=0)
 
-        wx.StaticText(self.panel_left_2, -1, u'类型：', pos=(20,80), size=wx.DefaultSize, style=0)
-        self.usertype = wx.StaticText(self.panel_left_2, -1, u'试用', pos=(65,80), size=wx.DefaultSize, style=0)
+        # wx.StaticText(self.panel_left_2, -1, u'类型：', pos=(20,80), size=wx.DefaultSize, style=0)
+        # self.usertype = wx.StaticText(self.panel_left_2, -1, u'试用', pos=(65,80), size=wx.DefaultSize, style=0)
 
-        bLogout = wx.Button(self.panel_left_2, -1, u"退出登录", pos=(50,110), size=wx.DefaultSize, name='bLogout')
-        self.Bind(wx.EVT_BUTTON, self.OnButton, bLogout)
-        # panel_left_3
-        wx.StaticText(self.panel_left_3, -1, u'账号：', pos=(20,50), size=wx.DefaultSize, style=0)
-        self.email_signin = wx.TextCtrl(self.panel_left_3, -1, pos=(85,50), size=wx.DefaultSize, style=0)
+        # bLogout = wx.Button(self.panel_left_2, -1, u"退出登录", pos=(50,110), size=wx.DefaultSize, name='bLogout')
+        # self.Bind(wx.EVT_BUTTON, self.OnButton, bLogout)
+        # # panel_left_3
+        # wx.StaticText(self.panel_left_3, -1, u'账号：', pos=(20,50), size=wx.DefaultSize, style=0)
+        # self.email_signin = wx.TextCtrl(self.panel_left_3, -1, pos=(85,50), size=wx.DefaultSize, style=0)
 
-        wx.StaticText(self.panel_left_3, -1, u'密码：', pos=(20,90), size=wx.DefaultSize, style=0)
-        self.passwd_signin = wx.TextCtrl(self.panel_left_3, -1, pos=(85,90), size=wx.DefaultSize, style=wx.TE_PASSWORD)
+        # wx.StaticText(self.panel_left_3, -1, u'密码：', pos=(20,90), size=wx.DefaultSize, style=0)
+        # self.passwd_signin = wx.TextCtrl(self.panel_left_3, -1, pos=(85,90), size=wx.DefaultSize, style=wx.TE_PASSWORD)
 
-        bSignin = wx.Button(self.panel_left_3, -1, u"新用户？", pos=(50,180), size=wx.DefaultSize, name='bNewUser')
-        self.Bind(wx.EVT_BUTTON, self.OnButton, bSignin)
+        # bSignin = wx.Button(self.panel_left_3, -1, u"新用户？", pos=(50,180), size=wx.DefaultSize, name='bNewUser')
+        # self.Bind(wx.EVT_BUTTON, self.OnButton, bSignin)
 
-        bSignin = wx.Button(self.panel_left_3, -1, u"登录", pos=(50,130), size=wx.DefaultSize, name='bSignin')
-        self.Bind(wx.EVT_BUTTON, self.OnButton, bSignin)
+        # bSignin = wx.Button(self.panel_left_3, -1, u"登录", pos=(50,130), size=wx.DefaultSize, name='bSignin')
+        # self.Bind(wx.EVT_BUTTON, self.OnButton, bSignin)
 
-        bForgetPwd = wx.Button(self.panel_left_3, -1, u"忘记密码", pos=(50,230), size=wx.DefaultSize, name='bForgetPwd')
-        self.Bind(wx.EVT_BUTTON, self.OnButton, bForgetPwd)
-        # panel_left_4
-        wx.StaticText(self.panel_left_4, -1, u'账号：', pos=(20,50), size=wx.DefaultSize, style=0)
-        self.email_resetpwd = wx.TextCtrl(self.panel_left_4, -1, pos=(85,50), size=wx.DefaultSize, style=0)
+        # bForgetPwd = wx.Button(self.panel_left_3, -1, u"忘记密码", pos=(50,230), size=wx.DefaultSize, name='bForgetPwd')
+        # self.Bind(wx.EVT_BUTTON, self.OnButton, bForgetPwd)
+        # # panel_left_4
+        # wx.StaticText(self.panel_left_4, -1, u'账号：', pos=(20,50), size=wx.DefaultSize, style=0)
+        # self.email_resetpwd = wx.TextCtrl(self.panel_left_4, -1, pos=(85,50), size=wx.DefaultSize, style=0)
 
-        wx.StaticText(self.panel_left_4, -1, u'新密码：', pos=(20,90), size=wx.DefaultSize, style=0)
-        self.newpasswd = wx.TextCtrl(self.panel_left_4, -1, pos=(85,90), size=wx.DefaultSize, style=0)
+        # wx.StaticText(self.panel_left_4, -1, u'新密码：', pos=(20,90), size=wx.DefaultSize, style=0)
+        # self.newpasswd = wx.TextCtrl(self.panel_left_4, -1, pos=(85,90), size=wx.DefaultSize, style=0)
 
-        wx.StaticText(self.panel_left_4, -1, u'验证码：', pos=(20,130), size=wx.DefaultSize, style=0)
-        self.reset_code = wx.TextCtrl(self.panel_left_4, -1, pos=(85,130), size=wx.DefaultSize, style=0)
+        # wx.StaticText(self.panel_left_4, -1, u'验证码：', pos=(20,130), size=wx.DefaultSize, style=0)
+        # self.reset_code = wx.TextCtrl(self.panel_left_4, -1, pos=(85,130), size=wx.DefaultSize, style=0)
 
-        bGetCode = wx.Button(self.panel_left_4, -1, u"获取验证码", pos=(50,180), size=wx.DefaultSize, name='bGetCode')
-        self.Bind(wx.EVT_BUTTON, self.OnButton, bGetCode)
+        # bGetCode = wx.Button(self.panel_left_4, -1, u"获取验证码", pos=(50,180), size=wx.DefaultSize, name='bGetCode')
+        # self.Bind(wx.EVT_BUTTON, self.OnButton, bGetCode)
 
-        bResetPwd = wx.Button(self.panel_left_4, -1, u"重置密码", pos=(50,230), size=wx.DefaultSize, name='bResetPwd')
-        self.Bind(wx.EVT_BUTTON, self.OnButton, bResetPwd)
+        # bResetPwd = wx.Button(self.panel_left_4, -1, u"重置密码", pos=(50,230), size=wx.DefaultSize, name='bResetPwd')
+        # self.Bind(wx.EVT_BUTTON, self.OnButton, bResetPwd)
 
-        bBack_4 = wx.Button(self.panel_left_4, -1, u"返回登录", pos=(50,280), size=wx.DefaultSize, name='bBack_4')
-        self.Bind(wx.EVT_BUTTON, self.OnButton, bBack_4)
+        # bBack_4 = wx.Button(self.panel_left_4, -1, u"返回登录", pos=(50,280), size=wx.DefaultSize, name='bBack_4')
+        # self.Bind(wx.EVT_BUTTON, self.OnButton, bBack_4)
         #right panel
         #first row
         FIRST_H = 20
@@ -170,31 +196,39 @@ class MyApp(wx.App):
         self.Bind(wx.EVT_BUTTON, self.OnButton, bCalc2)
         #fifth row
         FIFTH_H =240
-        wx.StaticText(self.panel, -1, u'结果1', pos=(right_base_x,FIFTH_H), size=wx.DefaultSize, style=0)
+        d_out1 = wx.StaticText(self.panel, -1, u'结果1', pos=(right_base_x,FIFTH_H), size=wx.DefaultSize, style=0)
         self.dout1 = wx.TextCtrl(self.panel, -1, pos=(right_base_x+tc_delta,FIFTH_H), size=wx.DefaultSize, style=0, name="dout1")
+        d_out1.SetFont(font)
 
-        wx.StaticText(self.panel, -1, u'结果2', pos=(right_base_x+175,FIFTH_H), size=wx.DefaultSize, style=0)
+        d_out2 = wx.StaticText(self.panel, -1, u'结果2', pos=(right_base_x+175,FIFTH_H), size=wx.DefaultSize, style=0)
         self.dout2 = wx.TextCtrl(self.panel, -1, pos=(right_base_x+tc_delta+175,FIFTH_H), size=wx.DefaultSize, style=0, name="dout2")
+        d_out2.SetFont(font)
 
-        wx.StaticText(self.panel, -1, u'结果3', pos=(right_base_x+350,FIFTH_H), size=wx.DefaultSize, style=0)
+        d_out3 = wx.StaticText(self.panel, -1, u'结果3', pos=(right_base_x+350,FIFTH_H), size=wx.DefaultSize, style=0)
         self.dout3 = wx.TextCtrl(self.panel, -1, pos=(right_base_x+tc_delta+350,FIFTH_H), size=wx.DefaultSize, style=0, name="dout3")
+        d_out3.SetFont(font)
 
-        wx.StaticText(self.panel, -1, u'结果4', pos=(right_base_x+525,FIFTH_H), size=wx.DefaultSize, style=0)
+        d_out4 = wx.StaticText(self.panel, -1, u'结果4', pos=(right_base_x+525,FIFTH_H), size=wx.DefaultSize, style=0)
         self.dout4 = wx.TextCtrl(self.panel, -1, pos=(right_base_x+tc_delta+525,FIFTH_H), size=wx.DefaultSize, style=0, name="dout4")
+        d_out4.SetFont(font)
 
         #sixth row
-        SIXTH_H = 300
-        wx.StaticText(self.panel, -1, u'结果5', pos=(right_base_x,SIXTH_H), size=wx.DefaultSize, style=0)
+        SIXTH_H = 280
+        d_out5 = wx.StaticText(self.panel, -1, u'结果5', pos=(right_base_x,SIXTH_H), size=wx.DefaultSize, style=0)
         self.dout5 = wx.TextCtrl(self.panel, -1, pos=(right_base_x+tc_delta,SIXTH_H), size=wx.DefaultSize, style=0, name="dout5")
+        d_out5.SetFont(font)
 
-        wx.StaticText(self.panel, -1, u'结果6', pos=(right_base_x+175,SIXTH_H), size=wx.DefaultSize, style=0)
+        d_out6 = wx.StaticText(self.panel, -1, u'结果6', pos=(right_base_x+175,SIXTH_H), size=wx.DefaultSize, style=0)
         self.dout6 = wx.TextCtrl(self.panel, -1, pos=(right_base_x+tc_delta+175,SIXTH_H), size=wx.DefaultSize, style=0, name="dout6")
+        d_out6.SetFont(font)
 
-        wx.StaticText(self.panel, -1, u'结果7', pos=(right_base_x+350,SIXTH_H), size=wx.DefaultSize, style=0)
+        d_out7 = wx.StaticText(self.panel, -1, u'结果7', pos=(right_base_x+350,SIXTH_H), size=wx.DefaultSize, style=0)
         self.dout7 = wx.TextCtrl(self.panel, -1, pos=(right_base_x+tc_delta+350,SIXTH_H), size=wx.DefaultSize, style=0, name="dout7")
+        d_out7.SetFont(font)
 
-        wx.StaticText(self.panel, -1, u'结果8', pos=(right_base_x+525,SIXTH_H), size=wx.DefaultSize, style=0)
+        d_out8 = wx.StaticText(self.panel, -1, u'结果8', pos=(right_base_x+525,SIXTH_H), size=wx.DefaultSize, style=0)
         self.dout8 = wx.TextCtrl(self.panel, -1, pos=(right_base_x+tc_delta+525,SIXTH_H), size=wx.DefaultSize, style=0, name="dout8")
+        d_out8.SetFont(font)
 
         self.frame.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
         # StatusBar
@@ -203,14 +237,15 @@ class MyApp(wx.App):
 
         #self.panel.Bind(wx.EVT_MOTION, self.OnPaintMotion)
         self.panel.SetBackgroundColour((211,244,254))
+        self.panel.Hide()
         #self.panel.Hide()
-        self.panel_left_1.SetBackgroundColour((211,244,254))
-        self.panel_left_2.SetBackgroundColour((211,244,254))
-        self.panel_left_3.SetBackgroundColour((211,244,254))
-        self.panel_left_4.SetBackgroundColour((211,244,254))
-        self.panel_left_1.Hide()
-        self.panel_left_2.Hide()
-        self.panel_left_4.Hide()
+        #self.panel_left_1.SetBackgroundColour((211,244,254))
+        #self.panel_left_2.SetBackgroundColour((211,244,254))
+        #self.panel_left_3.SetBackgroundColour((211,244,254))
+        #self.panel_left_4.SetBackgroundColour((211,244,254))
+        #self.panel_left_1.Hide()
+        #self.panel_left_2.Hide()
+        #self.panel_left_4.Hide()
         #self.panel_left.Hide()
         self.frame.SetMenuBar( menubar )
         self.frame.SetSize( wx.Size( w/1.5,h/1.5 ))
@@ -222,14 +257,27 @@ class MyApp(wx.App):
     def OnQuit(self, event):
         self.frame.Close()
 
+    def OnMenu(self, event):
+        print 1
+        # import pdb;pdb.set_trace()
+        print event.GetEventObject().GetId()
+    def OnKJYC(self, event):
+    	self.panel.SetBackgroundColour((211,244,254))
+    	self.panel.SetSize(wx.Size(self.w,self.h))
+        self.panel.Show()
+    def OnCJRL(self, event):
+        pass
+    def OnCJZZ(self, event):
+        pass 
+    def OnGY(self, event):
+        pass 
+    def OnLXWM(self, event):
+        pass 
+    def OnZXGX(self, event):
+        pass   
     def OnAbout(self, event):
         dlg = wx.MessageDialog(parent=None, message=u"关于我们", caption=u"关于我们", style=wx.YES_NO)
         dlg.ShowModal()
-
-    def OnPaintMotion(self, event):
-        #设置状态栏1内容
-        self.statusbar.SetStatusText(u"鼠标位置：" + str(event.GetPositionTuple()), 0)             
-        event.Skip()
 
     def OnButton(self, evt):
         #Button的响应事件
@@ -288,7 +336,7 @@ class MyApp(wx.App):
         self.statusbar.SetStatusText(msg, 0)
 
     def op_calc2(self):
-    	url = URL_PREFIX + '/service?service=calc2&arg1=%s&arg2=%s&email=%s&token=%s'
+        url = URL_PREFIX + '/service?service=calc2&arg1=%s&arg2=%s&email=%s&token=%s'
         url = url % (self.param3.GetValue(),self.param4.GetValue(),email_g,TOKEN)
         #print url
         response = requests.get(url).json()
