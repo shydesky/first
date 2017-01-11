@@ -88,7 +88,6 @@ class MyApp(wx.App):
             self.panel_left_2.Hide()
         elif name == 'bForgetPwd':
             self.panel_signin.Hide()
-
             self.panel_passwd.Show()
         elif name == 'bGetCode':
             self.op_get_code()
@@ -201,15 +200,15 @@ class MyApp(wx.App):
         url = URL_PREFIX + '/service?service=user&function=resetpwd&email=%s&verifycode=%s&passwd=%s'
         email = self.email_resetpwd.GetValue()
         if not email:
-            self.statusbar.SetStatusText(u'邮箱不能为空！', 0)
+            self.statusbar_login.SetStatusText(u'邮箱不能为空！', 0)
             return False
         code = self.reset_code.GetValue()
         if not code:
-            self.statusbar.SetStatusText(u'验证码不能为空！', 0)
+            self.statusbar_login.SetStatusText(u'验证码不能为空！', 0)
             return False
         newpasswd = self.newpasswd.GetValue()
         if not newpasswd:
-            self.statusbar.SetStatusText(u'请填写新密码！', 0)
+            self.statusbar_login.SetStatusText(u'请填写新密码！', 0)
             return False
         newpasswd = hashlib.md5(PWD_PREFIX + newpasswd).hexdigest()
         url = url % (email, code, newpasswd)
@@ -217,7 +216,7 @@ class MyApp(wx.App):
 
         msg = response.get('msg')
         flag = response.get('code')
-        self.statusbar.SetStatusText(msg, 0)
+        self.statusbar_login.SetStatusText(msg, 0)
         if flag:
             self.passwd_signin.SetValue('')
             return True
@@ -236,7 +235,8 @@ class MyApp(wx.App):
         
         self.login_frame = wx.Frame(None, wx.ID_ANY, title=u'用户登录', size=(350,200),
             style=wx.SYSTEM_MENU|wx.MINIMIZE_BOX|wx.CLOSE_BOX|wx.CAPTION)
-        
+        self.statusbar_login = self.login_frame.CreateStatusBar()
+        self.statusbar_login.SetFieldsCount(1)
         # panel_signup
         self.panel_signup = wx.Panel(self.login_frame, wx.ID_ANY, size=(350,200), pos=(0,0))
 
