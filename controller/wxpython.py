@@ -1,11 +1,14 @@
 #!/usr/bin/python2.7
 # -*- coding: utf-8 -*-
+import sys
+import webbrowser
 import requests
 import wx
 import hashlib
 import json
 import re
 from wx.lib.wordwrap import wordwrap
+sys.path.append("libs")
 URL_PREFIX = 'http://101.200.151.176:5000'
 PWD_PREFIX = 'MDF'
 TOKEN = ''
@@ -13,24 +16,6 @@ email_g = ''
 class MyApp(wx.App):
     def __init__(self, redirect=False, filename=None):
         wx.App.__init__(self, redirect, filename)
-        
-        # # panel_left_2
-        # wx.StaticText(self.panel_left_2, -1, u'账号：', pos=(20,50), size=wx.DefaultSize, style=0)
-        # self.account = wx.StaticText(self.panel_left_2, -1, pos=(65,50), size=wx.DefaultSize, style=0)
-
-        # wx.StaticText(self.panel_left_2, -1, u'类型：', pos=(20,80), size=wx.DefaultSize, style=0)
-        # self.usertype = wx.StaticText(self.panel_left_2, -1, u'试用', pos=(65,80), size=wx.DefaultSize, style=0)
-
-        # bLogout = wx.Button(self.panel_left_2, -1, u"退出登录", pos=(50,110), size=wx.DefaultSize, name='bLogout')
-        # self.Bind(wx.EVT_BUTTON, self.OnButton, bLogout)
-        
-       
-        #right panel
-
-
-
-        #self.frame.SetMaxSize(wx.Size( w/2,h/2 ))
-        #self.frame.SetMinSize(wx.Size( w/2,h/2 ))
         self.init_login_frame()
         self.login_frame.Centre()
         self.login_frame.Show()
@@ -47,9 +32,20 @@ class MyApp(wx.App):
         self.kjyc_panel.SetSize(wx.Size(self.w,self.h))
         self.kjyc_panel.Show()
     def OnCJRL(self, event): # 财经日历
-        pass
-    def OnCJZZ(self, event): # 财经主站
-        pass 
+        url = 'http://vip.stock.finance.sina.com.cn/forex/view/vDailyFX_More.php'
+        webbrowser.open(url)
+
+    def OnCJZZ(self, event): # 财经主站 
+        if event.GetId() == wx.ID_CJZZ_ZGCJ:
+            url = 'http://finance.fecn.net/'
+        elif event.GetId() == wx.ID_CJZZ_DFCF:
+            url = ' http://forex.eastmoney.com/'
+        elif event.GetId() == wx.ID_CJZZ_XLCJ:
+            url = 'http://finance.sina.com.cn/forex/'
+        elif event.GetId() == wx.ID_CJZZ_SHCJ:
+            url = 'http://money.sohu.com/waihui/'
+        webbrowser.open(url)
+
     def OnGY(self, event):  # 关于
         dlg = wx.MessageDialog(parent=None, message=u"我们是风暴眼", caption=u"关于我们", style=wx.YES_NO)
         dlg.ShowModal()
@@ -75,7 +71,6 @@ class MyApp(wx.App):
                 self.init_app_frame()
                 self.login_frame.Hide()
                 self.app_frame.Show()
-                # self.self.panel_signin.Hide()
         elif name == 'bNewUser':
             self.panel_signin.Hide()
             self.panel_signup.Show()
@@ -150,7 +145,7 @@ class MyApp(wx.App):
         response = requests.get(url).json()
         msg = response.get('msg')
         flag = response.get('code')
-        #self.statusbar.SetStatusText(msg, 0)
+        self.statusbar_login.SetStatusText(msg, 0)
         #print response
         if flag:
             email_g = str(response.get('data').get('email'))
@@ -306,10 +301,9 @@ class MyApp(wx.App):
         self.panel_signup.Hide()
     
     def init_app_frame(self):
-    	self.app_frame = wx.Frame(None, wx.ID_ANY, title=u'风暴眼v0.1', style=wx.SYSTEM_MENU|wx.MINIMIZE_BOX|wx.CLOSE_BOX|wx.CAPTION|wx.RESIZE_BORDER)
-        w, h = wx.DisplaySize()
-        self.w = w = 1500
-        self.h = h = 900
+        self.app_frame = wx.Frame(None, wx.ID_ANY, title=u'风暴眼v0.1', style=wx.SYSTEM_MENU|wx.MINIMIZE_BOX|wx.CLOSE_BOX|wx.CAPTION|wx.RESIZE_BORDER)
+        self.w = w = 1000
+        self.h = h = 600
         line_px = 0
         line_py = 0
         line_sx = 1
@@ -321,22 +315,38 @@ class MyApp(wx.App):
         file = wx.Menu()
         function = wx.Menu()
         information = wx.Menu()
+        
         help = wx.Menu()
 
         # 二级菜单
+        information_second_menu = wx.Menu()
         wx.ID_KJYC = 201
         wx.ID_CJZZ = 301
         wx.ID_CJRL = 302
         wx.ID_GY = 401
         wx.ID_LXWM = 402
         wx.ID_ZXGX = 403
+        # 三级菜单
+        wx.ID_CJZZ_ZGCJ = 3011
+        wx.ID_CJZZ_DFCF = 3012
+        wx.ID_CJZZ_XLCJ = 3013
+        wx.ID_CJZZ_SHCJ = 3014
 
+        information_item_one = wx.MenuItem(information_second_menu, 3011, text=u'中国财经网',kind=wx.ITEM_NORMAL)
+        information_item_two = wx.MenuItem(information_second_menu, 3012, text=u'东方财富网',kind=wx.ITEM_NORMAL)
+        information_item_three = wx.MenuItem(information_second_menu, 3013, text=u'新浪财经',kind=wx.ITEM_NORMAL)
+        information_item_four = wx.MenuItem(information_second_menu, 3014, text=u'搜狐财经',kind=wx.ITEM_NORMAL)
+
+        information_second_menu.AppendItem(information_item_one)
+        information_second_menu.AppendItem(information_item_two)
+        information_second_menu.AppendItem(information_item_three)
+        information_second_menu.AppendItem(information_item_four)    
         file.Append(wx.ID_ABOUT, u"&登录", u"登录")
         file.AppendSeparator()
         file.Append(wx.ID_EXIT, u"&退出", u"退出")
         file.AppendSeparator()
         function.Append(wx.ID_KJYC, u"&空间预测", u"空间预测")
-        information.Append(wx.ID_CJZZ, u"&财经主站", u"财经主站")
+        information.AppendMenu(wx.ID_CJZZ, u"&财经主站", information_second_menu)
         information.Append(wx.ID_CJRL, u"&财经日历", u"财经日历")
         help.Append(wx.ID_GY, u"&关于", u"关于")
         help.Append(wx.ID_LXWM, u"&联系我们", u"联系我们")
@@ -349,7 +359,10 @@ class MyApp(wx.App):
 
         self.app_frame.Bind(wx.EVT_MENU, self.OnQuit, id=wx.ID_EXIT)
         self.app_frame.Bind(wx.EVT_MENU, self.OnKJYC, id=wx.ID_KJYC)
-        self.app_frame.Bind(wx.EVT_MENU, self.OnCJZZ, id=wx.ID_CJZZ)
+        self.app_frame.Bind(wx.EVT_MENU, self.OnCJZZ, id=wx.ID_CJZZ_ZGCJ)
+        self.app_frame.Bind(wx.EVT_MENU, self.OnCJZZ, id=wx.ID_CJZZ_SHCJ)
+        self.app_frame.Bind(wx.EVT_MENU, self.OnCJZZ, id=wx.ID_CJZZ_XLCJ)
+        self.app_frame.Bind(wx.EVT_MENU, self.OnCJZZ, id=wx.ID_CJZZ_DFCF)
         self.app_frame.Bind(wx.EVT_MENU, self.OnCJRL, id=wx.ID_CJRL)
         self.app_frame.Bind(wx.EVT_MENU, self.OnGY, id=wx.ID_GY)
         self.app_frame.Bind(wx.EVT_MENU, self.OnLXWM, id=wx.ID_LXWM)
@@ -363,105 +376,107 @@ class MyApp(wx.App):
         self.kjyc_panel = wx.Panel(self.app_frame, wx.ID_ANY, size=(w,h))
 
         font = wx.Font(10, wx.DECORATIVE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
-        right_base_x = 160
+        right_base_x = 200
         tc_delta = 50
 
         # first row
-        FIRST_H = 20
-        wx.StaticText(self.kjyc_panel, -1, u'参数1', pos=(right_base_x+20,FIRST_H), size=wx.DefaultSize, style=0)
-        wx.StaticText(self.kjyc_panel, -1, u'参数2', pos=(right_base_x+270,FIRST_H), size=wx.DefaultSize, style=0)
-        self.param1 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+120,FIRST_H), size=wx.DefaultSize, style=0, name="param1")
-        self.param2 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+320,FIRST_H), size=wx.DefaultSize, style=0, name="param2")
-        bCalc1 = wx.Button(self.kjyc_panel, -1, u"计算", pos=(right_base_x+570,FIRST_H), size=wx.DefaultSize, name='bCalc1')
-        self.Bind(wx.EVT_BUTTON, self.OnButton, bCalc1)
-
-        #second row
-        SENCOND_H = 80
-        t_out1 = wx.StaticText(self.kjyc_panel, -1, u'结果1', pos=(right_base_x,SENCOND_H), size=wx.DefaultSize, style=0)
-        self.uout1 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+tc_delta,SENCOND_H), size=wx.DefaultSize, style=0, name="uout1")
-        t_out1.SetFont(font)
-
-        t_out2 = wx.StaticText(self.kjyc_panel, -1, u'结果2', pos=(right_base_x+175,SENCOND_H), size=wx.DefaultSize, style=0)
-        self.uout2 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+tc_delta+175,SENCOND_H), size=wx.DefaultSize, style=0, name="uout2")
-        t_out2.SetFont(font)
+        FIRST_H = tc_delta + 20
         
-        t_out3 = wx.StaticText(self.kjyc_panel, -1, u'结果3', pos=(right_base_x+350,SENCOND_H), size=wx.DefaultSize, style=0)
-        self.uout3 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+tc_delta+350,SENCOND_H), size=wx.DefaultSize, style=0, name="uout3")
+        wx.StaticText(self.kjyc_panel, -1, u'S', pos=(40,FIRST_H), size=wx.DefaultSize, style=0)
+        wx.StaticText(self.kjyc_panel, -1, u'H', pos=(100,FIRST_H), size=wx.DefaultSize, style=0)
+        t_out1 = wx.StaticText(self.kjyc_panel, -1, u'结果1', pos=(right_base_x,FIRST_H), size=wx.DefaultSize, style=0)
+        t_out2 = wx.StaticText(self.kjyc_panel, -1, u'结果2', pos=(right_base_x+175,FIRST_H), size=wx.DefaultSize, style=0)
+        t_out3 = wx.StaticText(self.kjyc_panel, -1, u'结果3', pos=(right_base_x+350,FIRST_H), size=wx.DefaultSize, style=0)
+        t_out4 = wx.StaticText(self.kjyc_panel, -1, u'结果4', pos=(right_base_x+525,FIRST_H), size=wx.DefaultSize, style=0)
+        t_out1.SetFont(font)
+        t_out2.SetFont(font)
         t_out3.SetFont(font)
-
-        t_out4 = wx.StaticText(self.kjyc_panel, -1, u'结果4', pos=(right_base_x+525,SENCOND_H), size=wx.DefaultSize, style=0)
-        self.uout4 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+tc_delta+525,SENCOND_H), size=wx.DefaultSize, style=0, name="uout4")
         t_out4.SetFont(font)
+        
+        #second row
+        SENCOND_H = tc_delta + 50
+
+        self.param1 = wx.TextCtrl(self.kjyc_panel, -1, pos=(20,SENCOND_H), size=(50,20), style=0, name="param1")
+        self.param2 = wx.TextCtrl(self.kjyc_panel, -1, pos=(80,SENCOND_H), size=(50,20), style=0, name="param2")
+        
+        self.uout1 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x,SENCOND_H), size=wx.DefaultSize, style=0, name="uout1")
+        self.uout2 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+175,SENCOND_H), size=wx.DefaultSize, style=0, name="uout2")
+        self.uout3 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+350,SENCOND_H), size=wx.DefaultSize, style=0, name="uout3")
+        self.uout4 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+525,SENCOND_H), size=wx.DefaultSize, style=0, name="uout4")
 
         #third row
-        THIRD_H = 120
+        THIRD_H = tc_delta + 90
+        bCalc1 = wx.Button(self.kjyc_panel, -1, u"计算", pos=(35,THIRD_H), size=wx.DefaultSize, name='bCalc1')
+        self.Bind(wx.EVT_BUTTON, self.OnButton, bCalc1)
         t_out5 = wx.StaticText(self.kjyc_panel, -1, u'结果5', pos=(right_base_x,THIRD_H), size=wx.DefaultSize, style=0)
-        self.uout5 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+tc_delta,THIRD_H), size=wx.DefaultSize, style=0, name="uout5")
-        t_out5.SetFont(font)
-        
         t_out6 = wx.StaticText(self.kjyc_panel, -1, u'结果6', pos=(right_base_x+175,THIRD_H), size=wx.DefaultSize, style=0)
-        self.uout6 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+tc_delta+175,THIRD_H), size=wx.DefaultSize, style=0, name="uout6")
-        t_out6.SetFont(font)
-        
         t_out7 = wx.StaticText(self.kjyc_panel, -1, u'结果7', pos=(right_base_x+350,THIRD_H), size=wx.DefaultSize, style=0)
-        self.uout7 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+tc_delta+350,THIRD_H), size=wx.DefaultSize, style=0, name="uout7")
-        t_out7.SetFont(font)
-
         t_out8 = wx.StaticText(self.kjyc_panel, -1, u'结果8', pos=(right_base_x+525,THIRD_H), size=wx.DefaultSize, style=0)
-        self.uout8 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+tc_delta+525,THIRD_H), size=wx.DefaultSize, style=0, name="uout8")
+        t_out5.SetFont(font)
+        t_out6.SetFont(font)
+        t_out7.SetFont(font)
         t_out8.SetFont(font)
-
-        #forth row
-        FORTH_H = 180
-        wx.StaticText(self.kjyc_panel, -1, u'参数3', pos=(right_base_x+20,FORTH_H), size=wx.DefaultSize, style=0)
-        wx.StaticText(self.kjyc_panel, -1, u'参数4', pos=(right_base_x+270,FORTH_H), size=wx.DefaultSize, style=0)
-        self.param3 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+120,FORTH_H), size=wx.DefaultSize, style=0, name="param1")
-        self.param4 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+320,FORTH_H), size=wx.DefaultSize, style=0, name="param2")
         
-        bCalc2 = wx.Button(self.kjyc_panel, -1, u"计算", pos=(right_base_x+570,FORTH_H), size=wx.DefaultSize, name='bCalc2')
-        self.Bind(wx.EVT_BUTTON, self.OnButton, bCalc2)
+        #forth row
+        FORTH_H = tc_delta + 130
+        self.uout5 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x,FORTH_H), size=wx.DefaultSize, style=0, name="uout5")
+        self.uout6 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+175,FORTH_H), size=wx.DefaultSize, style=0, name="uout6")
+        self.uout7 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+350,FORTH_H), size=wx.DefaultSize, style=0, name="uout7")
+        self.uout8 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+525,FORTH_H), size=wx.DefaultSize, style=0, name="uout8")
+        
 
+        
+        wx.StaticLine(self.kjyc_panel, -1, (0, FORTH_H+60), (1000, 1))
         #fifth row
-        FIFTH_H =240
+        FIFTH_H = tc_delta + 280
+        wx.StaticText(self.kjyc_panel, -1, u'S', pos=(40,FIFTH_H), size=(50,20), style=0)
+        wx.StaticText(self.kjyc_panel, -1, u'H', pos=(100,FIFTH_H), size=(50,20), style=0)
+        
         d_out1 = wx.StaticText(self.kjyc_panel, -1, u'结果1', pos=(right_base_x,FIFTH_H), size=wx.DefaultSize, style=0)
-        self.dout1 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+tc_delta,FIFTH_H), size=wx.DefaultSize, style=0, name="dout1")
-        d_out1.SetFont(font)
-
         d_out2 = wx.StaticText(self.kjyc_panel, -1, u'结果2', pos=(right_base_x+175,FIFTH_H), size=wx.DefaultSize, style=0)
-        self.dout2 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+tc_delta+175,FIFTH_H), size=wx.DefaultSize, style=0, name="dout2")
-        d_out2.SetFont(font)
-
         d_out3 = wx.StaticText(self.kjyc_panel, -1, u'结果3', pos=(right_base_x+350,FIFTH_H), size=wx.DefaultSize, style=0)
-        self.dout3 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+tc_delta+350,FIFTH_H), size=wx.DefaultSize, style=0, name="dout3")
-        d_out3.SetFont(font)
-
         d_out4 = wx.StaticText(self.kjyc_panel, -1, u'结果4', pos=(right_base_x+525,FIFTH_H), size=wx.DefaultSize, style=0)
-        self.dout4 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+tc_delta+525,FIFTH_H), size=wx.DefaultSize, style=0, name="dout4")
+        d_out1.SetFont(font)
+        d_out2.SetFont(font)
+        d_out3.SetFont(font)
         d_out4.SetFont(font)
-
+        
+    
         #sixth row
-        SIXTH_H = 280
-        d_out5 = wx.StaticText(self.kjyc_panel, -1, u'结果5', pos=(right_base_x,SIXTH_H), size=wx.DefaultSize, style=0)
-        self.dout5 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+tc_delta,SIXTH_H), size=wx.DefaultSize, style=0, name="dout5")
+        SIXTH_H = tc_delta + 310
+        self.param3 = wx.TextCtrl(self.kjyc_panel, -1, pos=(20,SIXTH_H), size=(50,20), style=0, name="param1")
+        self.param4 = wx.TextCtrl(self.kjyc_panel, -1, pos=(80,SIXTH_H), size=(50,20), style=0, name="param2")
+        
+        self.dout1 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x,SIXTH_H), size=wx.DefaultSize, style=0, name="dout1")
+        self.dout2 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+175,SIXTH_H), size=wx.DefaultSize, style=0, name="dout2")
+        self.dout3 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+350,SIXTH_H), size=wx.DefaultSize, style=0, name="dout3")
+        self.dout4 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+525,SIXTH_H), size=wx.DefaultSize, style=0, name="dout4")
+        
+        #seventh row
+        SEVENTH_H = tc_delta + 350
+        bCalc2 = wx.Button(self.kjyc_panel, -1, u"计算", pos=(35,SEVENTH_H), size=wx.DefaultSize, name='bCalc2')
+        self.Bind(wx.EVT_BUTTON, self.OnButton, bCalc2)
+        d_out5 = wx.StaticText(self.kjyc_panel, -1, u'结果5', pos=(right_base_x,SEVENTH_H), size=wx.DefaultSize, style=0)
+        d_out6 = wx.StaticText(self.kjyc_panel, -1, u'结果6', pos=(right_base_x+175,SEVENTH_H), size=wx.DefaultSize, style=0)
+        d_out7 = wx.StaticText(self.kjyc_panel, -1, u'结果7', pos=(right_base_x+350,SEVENTH_H), size=wx.DefaultSize, style=0)
+        d_out8 = wx.StaticText(self.kjyc_panel, -1, u'结果8', pos=(right_base_x+525,SEVENTH_H), size=wx.DefaultSize, style=0)
         d_out5.SetFont(font)
-
-        d_out6 = wx.StaticText(self.kjyc_panel, -1, u'结果6', pos=(right_base_x+175,SIXTH_H), size=wx.DefaultSize, style=0)
-        self.dout6 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+tc_delta+175,SIXTH_H), size=wx.DefaultSize, style=0, name="dout6")
         d_out6.SetFont(font)
-
-        d_out7 = wx.StaticText(self.kjyc_panel, -1, u'结果7', pos=(right_base_x+350,SIXTH_H), size=wx.DefaultSize, style=0)
-        self.dout7 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+tc_delta+350,SIXTH_H), size=wx.DefaultSize, style=0, name="dout7")
         d_out7.SetFont(font)
-
-        d_out8 = wx.StaticText(self.kjyc_panel, -1, u'结果8', pos=(right_base_x+525,SIXTH_H), size=wx.DefaultSize, style=0)
-        self.dout8 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+tc_delta+525,SIXTH_H), size=wx.DefaultSize, style=0, name="dout8")
         d_out8.SetFont(font)
 
+        #eighth row
+        EIGHTH_H = tc_delta + 380
+        self.dout5 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x,EIGHTH_H), size=wx.DefaultSize, style=0, name="dout5")
+        self.dout6 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+175,EIGHTH_H), size=wx.DefaultSize, style=0, name="dout6")
+        self.dout7 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+350,EIGHTH_H), size=wx.DefaultSize, style=0, name="dout7")
+        self.dout8 = wx.TextCtrl(self.kjyc_panel, -1, pos=(right_base_x+525,EIGHTH_H), size=wx.DefaultSize, style=0, name="dout8")
+        
         self.kjyc_panel.SetBackgroundColour((211,244,254))
         self.kjyc_panel.Hide()
 
         self.app_frame.SetMenuBar( menubar )
-        self.app_frame.SetSize( wx.Size( w/1.5,h/1.5 ))
+        self.app_frame.SetSize( wx.Size(w, h))
 
 if __name__ == '__main__':
     app = MyApp()
