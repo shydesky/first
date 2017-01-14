@@ -166,27 +166,27 @@ class MyApp(wx.App):
         p_re = re.compile('^0\d{2,3}\d{7,8}$|^1[358]\d{9}$|^147\d{8}')
         phonematch=p_re.match(phone)
         if not phonematch:
-            self.statusbar.SetStatusText(u'手机号码无效！', 0)
+            self.statusbar_login.SetStatusText(u'手机号码无效！', 0)
             return
 
         email = self.email.GetValue()
         e_re = re.compile("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$")
         emailmatch=e_re.match(email)
         if not emailmatch:
-            self.statusbar.SetStatusText(u'邮箱格式无效！', 0)
+            self.statusbar_login.SetStatusText(u'邮箱格式无效！', 0)
             return
 
         passwd = hashlib.md5(PWD_PREFIX + self.passwd.GetValue()).hexdigest()
         passwd_confirm = hashlib.md5(PWD_PREFIX + self.passwd_confirm.GetValue()).hexdigest()
         if passwd != passwd_confirm:
-            self.statusbar.SetStatusText(u'密码输入不一致！', 0)
+            self.statusbar_login.SetStatusText(u'密码输入不一致！', 0)
             return
         url = URL_PREFIX + '/service?service=user&function=signup&email=%s&passwd=%s&phone=%s'
         url = url % (email, passwd, phone)
         response = requests.get(url).json()
 
         msg = response.get('msg')
-        self.statusbar.SetStatusText(msg, 0)
+        self.statusbar_login.SetStatusText(msg, 0)
 
     #退出
     def op_logout(self):
@@ -246,8 +246,11 @@ class MyApp(wx.App):
         wx.StaticText(self.panel_signup, -1, u'邮箱', pos=(20,60), size=wx.DefaultSize, style=0)
         self.email = wx.TextCtrl(self.panel_signup, -1, pos=(85,60), size=wx.DefaultSize)
 
-        wx.StaticText(self.panel_signup, -1, u'密码：', pos=(20,100), size=wx.DefaultSize, style=0)
+        wx.StaticText(self.panel_signup, -1, u'密码', pos=(20,100), size=wx.DefaultSize, style=0)
         self.passwd = wx.TextCtrl(self.panel_signup, -1, pos=(85,100), size=wx.DefaultSize, style=wx.TE_PASSWORD)
+
+        wx.StaticText(self.panel_signup, -1, u'密码确认', pos=(20,140), size=wx.DefaultSize, style=0)
+        self.passwd_confirm = wx.TextCtrl(self.panel_signup, -1, pos=(85,140), size=wx.DefaultSize, style=wx.TE_PASSWORD)
 
         bSignup = wx.Button(self.panel_signup, -1, u"提交注册", pos=(220,20), size=(80,30), name='bSignup')
         self.Bind(wx.EVT_BUTTON, self.OnButton, bSignup)

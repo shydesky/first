@@ -3,7 +3,7 @@ import hashlib
 import datetime,time
 from decorator import permission_check_admin
 from constant import *
-
+from sqlalchemy import or_
 USER_FUNCTION = ['SIGNUP','SIGNIN','RESETPWD','GETCODE','GETUSERS']
 ADMIN_FUNCTION = ['ADMINLOGIN','GETUSERS','CHANGEUSERTYPE']
 def process_admin(kwargs):
@@ -21,6 +21,8 @@ def process_admin(kwargs):
     elif function == 'CHANGEUSERTYPE':
         ret = op_admin_change_user_type(kwargs)
     return ret
+
+
 def process_user(kwargs):
     ret = {}
     data = {}
@@ -42,14 +44,15 @@ def process_user(kwargs):
 
 
 def op_signup(kwargs):
+    u"""用户注册."""
     ret = {}
     data = {}
-    email = kwargs.args.get('email','')
-    phone = kwargs.args.get('phone','')
-    passwd = kwargs.args.get('passwd','')
-    name = kwargs.args.get('name','')
-    usertype = kwargs.args.get('usertype','0')
-    users = User.query.filter_by(email=email).all()
+    email = kwargs.args.get('email', '')
+    phone = kwargs.args.get('phone', '')
+    passwd = kwargs.args.get('passwd', '')
+    name = kwargs.args.get('name', '')
+    usertype = kwargs.args.get('usertype', '0')
+    users = User.query.filter(or_(email=email, phone=phone)).all()
 
     if users:
         ret['msg'] = USER_EXIST
@@ -69,8 +72,8 @@ def op_signup(kwargs):
 def op_signin(kwargs):
     ret = {}
     data = {}
-    email = kwargs.args.get('email','')
-    passwd = kwargs.args.get('passwd','')
+    email = kwargs.args.get('email', '')
+    passwd = kwargs.args.get('passwd', '')
     userip = kwargs.remote_addr
     user = User.query.filter(User.email==email).first()
 
