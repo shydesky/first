@@ -53,7 +53,7 @@ def op_signup(kwargs):
     passwd = kwargs.args.get('passwd', '')
     name = kwargs.args.get('name', '')
     usertype = kwargs.args.get('usertype', '0')
-    users = User.query.filter(or_(email=email, phone=phone)).all()
+    users = User.query.filter(or_(User.email==email, User.phone==phone)).all()
 
     if users:
         ret['msg'] = USER_EXIST
