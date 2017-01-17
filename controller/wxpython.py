@@ -21,7 +21,7 @@ class MyApp(wx.App):
         self.login_frame.Show()
         
     def OnQuit(self, event):
-        self.frame.Close()
+        self.app_frame.Close()
 
     def OnMenu(self, event):
         print 1
@@ -93,7 +93,14 @@ class MyApp(wx.App):
         elif name == 'bBack_4':
             self.panel_signin.Show()
             self.panel_passwd.Hide()
-
+        elif name == 'bBack_charge':
+        	self.panel_signin.Show()
+        	self.panel_charge.Hide()
+        elif name == 'bUserCharge':
+        	self.panel_signin.Hide()
+        	self.panel_charge.Show()
+        elif name == 'bCharge':
+        	print 'chognzhi'
     def op_calc1(self):
         #import pdb;pdb.set_trace()
         url = URL_PREFIX + '/service?service=calc1&arg1=%s&arg2=%s&email=%s&token=%s'
@@ -150,6 +157,7 @@ class MyApp(wx.App):
         if flag:
             email_g = str(response.get('data').get('email'))
             TOKEN = str(response.get('data').get('token'))
+            #usable = str(response.get('data').get('token'))
             return True
         else:
             return False
@@ -224,7 +232,8 @@ class MyApp(wx.App):
         url = url % (email)
         response = requests.get(url).json()
         msg = response.get('msg')
-        self.statusbar.SetStatusText(msg, 0)
+        self.statusbar_login.SetStatusText(msg, 0)
+    
 
     def init_login_frame(self):
         
@@ -293,12 +302,26 @@ class MyApp(wx.App):
         bBack_4 = wx.Button(self.panel_passwd, -1, u"返回登录", pos=(220,60), size=(80,30), name='bBack_4')
         self.Bind(wx.EVT_BUTTON, self.OnButton, bBack_4)
         
+        # panel_charge
+        self.panel_charge = wx.Panel(self.login_frame, wx.ID_ANY, size=(350,200), pos=(0,0))
+        wx.StaticText(self.panel_charge, -1, u'账号：', pos=(20,20), size=wx.DefaultSize, style=0)
+        self.account = wx.TextCtrl(self.panel_charge, -1, pos=(85,20), size=wx.DefaultSize, style=0)
+        wx.StaticText(self.panel_charge, -1, u'充值卡号：', pos=(20,60), size=wx.DefaultSize, style=0)
+        self.cardpwd = wx.TextCtrl(self.panel_charge, -1, pos=(85,60), size=wx.DefaultSize, style=0)
+        bCharge = wx.Button(self.panel_charge, -1, u"充值", pos=(220,20), size=(80,30), name='bCharge')
+        self.Bind(wx.EVT_BUTTON, self.OnButton, bCharge)
+        bBack_charge = wx.Button(self.panel_charge, -1, u"返回登录", pos=(220,60), size=(80,30), name='bBack_charge')
+        self.Bind(wx.EVT_BUTTON, self.OnButton, bBack_charge)
+
         self.panel_signin.SetBackgroundColour((211,244,254))
         self.panel_passwd.SetBackgroundColour((211,244,254))
         self.panel_signup.SetBackgroundColour((211,244,254))
+        self.panel_charge.SetBackgroundColour((211,244,254))
+
         self.panel_signin.Show()
         self.panel_passwd.Hide()
         self.panel_signup.Hide()
+        self.panel_charge.Hide()
     
     def init_app_frame(self):
         self.app_frame = wx.Frame(None, wx.ID_ANY, title=u'风暴眼v0.1', style=wx.SYSTEM_MENU|wx.MINIMIZE_BOX|wx.CLOSE_BOX|wx.CAPTION|wx.RESIZE_BORDER)

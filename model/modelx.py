@@ -15,6 +15,9 @@ class User(Base):
     clientKey = Column(String(120),default='')
     userip = Column(String(20),default='')
     usertype = Column(String(2),default='0')
+    create_time = Column(DateTime, default=datetime.datetime.now())
+    valid_time = Column(DateTime, default=datetime.datetime.now() + datetime.timedelta(days=10))
+
     def __init__(self, name=None, email=None, passwd=None, phone=None, clientKey=None, userip=None, usertype=0):
         self.name = name
         self.email = email
@@ -56,6 +59,17 @@ class Deposit(Base):
 
     def __repr__(self):
         return '<Deposit %r>' % (self.userid)
+
+
+class Card(Base):
+	__tablename__ = 'card'
+	id = Column(Integer, primary_key=True)
+	number = Column(String(32))
+	type = Column(Integer)
+
+	def __init__(self, number, type):
+        self.number = number
+        self.type = type
 
 
 class AdminUser(Base):

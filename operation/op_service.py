@@ -5,7 +5,7 @@ import datetime,time
 from decorator import permission_check_admin
 from constant import *
 from sqlalchemy import or_
-USER_FUNCTION = ['SIGNUP','SIGNIN','RESETPWD','GETCODE','GETUSERS']
+USER_FUNCTION = ['SIGNUP','SIGNIN','RESETPWD','GETCODE','GETUSERS','USERCHARGE']
 ADMIN_FUNCTION = ['ADMINLOGIN','GETUSERS','CHANGEUSERTYPE']
 def process_admin(kwargs):
     ret = {}
@@ -40,7 +40,8 @@ def process_user(kwargs):
         ret = op_resetpwd(kwargs)
     elif function == 'GETCODE':
         ret = op_send_verifycode(kwargs)
-
+    elif function == 'USERCHARGE':
+        ret = op_user_charge(kwargs)
     return ret
 
 
@@ -158,13 +159,18 @@ def op_send_verifycode(kwargs):
     ret['code'] = 1
     return ret
 
-def op_deposit(kwargs):
+def op_user_charge(kwargs):
     ret={}
-    email = kwargs.args.get('email','')
-    deposit_type = kwargs.args.get('deposit_type','')
-    user = User.query.filter(User.email==email).first()
+    account = kwargs.args.get('account','')
+    cardpwd = kwargs.args.get('cardpwd','')
+    user = User.query.filter(User.phone==account).first()
     if not user:
        ret['msg'] = USER_NOT_EXIST
+       return ret
+
+    card = Card.query.filter(User.cardpwd==cardpwd).first()
+    if not card:
+       ret['msg'] = CARD_NOT_EXIST
        return ret
 
     ins = Deposit(userid=user.id, type=deposit_type)
@@ -175,6 +181,11 @@ def op_deposit(kwargs):
     ret['data'] = {}
 
     return ret
+
+
+    
+
+
 
 def process_calc(kwargs, index):
     arg1 = kwargs.args.get('arg1',0)
