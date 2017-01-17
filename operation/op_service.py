@@ -4,7 +4,7 @@ import hashlib
 import datetime,time
 from decorator import permission_check_admin
 from constant import *
-from sqlalchemy import or_
+from sqlalchemy import or_, and_
 USER_FUNCTION = ['SIGNUP','SIGNIN','RESETPWD','GETCODE','GETUSERS','USERCHARGE']
 ADMIN_FUNCTION = ['ADMINLOGIN','GETUSERS','CHANGEUSERTYPE']
 def process_admin(kwargs):
@@ -168,13 +168,20 @@ def op_user_charge(kwargs):
        ret['msg'] = USER_NOT_EXIST
        return ret
 
-    card = Card.query.filter(User.cardpwd==cardpwd).first()
+    card = Card.query.filter(and_(Card.cardpwd==cardpwd,Card.status==1)).first()
     if not card:
        ret['msg'] = CARD_NOT_EXIST
        return ret
 
-    ins = Deposit(userid=user.id, type=deposit_type)
-    db_session.add(ins)
+    if card.type == 1:
+        days = 30
+    elif card.type == 2:
+        days = 180
+    elif card.type == 3:
+        days = 365
+
+    user.validtime = user.validtime + datetime.timedelta(days=days)
+    card.status = 0
     db_session.commit()
 
     ret['msg'] = DEPOSIT_SUCCESS
