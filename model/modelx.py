@@ -62,12 +62,12 @@ class Deposit(Base):
 
 
 class Card(Base):
-	__tablename__ = 'card'
-	id = Column(Integer, primary_key=True)
-	number = Column(String(32))
-	type = Column(Integer)
+    __tablename__ = 'card'    
+    id = Column(Integer, primary_key=True)
+    number = Column(String(32))
+    type = Column(Integer)
 
-	def __init__(self, number, type):
+    def __init__(self, number, type):
         self.number = number
         self.type = type
 
