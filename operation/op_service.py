@@ -161,14 +161,14 @@ def op_send_verifycode(kwargs):
 
 def op_user_charge(kwargs):
     ret={}
-    account = kwargs.args.get('account','')
-    cardpwd = kwargs.args.get('cardpwd','')
-    user = User.query.filter(User.phone==account).first()
+    account = kwargs.args.get('account', '')
+    cardpwd = kwargs.args.get('cardpwd', '')
+    user = User.query.filter(User.phone == account).first()
     if not user:
        ret['msg'] = USER_NOT_EXIST
        return ret
 
-    card = Card.query.filter(and_(Card.cardpwd==cardpwd,Card.status==1)).first()
+    card = Card.query.filter(and_(Card.number == cardpwd, Card.status==1)).first()
     if not card:
        ret['msg'] = CARD_NOT_EXIST
        return ret

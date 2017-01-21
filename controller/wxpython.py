@@ -100,7 +100,7 @@ class MyApp(wx.App):
         	self.panel_signin.Hide()
         	self.panel_charge.Show()
         elif name == 'bCharge':
-        	print 'chognzhi'
+        	self.op_charge()
     def op_calc1(self):
         #import pdb;pdb.set_trace()
         url = URL_PREFIX + '/service?service=calc1&arg1=%s&arg2=%s&email=%s&token=%s'
@@ -234,6 +234,15 @@ class MyApp(wx.App):
         msg = response.get('msg')
         self.statusbar_login.SetStatusText(msg, 0)
     
+    def op_charge(self):
+        url = URL_PREFIX + '/service?service=user&function=usercharge&account=%s&cardpwd=%s'
+        account = self.account.GetValue()
+        cardpwd =  self.cardpwd.GetValue()
+        print account, cardpwd
+        url = url % (account, cardpwd)
+        response = requests.get(url).json()
+        msg = response.get('msg')
+        self.statusbar_login.SetStatusText(msg, 0)
 
     def init_login_frame(self):
         
