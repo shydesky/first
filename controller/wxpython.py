@@ -279,7 +279,7 @@ class MyApp(wx.App):
         self.panel_signup = wx.Panel(self.login_frame, wx.ID_ANY, size=(350,200), pos=(0,0))
 
         wx.StaticText(self.panel_signup, -1, u'手机号', pos=(20,20), size=wx.DefaultSize, style=0)
-        self.phone = wx.TextCtrl(self.panel_signup, -1, pos=(60,20), size=(100, 30), style=0, name="uout1")
+        self.phone_signup = wx.TextCtrl(self.panel_signup, -1, pos=(60,20), size=(100, 30), style=0, name="uout1")
         
         wx.StaticText(self.panel_signup, -1, u'邮箱', pos=(180,20), size=wx.DefaultSize, style=0)
         self.email = wx.TextCtrl(self.panel_signup, -1, pos=(220,20), size=(100, 30))
@@ -292,13 +292,13 @@ class MyApp(wx.App):
         self.signup_code = wx.TextCtrl(self.panel_signup, -1, pos=(220,60), size=(100, 30), style=0)
         wx.StaticText(self.panel_signup, -1, u"验证码", pos=(180,60), size=(80,30), name='sendCode_signup')
 
-        bGetCode_signup = wx.Button(self.panel_signup, -1, u"提交注册", pos=(60,100), size=(80,30), name='bGetCode_signup')
+        bGetCode_signup = wx.Button(self.panel_signup, -1, u"获取验证码", pos=(20,100), size=(80,30), name='bGetCode_signup')
         self.Bind(wx.EVT_BUTTON, self.OnButton, bGetCode_signup)
 
-        bSignup = wx.Button(self.panel_signup, -1, u"提交注册", pos=(60,100), size=(80,30), name='bSignup')
+        bSignup = wx.Button(self.panel_signup, -1, u"提交注册", pos=(120,100), size=(80,30), name='bSignup')
         self.Bind(wx.EVT_BUTTON, self.OnButton, bSignup)
 
-        bBack = wx.Button(self.panel_signup, -1, u"返回登录", pos=(180,100), size=(80,30), name='bBack')
+        bBack = wx.Button(self.panel_signup, -1, u"返回登录", pos=(220,100), size=(80,30), name='bBack')
         self.Bind(wx.EVT_BUTTON, self.OnButton, bBack)
         
         # self.panel_signin

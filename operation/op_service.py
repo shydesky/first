@@ -155,7 +155,7 @@ def op_send_verifycode(kwargs):
         ins = VerifyCode(userid=user.id, code=code, code_type=code_type, create_time=datetime.datetime.now())
 
     elif code_type == 2:
-        result = send_message_example(code, user.phone)
+        result = send_message_example(code, phone)
         if result.get('code') != 0:
             ret['msg'] = CODE_SERVICE_WRONG
             ret['data'] = {}
