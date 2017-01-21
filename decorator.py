@@ -8,7 +8,7 @@ def permission_check(func):
     @wraps(func)
     def new_func(*args, **kwargs):
         ret = {}
-        key = request.args.get('token', '')
+        key = request.args.get('key', '')
         phone = request.args.get('account', '')
         key = hashlib.md5(phone + key).hexdigest()
         user = User.query.filter(and_(User.clientKey == key, User.phone == phone)).first()
