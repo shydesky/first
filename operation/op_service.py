@@ -180,7 +180,7 @@ def op_user_charge(kwargs):
     elif card.type == 3:
         days = 365
 
-    user.validtime = user.validtime + datetime.timedelta(days=days)
+    user.validtime = user.valid_time + datetime.timedelta(days=days)
     card.status = 0
     db_session.commit()
 
