@@ -11,8 +11,13 @@ from wx.lib.wordwrap import wordwrap
 sys.path.append("libs")
 URL_PREFIX = 'http://101.200.151.176:5000'
 PWD_PREFIX = 'MDF'
-TOKEN = ''
-email_g = ''
+
+def get_user_token():
+    from bios_util import get_disk_info
+    return get_disk_info()
+TOKEN = get_user_token()
+print TOKEN
+account_g = ''
 class MyApp(wx.App):
     def __init__(self, redirect=False, filename=None):
         wx.App.__init__(self, redirect, filename)
@@ -24,7 +29,6 @@ class MyApp(wx.App):
         self.app_frame.Close()
 
     def OnMenu(self, event):
-        print 1
         # import pdb;pdb.set_trace()
         print event.GetEventObject().GetId()
     def OnKJYC(self, event): # 空间预测
@@ -71,12 +75,15 @@ class MyApp(wx.App):
                 self.init_app_frame()
                 self.login_frame.Hide()
                 self.app_frame.Show()
+                self.statusbar_login.SetStatusText('', 0)
         elif name == 'bNewUser':
             self.panel_signin.Hide()
             self.panel_signup.Show()
+            self.statusbar_login.SetStatusText('', 0)
         elif name == 'bBack':
             self.panel_signin.Show()
             self.panel_signup.Hide()
+            self.statusbar_login.SetStatusText('', 0)
         elif name == 'bLogout':
             self.op_logout()
             self.panel_signin.Show()
@@ -84,27 +91,32 @@ class MyApp(wx.App):
         elif name == 'bForgetPwd':
             self.panel_signin.Hide()
             self.panel_passwd.Show()
+            self.statusbar_login.SetStatusText('', 0)
         elif name == 'bGetCode':
             self.op_get_code()
         elif name == 'bResetPwd':
             if self.op_reset_passwd():
                 self.panel_signin.Show()
                 self.panel_passwd.Hide()
+                self.statusbar_login.SetStatusText('', 0)
         elif name == 'bBack_4':
             self.panel_signin.Show()
             self.panel_passwd.Hide()
+            self.statusbar_login.SetStatusText('', 0)
         elif name == 'bBack_charge':
-        	self.panel_signin.Show()
-        	self.panel_charge.Hide()
+            self.panel_signin.Show()
+            self.panel_charge.Hide()
+            self.statusbar_login.SetStatusText('', 0)
         elif name == 'bUserCharge':
-        	self.panel_signin.Hide()
-        	self.panel_charge.Show()
+            self.panel_signin.Hide()
+            self.panel_charge.Show()
+            self.statusbar_login.SetStatusText('', 0)
         elif name == 'bCharge':
-        	self.op_charge()
+            self.op_charge()
     def op_calc1(self):
         #import pdb;pdb.set_trace()
-        url = URL_PREFIX + '/service?service=calc1&arg1=%s&arg2=%s&email=%s&token=%s'
-        url = url % (self.param1.GetValue(),self.param2.GetValue(),email_g,TOKEN)
+        url = URL_PREFIX + '/service?service=calc1&arg1=%s&arg2=%s&account=%s&key=%s'
+        url = url % (self.param1.GetValue(),self.param2.GetValue(),account_g,TOKEN)
         #print url
         response = requests.get(url).json()
         #import pdb;pdb.set_trace()
@@ -122,8 +134,8 @@ class MyApp(wx.App):
         self.statusbar.SetStatusText(msg, 0)
 
     def op_calc2(self):
-        url = URL_PREFIX + '/service?service=calc2&arg1=%s&arg2=%s&email=%s&token=%s'
-        url = url % (self.param3.GetValue(),self.param4.GetValue(),email_g,TOKEN)
+        url = URL_PREFIX + '/service?service=calc2&arg1=%s&arg2=%s&account=%s&key=%s'
+        url = url % (self.param3.GetValue(),self.param4.GetValue(),account_g,TOKEN)
         #print url
         response = requests.get(url).json()
         #import pdb;pdb.set_trace()
@@ -143,11 +155,11 @@ class MyApp(wx.App):
 
     #登录
     def op_signin(self):
-        global email_g , TOKEN
-        email = self.email_signin.GetValue()
+        global account_g , TOKEN
+        phone = self.email_signin.GetValue()
         passwd = hashlib.md5(PWD_PREFIX + self.passwd_signin.GetValue()).hexdigest()
-        url = URL_PREFIX + '/service?service=user&function=signin&email=%s&passwd=%s'
-        url = url % (email,passwd)
+        url = URL_PREFIX + '/service?service=user&function=signin&account=%s&passwd=%s&token=%s'
+        url = url % (phone,passwd,TOKEN)
 
         response = requests.get(url).json()
         msg = response.get('msg')
@@ -155,16 +167,14 @@ class MyApp(wx.App):
         self.statusbar_login.SetStatusText(msg, 0)
         #print response
         if flag:
-            email_g = str(response.get('data').get('email'))
-            TOKEN = str(response.get('data').get('token'))
-            #usable = str(response.get('data').get('token'))
+            account_g = str(response.get('data').get('account'))
             return True
         else:
             return False
 
     #注册
     def op_signup(self):
-    	import pdb;pdb.set_trace()
+        global TOKEN
         phone = self.phone.GetValue()
         p_re = re.compile('^0\d{2,3}\d{7,8}$|^1[358]\d{9}$|^147\d{8}')
         phonematch=p_re.match(phone)
@@ -184,8 +194,8 @@ class MyApp(wx.App):
         if passwd != passwd_confirm:
             self.statusbar_login.SetStatusText(u'密码输入不一致！', 0)
             return
-        url = URL_PREFIX + '/service?service=user&function=signup&email=%s&passwd=%s&phone=%s'
-        url = url % (email, passwd, phone)
+        url = URL_PREFIX + '/service?service=user&function=signup&email=%s&passwd=%s&phone=%s&key=%s'
+        url = url % (email, passwd, phone, TOKEN)
         response = requests.get(url).json()
 
         msg = response.get('msg')
@@ -193,8 +203,8 @@ class MyApp(wx.App):
 
     #退出
     def op_logout(self):
-        global email_g , TOKEN
-        email_g = ''
+        global account_g , TOKEN
+        account_g = ''
         TOKEN = ''
         self.passwd_signin.SetValue('') 
         self.statusbar.SetStatusText(u'您已成功退出', 0)
@@ -238,7 +248,6 @@ class MyApp(wx.App):
         url = URL_PREFIX + '/service?service=user&function=usercharge&account=%s&cardpwd=%s'
         account = self.account.GetValue()
         cardpwd =  self.cardpwd.GetValue()
-        print account, cardpwd
         url = url % (account, cardpwd)
         response = requests.get(url).json()
         msg = response.get('msg')
@@ -509,6 +518,7 @@ class MyApp(wx.App):
 
         self.app_frame.SetMenuBar( menubar )
         self.app_frame.SetSize( wx.Size(w, h))
+
 
 if __name__ == '__main__':
     app = MyApp()

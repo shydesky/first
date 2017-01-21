@@ -53,8 +53,11 @@ def op_signup(kwargs):
     phone = kwargs.args.get('phone', '')
     passwd = kwargs.args.get('passwd', '')
     name = kwargs.args.get('name', '')
+    clientKey = kwargs.args.get('key', '')
     usertype = kwargs.args.get('usertype', '0')
-    users = User.query.filter(or_(User.email==email, User.phone==phone)).all()
+    users = User.query.filter(or_(User.email == email, User.phone == phone)).all()
+    hash_md5 = hashlib.md5(phone + clientKey)
+    clientKey = hash_md5.hexdigest()
 
     if users:
         ret['msg'] = USER_EXIST
@@ -62,7 +65,7 @@ def op_signup(kwargs):
         ret['code'] = 0
         return ret
 
-    user = User(name=name,email=email,phone=phone,passwd=passwd,clientKey='',usertype=usertype)
+    user = User(name=name,email=email,phone=phone,passwd=passwd,clientKey=clientKey,usertype=usertype)
     db_session.add(user)
     db_session.commit()
 
@@ -74,10 +77,10 @@ def op_signup(kwargs):
 def op_signin(kwargs):
     ret = {}
     data = {}
-    email = kwargs.args.get('email', '')
+    phone = kwargs.args.get('account', '')
     passwd = kwargs.args.get('passwd', '')
     userip = kwargs.remote_addr
-    user = User.query.filter(User.email==email).first()
+    user = User.query.filter(User.phone == phone).first()
 
     if not user:
         ret['msg'] = USER_NOT_EXIST
@@ -90,15 +93,11 @@ def op_signin(kwargs):
             ret['data'] = {}
             ret['code'] = 0
             return ret
-        hash_md5 = hashlib.md5(email + str(time.time()))
-        hash_md5 = hash_md5.hexdigest()
-        user.clientKey = hash_md5
+
         user.userip = userip
         db_session.commit()
-        data['token'] = hash_md5
-        data['email'] = user.email
-        data['usertype'] = user.usertype
 
+        data['account'] = user.phone
         ret['msg'] = SIGNIN_SUCCESS
         ret['data'] = data
         ret['code'] = 1
@@ -134,7 +133,7 @@ def op_resetpwd(kwargs):
 def op_send_verifycode(kwargs):
     import random,string
     from tool.tool_sms import send_message_example
-    ret={}
+    ret = {}
     email = kwargs.args.get('email','')
     code = ''.join(random.sample(string.ascii_letters + string.digits, 6))
     user = User.query.filter(User.email==email).first()
@@ -190,16 +189,12 @@ def op_user_charge(kwargs):
     return ret
 
 
-    
-
-
 
 def process_calc(kwargs, index):
     arg1 = kwargs.args.get('arg1',0)
     arg2 = kwargs.args.get('arg2',0)
     return op_calc(float(arg1), float(arg2), index)
 
-    
 
 def op_calc(arg1, arg2, index):
     ret = {}
@@ -230,8 +225,8 @@ def op_calc(arg1, arg2, index):
 
     ret['data'] = data
     ret['msg'] = CALC_SUCCESS
-    return ret    
-    
+    return ret
+
 @permission_check_admin
 def op_get_all_user():
     ret = {}

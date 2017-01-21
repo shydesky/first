@@ -1,18 +1,24 @@
 from model import *
 from flask import request
 from functools import wraps
+from constant import *
+import datetime
 
 def permission_check(func):
     @wraps(func)
     def new_func(*args, **kwargs):
         ret = {}
         key = request.args.get('token','')
-        email = request.args.get('email','')
-        user = User.query.filter(and_(User.clientKey==key,User.email==email)).filter(User.usertype!=0).first()
-        if user:
+        phone = request.args.get('account','')
+        user = User.query.filter(and_(User.clientKey == key, User.phone == phone)).first()
+        if not user:
+            ret['msg'] = 'Permission deny'
+            ret['data'] = {}
+            return ret
+        if user.valid_time > datetime.datetime.now().date():
             return func(*args, **kwargs)
         else:
-            ret['msg'] = 'Permission deny'
+            ret['msg'] = BALANCE_NOT_ENOUGH
             ret['data'] = {}
             return ret
     return new_func
