@@ -54,6 +54,7 @@ def op_signup(kwargs):
     passwd = kwargs.args.get('passwd', '')
     name = kwargs.args.get('name', '')
     clientKey = kwargs.args.get('key', '')
+    code = kwargs.args.get('code', '')
     usertype = kwargs.args.get('usertype', '0')
     users = User.query.filter(or_(User.email == email, User.phone == phone)).all()
     hash_md5 = hashlib.md5(phone + clientKey)
@@ -134,23 +135,35 @@ def op_send_verifycode(kwargs):
     import random,string
     from tool.tool_sms import send_message_example
     ret = {}
-    email = kwargs.args.get('email','')
-    code = ''.join(random.sample(string.ascii_letters + string.digits, 6))
-    user = User.query.filter(User.email==email).first()
+    phone = kwargs.args.get('phone','')
+    code_type = kwargs.args.get('type','')
+    code = ''.join(random.sample(string.ascii_letters + string.digits, 6)).lower()
+    if code_type == 1:
+        user = User.query.filter(User.phone==phone).first()
+        if not user:
+           ret['msg'] = USER_NOT_EXIST
+           ret['data'] = {}
+           ret['code'] = 0
+           return ret
+        result = send_message_example(code, user.phone)
+        if result.get('code') != 0:
+            ret['msg'] = CODE_SERVICE_WRONG
+            ret['data'] = {}
+            ret['code'] = 0
+            return ret
+        code = '000000' #temp code
+        ins = VerifyCode(userid=user.id, code=code, code_type=code_type, create_time=datetime.datetime.now())
 
-    if not user:
-       ret['msg'] = USER_NOT_EXIST
-       ret['data'] = {}
-       ret['code'] = 0
-       return ret
-    result = send_message_example(code, user.phone)
-    if result.get('code') != 0:
-        ret['msg'] = CODE_SERVICE_WRONG
-        ret['data'] = {}
-        ret['code'] = 0
-        return ret
-    code = '000000' #temp code
-    ins = VerifyCode(userid=user.id, code=code, create_time=datetime.datetime.now())
+    elif code_type == 2:
+        result = send_message_example(code, user.phone)
+        if result.get('code') != 0:
+            ret['msg'] = CODE_SERVICE_WRONG
+            ret['data'] = {}
+            ret['code'] = 0
+            return ret
+        code = '000000' #temp code
+        ins = VerifyCode(userid=0, code=code, code_type=code_type, create_time=datetime.datetime.now())
+
     db_session.add(ins)
     db_session.commit()
     ret['msg'] = VERIFYCODE_IS_SEND

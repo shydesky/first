@@ -94,6 +94,8 @@ class MyApp(wx.App):
             self.statusbar_login.SetStatusText('', 0)
         elif name == 'bGetCode':
             self.op_get_code()
+        elif name == 'bGetCode_signup':
+            self.op_get_code_signup()
         elif name == 'bResetPwd':
             if self.op_reset_passwd():
                 self.panel_signin.Show()
@@ -175,7 +177,7 @@ class MyApp(wx.App):
     #注册
     def op_signup(self):
         global TOKEN
-        phone = self.phone.GetValue()
+        phone = self.phone_signup.GetValue()
         p_re = re.compile('^0\d{2,3}\d{7,8}$|^1[358]\d{9}$|^147\d{8}')
         phonematch=p_re.match(phone)
         if not phonematch:
@@ -190,12 +192,13 @@ class MyApp(wx.App):
             return
 
         passwd = hashlib.md5(PWD_PREFIX + self.passwd.GetValue()).hexdigest()
-        passwd_confirm = hashlib.md5(PWD_PREFIX + self.passwd_confirm.GetValue()).hexdigest()
-        if passwd != passwd_confirm:
-            self.statusbar_login.SetStatusText(u'密码输入不一致！', 0)
-            return
-        url = URL_PREFIX + '/service?service=user&function=signup&email=%s&passwd=%s&phone=%s&key=%s'
-        url = url % (email, passwd, phone, TOKEN)
+        # passwd_confirm = hashlib.md5(PWD_PREFIX + self.passwd_confirm.GetValue()).hexdigest()
+        # if passwd != passwd_confirm:
+        #     self.statusbar_login.SetStatusText(u'密码输入不一致！', 0)
+        #     return
+        code = self.signup_code.GetValue()
+        url = URL_PREFIX + '/service?service=user&function=signup&email=%s&passwd=%s&phone=%s&key=%s&code=%s'
+        url = url % (email, passwd, phone, TOKEN, code)
         response = requests.get(url).json()
 
         msg = response.get('msg')
@@ -237,13 +240,26 @@ class MyApp(wx.App):
             return False
 
     def op_get_code(self):
-        url = URL_PREFIX + '/service?service=user&function=getcode&email=%s'
-        email = self.email_resetpwd.GetValue()
-        url = url % (email)
+        url = URL_PREFIX + '/service?service=user&function=getcode&phone=%s&type=1'
+        phone = self.phone.GetValue()
+        url = url % (phone)
         response = requests.get(url).json()
         msg = response.get('msg')
         self.statusbar_login.SetStatusText(msg, 0)
     
+    def op_get_code_signup(self):
+        url = URL_PREFIX + '/service?service=user&function=getcode&phone=%s&type=2'
+        phone = self.phone_signup.GetValue()
+        p_re = re.compile('^0\d{2,3}\d{7,8}$|^1[358]\d{9}$|^147\d{8}')
+        phonematch=p_re.match(phone)
+        if not phonematch:
+            self.statusbar_login.SetStatusText(u'手机号码无效！', 0)
+            return
+        url = url % (phone)
+        response = requests.get(url).json()
+        msg = response.get('msg')
+        self.statusbar_login.SetStatusText(msg, 0)
+
     def op_charge(self):
         url = URL_PREFIX + '/service?service=user&function=usercharge&account=%s&cardpwd=%s'
         account = self.account.GetValue()
@@ -263,21 +279,26 @@ class MyApp(wx.App):
         self.panel_signup = wx.Panel(self.login_frame, wx.ID_ANY, size=(350,200), pos=(0,0))
 
         wx.StaticText(self.panel_signup, -1, u'手机号', pos=(20,20), size=wx.DefaultSize, style=0)
-        self.phone = wx.TextCtrl(self.panel_signup, -1, pos=(85,20), size=wx.DefaultSize, style=0, name="uout1")
+        self.phone = wx.TextCtrl(self.panel_signup, -1, pos=(60,20), size=(100, 30), style=0, name="uout1")
         
-        wx.StaticText(self.panel_signup, -1, u'邮箱', pos=(20,60), size=wx.DefaultSize, style=0)
-        self.email = wx.TextCtrl(self.panel_signup, -1, pos=(85,60), size=wx.DefaultSize)
+        wx.StaticText(self.panel_signup, -1, u'邮箱', pos=(180,20), size=wx.DefaultSize, style=0)
+        self.email = wx.TextCtrl(self.panel_signup, -1, pos=(220,20), size=(100, 30))
 
-        wx.StaticText(self.panel_signup, -1, u'密码', pos=(20,100), size=wx.DefaultSize, style=0)
-        self.passwd = wx.TextCtrl(self.panel_signup, -1, pos=(85,100), size=wx.DefaultSize, style=wx.TE_PASSWORD)
+        wx.StaticText(self.panel_signup, -1, u'密码', pos=(20,60), size=wx.DefaultSize, style=0)
+        self.passwd = wx.TextCtrl(self.panel_signup, -1, pos=(60,60), size=(100, 30), style=wx.TE_PASSWORD)
 
-        wx.StaticText(self.panel_signup, -1, u'密码确认', pos=(20,140), size=wx.DefaultSize, style=0)
-        self.passwd_confirm = wx.TextCtrl(self.panel_signup, -1, pos=(85,140), size=wx.DefaultSize, style=wx.TE_PASSWORD)
+        # wx.StaticText(self.panel_signup, -1, u'密码确认', pos=(20,140), size=wx.DefaultSize, style=0)
+        # self.passwd_confirm = wx.TextCtrl(self.panel_signup, -1, pos=(85,140), size=wx.DefaultSize, style=wx.TE_PASSWORD)
+        self.signup_code = wx.TextCtrl(self.panel_signup, -1, pos=(220,60), size=(100, 30), style=0)
+        wx.StaticText(self.panel_signup, -1, u"验证码", pos=(180,60), size=(80,30), name='sendCode_signup')
 
-        bSignup = wx.Button(self.panel_signup, -1, u"提交注册", pos=(220,20), size=(80,30), name='bSignup')
+        bGetCode_signup = wx.Button(self.panel_signup, -1, u"提交注册", pos=(60,100), size=(80,30), name='bGetCode_signup')
+        self.Bind(wx.EVT_BUTTON, self.OnButton, bGetCode_signup)
+
+        bSignup = wx.Button(self.panel_signup, -1, u"提交注册", pos=(60,100), size=(80,30), name='bSignup')
         self.Bind(wx.EVT_BUTTON, self.OnButton, bSignup)
 
-        bBack = wx.Button(self.panel_signup, -1, u"返回登录", pos=(220,60), size=(80,30), name='bBack')
+        bBack = wx.Button(self.panel_signup, -1, u"返回登录", pos=(180,100), size=(80,30), name='bBack')
         self.Bind(wx.EVT_BUTTON, self.OnButton, bBack)
         
         # self.panel_signin
