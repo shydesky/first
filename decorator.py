@@ -16,7 +16,7 @@ def permission_check(func):
             ret['msg'] = 'Permission deny'
             ret['data'] = {}
             return ret
-        if user.valid_time > datetime.datetime.now().date():
+        if user.valid_time > datetime.datetime.now():
             return func(*args, **kwargs)
         else:
             ret['msg'] = BALANCE_NOT_ENOUGH
