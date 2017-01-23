@@ -9,7 +9,7 @@ import json
 import re
 from wx.lib.wordwrap import wordwrap
 sys.path.append("libs")
-URL_PREFIX = 'http://101.200.151.176:5000'
+URL_PREFIX = 'http://www.thestormeye.com:5000'
 PWD_PREFIX = 'MDF'
 
 def get_user_token():
