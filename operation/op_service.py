@@ -136,7 +136,7 @@ def op_send_verifycode(kwargs):
     from tool.tool_sms import send_message_example
     ret = {}
     phone = kwargs.args.get('phone','')
-    code_type = kwargs.args.get('type','')
+    code_type = int(kwargs.args.get('type', 0))
     code = ''.join(random.sample(string.ascii_letters + string.digits, 6)).lower()
     if code_type == 1:
         user = User.query.filter(User.phone==phone).first()
