@@ -28,7 +28,7 @@ def download():
     return service.process_download()
 
 @app.route("/information", methods=['POST', 'GET'])
-def download():
+def information():
     return service.process_information()
 
 @app.teardown_appcontext

@@ -26,7 +26,8 @@ def init_information():
 
     msg = response.get('msg')
     data = response.get('data')
-    info_gywm_g = data
+    info_gywm_g = data.get('gywo')
+    info_lxwm_g = data.get('lxwm')
 
 account_g = ''
 class MyApp(wx.App):
@@ -175,7 +176,6 @@ class MyApp(wx.App):
         passwd = hashlib.md5(PWD_PREFIX + self.passwd_signin.GetValue()).hexdigest()
         url = URL_PREFIX + '/service?service=user&function=signin&account=%s&passwd=%s&token=%s'
         url = url % (phone,passwd,TOKEN)
-
         response = requests.get(url).json()
         msg = response.get('msg')
         flag = response.get('code')
