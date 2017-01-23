@@ -16,7 +16,18 @@ def get_user_token():
     from bios_util import get_disk_info
     return get_disk_info()
 TOKEN = get_user_token()
-print TOKEN
+
+info_gywm_g = u'风暴眼外汇计算工具\n著作人:王岩，联合出品人:黄伟\n更多详细信息请登录www.thestormeye.com'
+info_lxwm_g = 'email: hag_kane@sina.com'
+def init_information():
+    url = URL_PREFIX + '/service?service=information'
+    #print url
+    response = requests.get(url).json()
+
+    msg = response.get('msg')
+    data = response.get('data')
+    info_gywm_g = data
+
 account_g = ''
 class MyApp(wx.App):
     def __init__(self, redirect=False, filename=None):
@@ -51,12 +62,14 @@ class MyApp(wx.App):
         webbrowser.open(url)
 
     def OnGY(self, event):  # 关于
-        dlg = wx.MessageDialog(parent=None, message=u"我们是风暴眼", caption=u"关于我们", style=wx.YES_NO)
+        dlg = wx.MessageDialog(parent=None, message=info_gywm_g, caption=u"关于我们", style=wx.OK)
         dlg.ShowModal()
     def OnLXWM(self, event): # 联系我们
-        pass 
+        dlg = wx.MessageDialog(parent=None, message=info_lxwm_g, caption=u"联系我们", style=wx.OK)
+        dlg.ShowModal()
     def OnZXGX(self, event): # 在线更新
-        pass   
+        url = URL_PREFIX + '/download'
+        webbrowser.open(url)
     def OnAbout(self, event):
         pass
 
@@ -444,7 +457,7 @@ class MyApp(wx.App):
         # first row
         FIRST_H = tc_delta + 20
         
-        wx.StaticText(self.kjyc_panel, -1, u'S', pos=(40,FIRST_H), size=wx.DefaultSize, style=0)
+        wx.StaticText(self.kjyc_panel, -1, u'L', pos=(40,FIRST_H), size=wx.DefaultSize, style=0)
         wx.StaticText(self.kjyc_panel, -1, u'H', pos=(100,FIRST_H), size=wx.DefaultSize, style=0)
         t_out1 = wx.StaticText(self.kjyc_panel, -1, u'结果1', pos=(right_base_x,FIRST_H), size=wx.DefaultSize, style=0)
         t_out2 = wx.StaticText(self.kjyc_panel, -1, u'结果2', pos=(right_base_x+175,FIRST_H), size=wx.DefaultSize, style=0)
@@ -491,7 +504,7 @@ class MyApp(wx.App):
         wx.StaticLine(self.kjyc_panel, -1, (0, FORTH_H+60), (1000, 1))
         #fifth row
         FIFTH_H = tc_delta + 280
-        wx.StaticText(self.kjyc_panel, -1, u'S', pos=(40,FIFTH_H), size=(50,20), style=0)
+        wx.StaticText(self.kjyc_panel, -1, u'L', pos=(40,FIFTH_H), size=(50,20), style=0)
         wx.StaticText(self.kjyc_panel, -1, u'H', pos=(100,FIFTH_H), size=(50,20), style=0)
         
         d_out1 = wx.StaticText(self.kjyc_panel, -1, u'结果1', pos=(right_base_x,FIFTH_H), size=wx.DefaultSize, style=0)

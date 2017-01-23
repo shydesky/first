@@ -27,6 +27,10 @@ def admin():
 def download():
     return service.process_download()
 
+@app.route("/information", methods=['POST', 'GET'])
+def download():
+    return service.process_information()
+
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     db_session.remove()

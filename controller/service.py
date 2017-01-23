@@ -5,7 +5,7 @@ from decorator import permission_check, permission_check_admin
 
 def process():
     ret = {}
-    service_name = request.args.get('service','')
+    service_name = request.args.get('service', '')
     if not service_name:
         return ret
     elif service_name[0:4] == 'calc':
@@ -35,3 +35,6 @@ def process_admin():
 
 def process_download():
     return op_download.op_download_app()
+
+def process_information():
+    return op_service.op_get_information()

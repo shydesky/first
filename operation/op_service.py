@@ -282,8 +282,8 @@ def op_admin_login(kwargs):
 def op_admin_change_user_type(request):
     ret = {}
     data = {}
-    email = request.form['email']   
-    usertype = request.form['usertype']   
+    email = request.form['email']
+    usertype = request.form['usertype']
     user = User.query.filter(User.email == email).first()
     if not user:
         ret['msg'] = USER_NOT_EXIST
@@ -294,4 +294,14 @@ def op_admin_change_user_type(request):
         db_session.close()
         ret['msg'] = SUCCESS
         ret['data'] = data
+    return ret
+
+
+def op_get_information():
+    ret = {}
+    data = {}
+    data['gywm'] = u'风暴眼外汇计算工具\n著作人:王岩，联合出品人:黄伟\n更多详细信息请登录www.thestormeye.com'
+    data['lxwm'] = 'Email: hag_kane@sina.com'
+    ret['msg'] = SUCCESS
+    ret['data'] = data
     return ret
