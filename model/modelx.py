@@ -35,12 +35,14 @@ class VerifyCode(Base):
     id = Column(Integer, primary_key=True) 
     userid = Column(Integer)
     code = Column(String(50))
+    code_type = Column(Integer)
     create_time = Column(DateTime, default=datetime.datetime.now())
-    
-    def __init__(self, userid=0, code='000000', create_time=datetime.datetime.now()):
+
+    def __init__(self, userid=0, code='000000', code_type=0, create_time=datetime.datetime.now()):
         self.userid = userid
         self.code = code
         self.create_time = create_time
+        self.code_type = code_type
 
     def __repr__(self):
         return '<VerifyCode %r>' % (self.code)
