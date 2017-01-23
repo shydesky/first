@@ -65,7 +65,7 @@ def op_signup(kwargs):
         ret['data'] = data
         ret['code'] = 0
         return ret
-    is_valid_code = VerifyCode.query.filter(and_(VerifyCode.code == code, VerifyCode.code_type == 1)).first()
+    is_valid_code = VerifyCode.query.filter(and_(VerifyCode.code == code, VerifyCode.code_type == 2)).first()
     if not is_valid_code:
         ret['msg'] = VERIFYCODE_IS_INVALID
         ret['data'] = data
