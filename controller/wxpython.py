@@ -271,7 +271,7 @@ class MyApp(wx.App):
 
     def init_login_frame(self):
         
-        self.login_frame = wx.Frame(None, wx.ID_ANY, title=u'用户登录', size=(350,200),
+        self.login_frame = wx.Frame(None, wx.ID_ANY, title=u'风暴眼科技--用户登录', size=(350,200),
             style=wx.SYSTEM_MENU|wx.MINIMIZE_BOX|wx.CLOSE_BOX|wx.CAPTION)
         self.statusbar_login = self.login_frame.CreateStatusBar()
         self.statusbar_login.SetFieldsCount(1)

@@ -21,8 +21,11 @@ def service_adapter2():
 
 @app.route("/admin1")
 def admin():
-    return  render_template('ss.html')
+    return render_template('ss.html')
 
+@app.route("/download", methods=['POST', 'GET'])
+def download():
+    return service.process_download()
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):

@@ -1,6 +1,6 @@
 from flask import Flask
 from flask import request, make_response
-from operation import op_service
+from operation import op_service, op_download
 from decorator import permission_check, permission_check_admin
 
 def process():
@@ -33,3 +33,5 @@ def process_admin():
         resp.set_cookie('user', ret.get('key'))
     return ret
 
+def process_download():
+    return op_download.get_download_app()
