@@ -34,4 +34,4 @@ def process_admin():
     return ret
 
 def process_download():
-    return op_download.get_download_app()
+    return op_download.op_download_app()
