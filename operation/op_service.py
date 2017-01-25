@@ -160,7 +160,6 @@ def op_send_verifycode(kwargs):
             ret['data'] = {}
             ret['code'] = 0
             return ret
-        code = '000000' #temp code
         is_valid_code = VerifyCode.query.filter(and_(VerifyCode.userid == user.id, VerifyCode.code_type == 1)).first()
         if is_valid_code:
             is_valid_code.code = code
@@ -180,7 +179,6 @@ def op_send_verifycode(kwargs):
             ret['code'] = 0
             return ret
 
-        code = '000000' #temp code
         ins = VerifyCode(userid=0, code=code, code_type=code_type, create_time=datetime.datetime.now())
         db_session.add(ins)
         db_session.commit()
