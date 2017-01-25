@@ -105,6 +105,8 @@ def op_signin(kwargs):
         db_session.commit()
 
         data['account'] = user.phone
+        data['validtime'] = str(user.valid_time.date())
+
         ret['msg'] = SIGNIN_SUCCESS
         ret['data'] = data
         ret['code'] = 1
@@ -144,7 +146,8 @@ def op_send_verifycode(kwargs):
     phone = kwargs.args.get('phone','')
     code_type = int(kwargs.args.get('type', 0))
     code = ''.join(random.sample(string.ascii_letters + string.digits, 6)).lower()
-    if code_type == 1:
+    now = datetime.datetime.now()
+    if code_type == 1: # forget password send code
         user = User.query.filter(User.phone==phone).first()
         if not user:
            ret['msg'] = USER_NOT_EXIST
@@ -158,20 +161,30 @@ def op_send_verifycode(kwargs):
             ret['code'] = 0
             return ret
         code = '000000' #temp code
-        ins = VerifyCode(userid=user.id, code=code, code_type=code_type, create_time=datetime.datetime.now())
+        is_valid_code = VerifyCode.query.filter(and_(VerifyCode.userid == user.id, VerifyCode.code_type == 1)).first()
+        if is_valid_code:
+            is_valid_code.code = code
+            is_valid_code.create_time = now
+            db_session.commit()
 
-    elif code_type == 2:
+        else:
+            ins = VerifyCode(userid=user.id, code=code, code_type=code_type, create_time=now)
+            db_session.add(ins)
+            db_session.commit()
+
+    elif code_type == 2: # signup send code
         result = send_message_example(code, phone)
         if result.get('code') != 0:
             ret['msg'] = CODE_SERVICE_WRONG
             ret['data'] = {}
             ret['code'] = 0
             return ret
+
         code = '000000' #temp code
         ins = VerifyCode(userid=0, code=code, code_type=code_type, create_time=datetime.datetime.now())
+        db_session.add(ins)
+        db_session.commit()
 
-    db_session.add(ins)
-    db_session.commit()
     ret['msg'] = VERIFYCODE_IS_SEND
     ret['data'] = {}
     ret['code'] = 1
@@ -197,8 +210,12 @@ def op_user_charge(kwargs):
         days = 180
     elif card.type == 3:
         days = 365
-
-    user.valid_time = user.valid_time + datetime.timedelta(days=days)
+      
+    now = datetime.datetime.now()
+    if now > user.valid_time:
+        user.valid_time = now + datetime.timedelta(days=days)
+    else:   
+        user.valid_time = user.valid_time + datetime.timedelta(days=days)
     card.status = 0
     db_session.commit()
 

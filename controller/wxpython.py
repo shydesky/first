@@ -183,6 +183,15 @@ class MyApp(wx.App):
         #print response
         if flag:
             account_g = str(response.get('data').get('account'))
+            validtime = str(response.get('data').get('validtime'))
+            message = u'尊敬的用戶您好,感謝你使用風暴眼科技外匯計算器工具。\n您當前的使用有效期至'\
+                      + validtime + u'，如您想在服務到期之後繼續使用，請及時充值.'
+            if str(datetime.datetime.now().date()) > validtime:
+                message = u'尊敬的用戶您好,感謝你使用風暴眼科技外匯計算器工具。\n您當前的使用有效期至'\
+                          + validtime + u'，現已過期，請及時充值.'
+            
+            dlg = wx.MessageDialog(parent=None, message=message, caption=u'溫馨提示', style=wx.OK)
+            dlg.ShowModal()
             return True
         else:
             return False
