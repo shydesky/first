@@ -9,6 +9,7 @@ def send_message_example(code,phone):
         "pas": "nf4wxhx9",
         "mob": phone,
         "cid": "inLaXL7UPnaJ",
+        "p1": code,
         "con": '【微米】您的验证码是：%s，10分钟内有效。如非您本人操作，可忽略本消息。' % code,
         "type": "json"
     },timeout=3, verify=False);
