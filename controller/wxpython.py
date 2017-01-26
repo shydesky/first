@@ -52,6 +52,7 @@ class MyApp(wx.App):
         url = 'http://vip.stock.finance.sina.com.cn/forex/view/vDailyFX_More.php'
         webbrowser.open(url)
 
+
     def OnCJZZ(self, event): # 财经主站 
         if event.GetId() == wx.ID_CJZZ_ZGCJ:
             url = 'http://finance.fecn.net/'
@@ -63,17 +64,18 @@ class MyApp(wx.App):
             url = 'http://money.sohu.com/waihui/'
         webbrowser.open(url)
 
+
     def OnGY(self, event):  # 关于
         dlg = wx.MessageDialog(parent=None, message=info_gywm_g, caption=u"关于我们", style=wx.OK)
         dlg.ShowModal()
+
     def OnLXWM(self, event): # 联系我们
         dlg = wx.MessageDialog(parent=None, message=info_lxwm_g, caption=u"联系我们", style=wx.OK)
         dlg.ShowModal()
+
     def OnZXGX(self, event): # 在线更新
         url = URL_PREFIX + '/download'
         webbrowser.open(url)
-    def OnAbout(self, event):
-        pass
 
     def OnButton(self, evt):
         #Button的响应事件
@@ -130,6 +132,7 @@ class MyApp(wx.App):
             self.statusbar_login.SetStatusText('', 0)
         elif name == 'bCharge':
             self.op_charge()
+
     def op_calc1(self):
         #import pdb;pdb.set_trace()
         url = URL_PREFIX + '/service?service=calc1&arg1=%s&arg2=%s&account=%s&key=%s'
@@ -137,7 +140,6 @@ class MyApp(wx.App):
         #print url
         response = requests.get(url).json()
         #import pdb;pdb.set_trace()
-        #print self.param1.GetValue() + self.param2.GetValue()
         msg = response.get('msg')
         data = response.get('data')
         self.uout1.SetValue(str(data.get('X1')))
@@ -181,7 +183,6 @@ class MyApp(wx.App):
         msg = response.get('msg')
         flag = response.get('code')
         self.statusbar_login.SetStatusText(msg, 0)
-        #print response
         if flag:
             account_g = str(response.get('data').get('account'))
             validtime = str(response.get('data').get('validtime'))
@@ -215,10 +216,6 @@ class MyApp(wx.App):
             return
 
         passwd = hashlib.md5(PWD_PREFIX + self.passwd.GetValue()).hexdigest()
-        # passwd_confirm = hashlib.md5(PWD_PREFIX + self.passwd_confirm.GetValue()).hexdigest()
-        # if passwd != passwd_confirm:
-        #     self.statusbar_login.SetStatusText(u'密码输入不一致！', 0)
-        #     return
         code = self.signup_code.GetValue()
         url = URL_PREFIX + '/service?service=user&function=signup&email=%s&passwd=%s&phone=%s&key=%s&code=%s'
         url = url % (email, passwd, phone, TOKEN, code)
@@ -236,9 +233,9 @@ class MyApp(wx.App):
         self.statusbar.SetStatusText(u'您已成功退出', 0)
 
     def op_reset_passwd(self):
-        url = URL_PREFIX + '/service?service=user&function=resetpwd&email=%s&verifycode=%s&passwd=%s'
-        email = self.email_resetpwd.GetValue()
-        if not email:
+        url = URL_PREFIX + '/service?service=user&function=resetpwd&phone=%s&verifycode=%s&passwd=%s'
+        phone = self.phone_resetpwd.GetValue()
+        if not phone:
             self.statusbar_login.SetStatusText(u'邮箱不能为空！', 0)
             return False
         code = self.reset_code.GetValue()
@@ -250,7 +247,7 @@ class MyApp(wx.App):
             self.statusbar_login.SetStatusText(u'请填写新密码！', 0)
             return False
         newpasswd = hashlib.md5(PWD_PREFIX + newpasswd).hexdigest()
-        url = url % (email, code, newpasswd)
+        url = url % (phone, code, newpasswd)
         response = requests.get(url).json()
 
         msg = response.get('msg')
@@ -347,7 +344,7 @@ class MyApp(wx.App):
         # panel_passwd
         self.panel_passwd = wx.Panel(self.login_frame, wx.ID_ANY, size=(350,200), pos=(0,0))
         wx.StaticText(self.panel_passwd, -1, u'账号：', pos=(20,20), size=wx.DefaultSize, style=0)
-        self.email_resetpwd = wx.TextCtrl(self.panel_passwd, -1, pos=(85,20), size=wx.DefaultSize, style=0)
+        self.phone_resetpwd = wx.TextCtrl(self.panel_passwd, -1, pos=(85,20), size=wx.DefaultSize, style=0)
 
         wx.StaticText(self.panel_passwd, -1, u'新密码：', pos=(20,60), size=wx.DefaultSize, style=0)
         self.newpasswd = wx.TextCtrl(self.panel_passwd, -1, pos=(85,60), size=wx.DefaultSize, style=0)

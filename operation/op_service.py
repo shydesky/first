@@ -115,11 +115,11 @@ def op_signin(kwargs):
 def op_resetpwd(kwargs):
     ret = {}
     data = {}
-    email = kwargs.args.get('email','')
+    phone = kwargs.args.get('phone','')
     passwd = kwargs.args.get('passwd','')
     verifycode = kwargs.args.get('verifycode','')
 
-    user = User.query.filter(User.email==email).first()
+    user = User.query.filter(User.phone==phone).first()
     if not user:
        ret['msg'] = USER_NOT_EXIST
        ret['code'] = 0
@@ -127,7 +127,7 @@ def op_resetpwd(kwargs):
 
     vcode = VerifyCode.query.filter(VerifyCode.userid==user.id).order_by(desc(VerifyCode.create_time)).first()
     if vcode and (vcode.code == verifycode) and ((datetime.datetime.now() - vcode.create_time).seconds < 600):
-        user = User.query.filter(User.email==email).first()
+        user = User.query.filter(User.phone==phone).first()
         user.passwd = passwd
         db_session.commit()
         ret['msg'] = PASSWORD_RESET_SUCCESS

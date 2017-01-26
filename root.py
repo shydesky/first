@@ -35,5 +35,9 @@ def information():
 def shutdown_session(exception=None):
     db_session.remove()
 
+
+def application():
+    app.run(host='0.0.0.0')
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
+
