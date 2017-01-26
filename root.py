@@ -23,6 +23,10 @@ def service_adapter2():
 def admin():
     return render_template('ss.html')
 
+@app.route("/admin_login")
+def admin_login():
+	return render_template('admin_login.html')
+
 @app.route("/download", methods=['POST', 'GET'])
 def download():
     return service.process_download()
