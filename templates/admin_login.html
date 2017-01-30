@@ -70,9 +70,9 @@
         	var username = document.loginForm.username;
         	var password = document.loginForm.password;
             $.ajax({
-                url:  "admin", 
+                url:  "/admin/login", 
                 type: "Post",
-                data: {'email':user.email,'usertype':user.usertype},
+                data: {'name':username,'passwd':password},
                 success: function (response) {
                     alert('保存成功');
                 }
