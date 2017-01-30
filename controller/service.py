@@ -32,7 +32,7 @@ def process_admin():
     ret = op_service.op_admin_login(username, password)
     if ret.get('key',None):
         resp.set_cookie('user', ret.get('key'))
-    return ret
+    return resp
 
 def process_download():
     return op_download.op_download_app()
