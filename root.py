@@ -18,15 +18,12 @@ def service_adapter():
 def admin():
     return render_template('ss.html')
 
-@app.route("/admin/login", methods=['GET'])
+@app.route("/admin/login", methods=['GET','POST'])
 def admin_login():
-	return render_template('admin_login.html')
-
-
-@app.route("/admin/login", methods=['POST'])
-@jsonapi
-def admin_login():
-	return service.process_admin()
+    if request.method == 'GET':
+        return render_template('admin_login.html')
+    elif request.method == 'POST':
+        return service.process_admin()
 
 @app.route("/download", methods=['POST', 'GET'])
 def download():
