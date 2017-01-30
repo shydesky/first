@@ -273,12 +273,10 @@ def op_get_all_user():
     ret['data'] = data
     return ret
 
-def op_admin_login(kwargs):
+def op_admin_login(name, passwd):
     ret = {}
     data = {}
 
-    name = request.form['name']
-    passwd = request.form['passwd']
     admin = User.query.filter(and_(AdminUser.name == name,AdminUser.passwd==passwd)).first()
     if not admin:
         ret['msg'] = ADMIN_USER_NOT_EXIST
