@@ -277,7 +277,7 @@ def op_admin_login(name, passwd):
     ret = {}
     data = {}
 
-    admin = User.query.filter(and_(AdminUser.name == name,AdminUser.passwd==passwd)).first()
+    admin = AdminUser.query.filter(and_(AdminUser.name == name,AdminUser.passwd==passwd)).first()
     if not admin:
         ret['msg'] = ADMIN_USER_NOT_EXIST
         ret['data'] = {}
