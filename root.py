@@ -19,7 +19,7 @@ def admin():
     return render_template('ss.html')
 
 @app.route("/admin/users", methods=['GET','POST'])
-def admin():
+def admin_user():
     return service.process_user_list()
 
 @app.route("/admin/login", methods=['GET','POST'])
