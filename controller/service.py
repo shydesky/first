@@ -34,8 +34,8 @@ def process_admin():
     username = request.form['username']
     password = request.form['password']
     ret = op_service.op_admin_login(username, password)
-    if ret.get('key',None):
-        resp.set_cookie('user', ret.get('key'))
+    if ret.get('data').get('key',None):
+        resp.set_cookie('user', ret.get('data').get('key'))
     return resp
 
 def process_download():

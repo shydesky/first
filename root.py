@@ -19,6 +19,7 @@ def admin():
     return render_template('ss.html')
 
 @app.route("/admin/users", methods=['GET','POST'])
+@jsonapi
 def admin_user():
     return service.process_user_list()
 
