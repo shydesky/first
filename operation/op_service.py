@@ -17,12 +17,12 @@ def process_admin(kwargs):
         return ret
     elif function == 'GETUSERS':
         ret = op_get_all_user()
-    elif function == 'ADMINLOGIN':
-        ret = op_admin_login(kwargs)
+    # elif function == 'ADMINLOGIN':
+    #     ret = op_admin_login(kwargs)
     elif function == 'CHANGEUSERTYPE':
         ret = op_admin_change_user_type(kwargs)
     return ret
-
+    
 
 def process_user(kwargs):
     ret = {}
@@ -276,8 +276,9 @@ def op_get_all_user():
 def op_admin_login(kwargs):
     ret = {}
     data = {}
-    name = kwargs.args.get('name','')
-    passwd = kwargs.args.get('passwd','')
+
+    name = request.form['name']
+    passwd = request.form['passwd']
     admin = User.query.filter(and_(AdminUser.name == name,AdminUser.passwd==passwd)).first()
     if not admin:
         ret['msg'] = ADMIN_USER_NOT_EXIST

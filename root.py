@@ -14,18 +14,19 @@ def hello():
 def service_adapter():
     return service.process()
 
-@app.route("/admin", methods=['POST', 'GET'])
-@jsonapi
-def service_adapter2():
-    return service.process()
-
 @app.route("/admin1")
 def admin():
     return render_template('ss.html')
 
-@app.route("/admin_login")
+@app.route("/admin/login", methods=['GET'])
 def admin_login():
 	return render_template('admin_login.html')
+
+
+@app.route("/admin/login", methods=['POST'])
+@jsonapi
+def admin_login():
+	return service.process_admin()
 
 @app.route("/download", methods=['POST', 'GET'])
 def download():

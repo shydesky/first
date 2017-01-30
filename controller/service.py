@@ -25,10 +25,9 @@ def process_user():
     ret = op_service.process_user(request)
     return ret
 
-
 def process_admin():
     resp = make_response()
-    ret = op_service.process_admin(request)
+    ret = op_service.op_admin_login()
     if ret.get('key',None):
         resp.set_cookie('user', ret.get('key'))
     return ret

@@ -1,6 +1,7 @@
 <html>
+<script src='http://libs.baidu.com/jquery/1.11.1/jquery.min.js'></script>
 <head>
-    <title>登录界面</title>
+    <title>admin</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <script type="text/javascript">
         //窗体改变大小时触发事件
@@ -62,6 +63,20 @@
                 alert("请输入密码");
                 return false;
             }
+        }
+
+        //check admin user
+        function checkAdminUser(){
+        	var username = document.loginForm.username;
+        	var password = document.loginForm.password;
+            $.ajax({
+                url:  "admin", 
+                type: "Post",
+                data: {'email':user.email,'usertype':user.usertype},
+                success: function (response) {
+                    alert('保存成功');
+                }
+            });
         }
     </script>
 </head>
