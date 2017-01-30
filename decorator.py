@@ -29,8 +29,7 @@ def permission_check_admin(func):
     @wraps(func)
     def new_func(*args, **kwargs):
         ret = {}
-        #key = request.cookies.get('user','')
-        key = 'mdf1234'
+        key = request.cookies.get('user','')
         admin = AdminUser.query.filter(AdminUser.key==key).first()
         if admin:
             return func(*args, **kwargs)

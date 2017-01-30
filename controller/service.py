@@ -1,6 +1,6 @@
 from flask import Flask
 from flask import request, make_response
-from operation import op_service, op_download
+from operation import op_service, op_download, op_get_all_user
 from decorator import permission_check, permission_check_admin
 
 def process():
@@ -14,6 +14,10 @@ def process():
         ret = process_user()
     elif service_name == 'admin':
         ret = process_admin()
+    return ret
+
+def process_user_list():
+    ret = op_get_all_user()
     return ret
 
 @permission_check

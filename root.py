@@ -18,6 +18,10 @@ def service_adapter():
 def admin():
     return render_template('ss.html')
 
+@app.route("/admin/users", methods=['GET','POST'])
+def admin():
+    return service.process_user_list()
+
 @app.route("/admin/login", methods=['GET','POST'])
 def admin_login():
     if request.method == 'GET':
