@@ -9,6 +9,10 @@ app = Flask(__name__, static_url_path='')
 def hello():
     return "Hello World!"
 
+@app.route("/index")
+def index():
+    return "Hello World!"
+
 @app.route("/service", methods=['POST', 'GET'])
 @jsonapi
 def service_adapter():
