@@ -25,7 +25,6 @@ def admin():
     return render_template('ss.html')
 
 @app.route("/admin/card", methods=['POST', 'GET'])
-@jsonapi
 def card():
     if request.method == 'GET':
         return render_template('card.html')

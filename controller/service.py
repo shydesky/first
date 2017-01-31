@@ -49,4 +49,5 @@ def process_card():
     card = request.form['card']
     cardtype = request.form['card_type']
     op_service.op_set_card(card, cardtype)
+    flash('you input valid number, success!')
     return redirect(url_for('card'))
