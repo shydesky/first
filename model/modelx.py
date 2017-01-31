@@ -70,7 +70,7 @@ class Card(Base):
     type = Column(Integer)
     status = Column(Integer, default=0)
 
-    def __init__(self, number, type):
+    def __init__(self, number, type, status):
         self.number = number
         self.type = type
         self.status = status
