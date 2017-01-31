@@ -2,7 +2,7 @@ from flask import Flask
 from flask import request, make_response, url_for
 from operation import op_service, op_download
 from decorator import permission_check, permission_check_admin
-
+import datetime
 def process():
     ret = {}
     service_name = request.args.get('service', '')
@@ -35,7 +35,8 @@ def process_admin():
     password = request.form['password']
     ret = op_service.op_admin_login(username, password)
     if ret.get('data').get('key',None):
-        resp.set_cookie('user', ret.get('data').get('key'), expires=30)
+        outdate = datetime.datetime.today() + datetime.timedelta(days=(1.0/48))
+        resp.set_cookie('user', ret.get('data').get('key'), expires=outdate)
     return resp
 
 def process_download():
