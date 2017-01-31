@@ -320,6 +320,10 @@ def op_get_information():
     return ret
 
 def op_set_card(card, cardtype):
+    ret = {}
     card = Card(number=card, type=cardtype, status=1)
     db_session.add(card)
     db_session.commit()
+    ret['msg'] = SUCCESS
+    ret['data'] = {}
+    return ret
