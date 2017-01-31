@@ -1,5 +1,6 @@
 from model import *
 from flask import request, url_for, redirect
+from werkzeug.routing import RequestRedirect
 from functools import wraps
 from constant import *
 import datetime
@@ -34,5 +35,5 @@ def permission_check_admin(func):
         if admin:
             return func(*args, **kwargs)
         else:
-            return redirect(url_for('index'))
+            return RequestRedirect('index')
     return new_func
