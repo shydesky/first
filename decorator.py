@@ -35,5 +35,5 @@ def permission_check_admin(func):
         if admin:
             return func(*args, **kwargs)
         else:
-            raise RequestRedirect(url_for('admin_login'))
+            return redirect(url_for('admin_login'))
     return new_func
