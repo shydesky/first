@@ -25,6 +25,7 @@ def admin():
     return render_template('ss.html')
 
 @app.route("/admin/card", methods=['POST', 'GET'])
+@permission_check_admin
 def card():
     if request.method == 'GET':
         return render_template('card.html')
