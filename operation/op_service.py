@@ -318,3 +318,8 @@ def op_get_information():
     ret['msg'] = SUCCESS
     ret['data'] = data
     return ret
+
+def op_set_card(card, cardtype):
+    card = Card(number=card, type=cardtype, status=1)
+    db_session.add(card)
+    db_session.commit()

@@ -44,3 +44,8 @@ def process_download():
 
 def process_information():
     return op_service.op_get_information()
+
+def process_card():
+    card = request.form['card']
+    cardtype = request.form['card_type']
+    return op_service.op_set_card(card, cardtype)

@@ -26,7 +26,10 @@ def admin():
 
 @app.route("/admin/card", methods=['POST', 'GET'])
 def card():
-	return render_template('card.html')
+	if request.method == 'GET':
+	    return render_template('card.html')
+    elif request.method == 'POST'
+        return service.process_card()
 
 @app.route("/admin/users", methods=['GET','POST'])
 @jsonapi
