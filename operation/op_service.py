@@ -261,7 +261,6 @@ def op_calc(arg1, arg2, index):
     ret['msg'] = CALC_SUCCESS
     return ret
 
-@permission_check_admin
 def op_get_all_user():
     ret = {}
     data = []

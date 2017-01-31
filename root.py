@@ -3,6 +3,7 @@ from flask import request
 from flask_jsontools import jsonapi
 from database import db_session
 from controller import service
+from decorator import permission_check_admin
 app = Flask(__name__, static_url_path='')
 
 @app.route("/")
@@ -19,6 +20,7 @@ def service_adapter():
     return service.process()
 
 @app.route("/admin1")
+@permission_check_admin
 def admin():
     return render_template('ss.html')
 
