@@ -5,24 +5,7 @@ import datetime,time
 from decorator import permission_check_admin
 from constant import *
 from sqlalchemy import or_, and_
-USER_FUNCTION = ['SIGNUP','SIGNIN','RESETPWD','GETCODE','GETUSERS','USERCHARGE']
-ADMIN_FUNCTION = ['ADMINLOGIN','GETUSERS','CHANGEUSERTYPE']
-def process_admin(kwargs):
-    ret = {}
-    data = {}
-    function = kwargs.args.get('function','').upper()
-    if function not in ADMIN_FUNCTION:
-        ret['msg'] = 'param is wrong'
-        ret ['data'] = data
-        return ret
-    elif function == 'GETUSERS':
-        ret = op_get_all_user()
-    # elif function == 'ADMINLOGIN':
-    #     ret = op_admin_login(kwargs)
-    elif function == 'CHANGEUSERTYPE':
-        ret = op_admin_change_user_type(kwargs)
-    return ret
-    
+USER_FUNCTION = ['SIGNUP','SIGNIN','RESETPWD','GETCODE','USERCHARGE']
 
 def process_user(kwargs):
     ret = {}
@@ -82,6 +65,7 @@ def op_signup(kwargs):
     return ret
 
 def op_signin(kwargs):
+    u"""用户登录."""
     ret = {}
     data = {}
     phone = kwargs.args.get('account', '')
@@ -113,6 +97,7 @@ def op_signin(kwargs):
         return ret
 
 def op_resetpwd(kwargs):
+    u"""重置密码."""
     ret = {}
     data = {}
     phone = kwargs.args.get('phone','')
@@ -140,6 +125,7 @@ def op_resetpwd(kwargs):
     return ret
 
 def op_send_verifycode(kwargs):
+    u"""发送短信验证码."""
     import random,string
     from tool.tool_sms import send_message_example
     ret = {}
@@ -189,6 +175,7 @@ def op_send_verifycode(kwargs):
     return ret
 
 def op_user_charge(kwargs):
+    u"""用户充值."""
     ret={}
     account = kwargs.args.get('account', '')
     cardpwd = kwargs.args.get('cardpwd', '')
@@ -225,6 +212,7 @@ def op_user_charge(kwargs):
 
 
 def process_calc(kwargs, index):
+    u"""计算接口."""
     arg1 = kwargs.args.get('arg1',0)
     arg2 = kwargs.args.get('arg2',0)
     return op_calc(float(arg1), float(arg2), index)
@@ -273,10 +261,11 @@ def op_get_all_user():
     return ret
 
 def op_admin_login(name, passwd):
+    u"""admin用户登录."""
     ret = {}
     data = {}
 
-    admin = AdminUser.query.filter(and_(AdminUser.name == name,AdminUser.passwd==passwd)).first()
+    admin = AdminUser.query.filter(and_(AdminUser.name == name,AdminUser.passwd == passwd)).first()
     if not admin:
         ret['msg'] = ADMIN_USER_NOT_EXIST
         ret['data'] = {}
@@ -292,24 +281,6 @@ def op_admin_login(name, passwd):
         ret['data'] = data
     return ret
 
-def op_admin_change_user_type(request):
-    ret = {}
-    data = {}
-    email = request.form['email']
-    usertype = request.form['usertype']
-    user = User.query.filter(User.email == email).first()
-    if not user:
-        ret['msg'] = USER_NOT_EXIST
-        ret['data'] = {}
-    else:
-        user.usertype = usertype
-        db_session.commit()
-        db_session.close()
-        ret['msg'] = SUCCESS
-        ret['data'] = data
-    return ret
-
-
 def op_get_information():
     ret = {}
     data = {}
@@ -320,6 +291,7 @@ def op_get_information():
     return ret
 
 def op_set_card(card, cardtype):
+    u"""设置充值卡."""
     ret = {}
     card = Card(number=card, type=cardtype, status=1)
     db_session.add(card)

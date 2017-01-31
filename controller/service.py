@@ -1,3 +1,5 @@
+#!/usr/bin/python2.7
+# -*- coding: utf-8 -*-
 from flask import Flask
 from flask import request, make_response, url_for, redirect
 from operation import op_service, op_download
@@ -12,8 +14,6 @@ def process():
         ret = process_calc(service_name[4:])
     elif service_name == 'user':
         ret = process_user()
-    elif service_name == 'admin':
-        ret = process_admin()
     return ret
 
 def process_user_list():
@@ -30,7 +30,7 @@ def process_user():
     return ret
 
 def process_admin():
-    resp = make_response('<a href="%s">users</a> <br> <a href="%s">card</a>' % (url_for('admin'),url_for('card')))
+    resp = make_response('<a href="%s">用户管理</a> <br> <a href="%s">卡密管理</a>' % (url_for('admin'),url_for('card')))
     username = request.form['username']
     password = request.form['password']
     ret = op_service.op_admin_login(username, password)
@@ -40,14 +40,17 @@ def process_admin():
     return resp
 
 def process_download():
+    u"""软件下载."""
     return op_download.op_download_app()
 
 def process_information():
+    u"""信息初始化."""
     return op_service.op_get_information()
 
 def process_card():
+    u"""录入卡密."""
     card = request.form['card']
     cardtype = request.form['card_type']
     op_service.op_set_card(card, cardtype)
-    flash('you input valid number, success!')
+    flash('成功添加了1个卡密!')
     return redirect(url_for('card'))
