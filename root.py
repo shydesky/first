@@ -5,7 +5,7 @@ from database import db_session
 from controller import service
 from decorator import permission_check_admin
 app = Flask(__name__, static_url_path='')
-
+app.secret_key = 'some_secret'
 @app.route("/")
 def hello():
     return "Hello World!"

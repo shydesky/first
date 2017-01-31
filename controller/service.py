@@ -1,6 +1,6 @@
 #!/usr/bin/python2.7
 # -*- coding: utf-8 -*-
-from flask import Flask
+from flask import Flask, flash
 from flask import request, make_response, url_for, redirect
 from operation import op_service, op_download
 from decorator import permission_check, permission_check_admin
