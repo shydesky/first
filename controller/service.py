@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import request, make_response, url_for
+from flask import request, make_response, url_for, redirect
 from operation import op_service, op_download
 from decorator import permission_check, permission_check_admin
 import datetime
@@ -48,4 +48,5 @@ def process_information():
 def process_card():
     card = request.form['card']
     cardtype = request.form['card_type']
-    return op_service.op_set_card(card, cardtype)
+    op_service.op_set_card(card, cardtype)
+    return redirect(url_for('card'))
