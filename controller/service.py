@@ -30,7 +30,7 @@ def process_user():
     return ret
 
 def process_admin():
-    resp = make_response('<a href="%s">index</a>' % url_for('admin1'))
+    resp = make_response('<a href="%s">index</a>' % url_for('admin'))
     username = request.form['username']
     password = request.form['password']
     ret = op_service.op_admin_login(username, password)
