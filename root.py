@@ -24,6 +24,10 @@ def service_adapter():
 def admin():
     return render_template('ss.html')
 
+@app.route("/admin/card", methods=['POST', 'GET'])
+def card():
+	return render_template('card.html')
+
 @app.route("/admin/users", methods=['GET','POST'])
 @jsonapi
 def admin_user():
