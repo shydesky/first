@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import request, make_response
+from flask import request, make_response, url_for
 from operation import op_service, op_download
 from decorator import permission_check, permission_check_admin
 
@@ -30,7 +30,7 @@ def process_user():
     return ret
 
 def process_admin():
-    resp = make_response()
+    resp = make_response(url_for('index'))
     username = request.form['username']
     password = request.form['password']
     ret = op_service.op_admin_login(username, password)
