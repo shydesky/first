@@ -13,17 +13,17 @@
 </head>
 
 <body bgcolor="#1E81C2" onload="" >
-     <form  action="card" name="loginForm" >
-     <div  id="loginFormMain">
+     <form  action="card" name="cardForm" >
+     <div  id="cardFormMain">
          <table  style="width:468px;height:262px;background-color: gray;text-align: center;">
               <tr>
-                  <td>card:<input type="text" style="width: 200px;height: 30px;"  name="card"></td>
+                  <td>充值卡号:<input type="text" style="width: 200px;height: 30px;"  name="card"></td>
               </tr>
               <tr>
-                  <td>type:<input type="text"  style="width: 200px;height: 30px;"  name="card_type"></td>
+                  <td>充值卡类型:<input type="text"  style="width: 200px;height: 30px;"  name="cardtype"></td>
               </tr>
               <tr>
-                  <td align="center" ><input  formmethod="post" type="submit" style="cursor: pointer;font-style: inherit;" name="submit"  onclick="return checkCard();" value="submit" >
+                  <td align="center" ><input  formmethod="post" type="submit" style="cursor: pointer;font-style: inherit;" name="submit"  onclick="return checkCard();" value="生成卡密" >
                   </td> 
               </tr>
          </table>

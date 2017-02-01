@@ -50,7 +50,7 @@ def process_information():
 def process_card():
     u"""录入卡密."""
     card = request.form['card']
-    cardtype = request.form['card_type']
+    cardtype = request.form['cardtype']
     op_service.op_set_card(card, cardtype)
     flash(u'成功添加了1个卡密!')
     return redirect(url_for('card'))
