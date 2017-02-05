@@ -1,3 +1,5 @@
+#!/usr/bin/python2.7
+# -*- coding: utf-8 -*-
 from model import *
 from flask import request, url_for, redirect
 from werkzeug.routing import RequestRedirect
