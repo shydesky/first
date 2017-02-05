@@ -5,6 +5,7 @@ from functools import wraps
 from constant import *
 import datetime
 import hashlib
+
 def permission_check(func):
     @wraps(func)
     def new_func(*args, **kwargs):
@@ -14,7 +15,7 @@ def permission_check(func):
         key = hashlib.md5(phone + key).hexdigest()
         user = User.query.filter(and_(User.clientKey == key, User.phone == phone)).first()
         if not user:
-            ret['msg'] = 'Permission deny'
+            ret['msg'] = u'权限拒绝'
             ret['data'] = {}
             return ret
         if user.valid_time > datetime.datetime.now():

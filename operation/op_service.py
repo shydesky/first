@@ -129,18 +129,23 @@ def op_send_verifycode(kwargs):
     import random,string
     from tool.tool_sms import send_message_example
     ret = {}
-    phone = kwargs.args.get('phone','')
+    phone = kwargs.args.get('phone', '')
     code_type = int(kwargs.args.get('type', 0))
     code = ''.join(random.sample(string.ascii_letters + string.digits, 6)).lower()
     now = datetime.datetime.now()
-    if code_type == 1: # forget password send code
-        user = User.query.filter(User.phone==phone).first()
+    if code_type == 1:  # forget password send code
+        user = User.query.filter(User.phone == phone).first()
         if not user:
            ret['msg'] = USER_NOT_EXIST
            ret['data'] = {}
            ret['code'] = 0
            return ret
         result = send_message_example(code, user.phone)
+        if result.get('code') == -7:
+            ret['msg'] = CODE_SERVICE_MANY
+            ret['data'] = {}
+            ret['code'] = 0
+            return ret
         if result.get('code') != 0:
             ret['msg'] = CODE_SERVICE_WRONG
             ret['data'] = {}
@@ -157,8 +162,13 @@ def op_send_verifycode(kwargs):
             db_session.add(ins)
             db_session.commit()
 
-    elif code_type == 2: # signup send code
+    elif code_type == 2:  # signup send code
         result = send_message_example(code, phone)
+        if result.get('code') == -7:
+            ret['msg'] = CODE_SERVICE_MANY
+            ret['data'] = {}
+            ret['code'] = 0
+            return ret
         if result.get('code') != 0:
             ret['msg'] = CODE_SERVICE_WRONG
             ret['data'] = {}
@@ -195,11 +205,11 @@ def op_user_charge(kwargs):
         days = 180
     elif card.type == 3:
         days = 365
-      
+
     now = datetime.datetime.now()
     if now > user.valid_time:
         user.valid_time = now + datetime.timedelta(days=days)
-    else:   
+    else:
         user.valid_time = user.valid_time + datetime.timedelta(days=days)
     card.status = 0
     db_session.commit()

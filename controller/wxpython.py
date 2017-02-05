@@ -31,6 +31,7 @@ def init_information():
     info_lxwm_g = data.get('lxwm')
 
 account_g = ''
+focus_flag = 0
 class MyApp(wx.App):
     def __init__(self, redirect=False, filename=None):
         wx.App.__init__(self, redirect, filename)
@@ -40,18 +41,24 @@ class MyApp(wx.App):
         
     def OnQuit(self, event):
         self.app_frame.Close()
-
+    def OnCharge(self, event):
+        self.init_login_frame()
+        self.login_frame.Centre()
+        self.login_frame.Show()
+        self.app_frame.Hide()
     def OnMenu(self, event):
         # import pdb;pdb.set_trace()
         print event.GetEventObject().GetId()
+
     def OnKJYC(self, event): # 空间预测
         self.kjyc_panel.SetBackgroundColour((211,244,254))
         self.kjyc_panel.SetSize(wx.Size(self.w,self.h))
+        self.init_panel.Hide()
         self.kjyc_panel.Show()
+
     def OnCJRL(self, event): # 财经日历
         url = 'http://vip.stock.finance.sina.com.cn/forex/view/vDailyFX_More.php'
         webbrowser.open(url)
-
 
     def OnCJZZ(self, event): # 财经主站 
         if event.GetId() == wx.ID_CJZZ_ZGCJ:
@@ -63,7 +70,6 @@ class MyApp(wx.App):
         elif event.GetId() == wx.ID_CJZZ_SHCJ:
             url = 'http://money.sohu.com/waihui/'
         webbrowser.open(url)
-
 
     def OnGY(self, event):  # 关于
         dlg = wx.MessageDialog(parent=None, message=info_gywm_g, caption=u"关于我们", style=wx.OK)
@@ -132,6 +138,8 @@ class MyApp(wx.App):
             self.statusbar_login.SetStatusText('', 0)
         elif name == 'bCharge':
             self.op_charge()
+        elif name == 'bBuyCard':
+            self.op_buycard()
 
     def op_calc1(self):
         #import pdb;pdb.set_trace()
@@ -175,7 +183,13 @@ class MyApp(wx.App):
     #登录
     def op_signin(self):
         global account_g , TOKEN
-        phone = self.email_signin.GetValue()
+        import re
+        p2 = re.compile('^1[358]\d{9}$|^147\d{8}')
+        phone = self.phone_signin.GetValue()
+        if not p2.match(phone):
+            msg = u'请输入有效的手机号!'
+            self.statusbar_login.SetStatusText(msg, 0)
+            return False
         passwd = hashlib.md5(PWD_PREFIX + self.passwd_signin.GetValue()).hexdigest()
         url = URL_PREFIX + '/service?service=user&function=signin&account=%s&passwd=%s&token=%s'
         url = url % (phone,passwd,TOKEN)
@@ -186,13 +200,13 @@ class MyApp(wx.App):
         if flag:
             account_g = str(response.get('data').get('account'))
             validtime = str(response.get('data').get('validtime'))
-            message = u'尊敬的用戶您好,感謝你使用風暴眼科技外匯計算器工具。\n您當前的使用有效期至'\
-                      + validtime + u'，如您想在服務到期之後繼續使用，請及時充值.'
+            message = u'尊敬的用户你好,感谢你使用风暴眼科技外汇计算器工具。\n您当前的使用有效期至'\
+                      + validtime + u',如您想在服务到期之后继续使用,请及时充值。'
             if str(datetime.datetime.now().date()) > validtime:
-                message = u'尊敬的用戶您好,感謝你使用風暴眼科技外匯計算器工具。\n您當前的使用有效期至'\
-                          + validtime + u'，現已過期，請及時充值.'
+                message = u'尊敬的用户你好,感谢你使用风暴眼科技外汇计算器工具。\n您当前的使用有效期至'\
+                          + validtime + u',现已到期,请及时充值。'
             
-            dlg = wx.MessageDialog(parent=None, message=message, caption=u'溫馨提示', style=wx.OK)
+            dlg = wx.MessageDialog(parent=None, message=message, caption=u'温馨提示', style=wx.OK)
             dlg.ShowModal()
             return True
         else:
@@ -289,6 +303,10 @@ class MyApp(wx.App):
         msg = response.get('msg')
         self.statusbar_login.SetStatusText(msg, 0)
 
+    def op_buycard(self):
+        url = 'http://web10002066.sa.17uhui.com.cn/?page_id=2'
+        webbrowser.open(url)
+
     def init_login_frame(self):
         
         self.login_frame = wx.Frame(None, wx.ID_ANY, title=u'风暴眼科技--用户登录', size=(350,200),
@@ -324,7 +342,9 @@ class MyApp(wx.App):
         # self.panel_signin
         self.panel_signin = wx.Panel(self.login_frame, wx.ID_ANY, size=(350,200), pos=(0,0))
         wx.StaticText(self.panel_signin, -1, u'账号：', pos=(20,20), size=wx.DefaultSize, style=0)
-        self.email_signin = wx.TextCtrl(self.panel_signin, -1, pos=(85,20), size=wx.DefaultSize, style=0)
+        self.phone_signin = wx.TextCtrl(self.panel_signin, -1, u'手机号', pos=(85,20), size=wx.DefaultSize, style=0)
+        self.phone_signin.Bind(wx.EVT_LEFT_DOWN, self.onSetFocus)
+        self.phone_signin.Bind(wx.EVT_KILL_FOCUS, self.onKillFocus)
 
         wx.StaticText(self.panel_signin, -1, u'密码：', pos=(20,60), size=wx.DefaultSize, style=0)
         self.passwd_signin = wx.TextCtrl(self.panel_signin, -1, pos=(85,60), size=wx.DefaultSize, style=wx.TE_PASSWORD)
@@ -369,7 +389,11 @@ class MyApp(wx.App):
         self.cardpwd = wx.TextCtrl(self.panel_charge, -1, pos=(85,60), size=wx.DefaultSize, style=0)
         bCharge = wx.Button(self.panel_charge, -1, u"充值", pos=(220,20), size=(80,30), name='bCharge')
         self.Bind(wx.EVT_BUTTON, self.OnButton, bCharge)
-        bBack_charge = wx.Button(self.panel_charge, -1, u"返回登录", pos=(220,60), size=(80,30), name='bBack_charge')
+       
+        bBuyCard = wx.Button(self.panel_charge, -1, u"购买充值卡", pos=(220,60), size=(80,30), name='bBuyCard')
+        self.Bind(wx.EVT_BUTTON, self.OnButton, bBuyCard)
+
+        bBack_charge = wx.Button(self.panel_charge, -1, u"返回登录", pos=(220,100), size=(80,30), name='bBack_charge')
         self.Bind(wx.EVT_BUTTON, self.OnButton, bBack_charge)
 
         self.panel_signin.SetBackgroundColour((211,244,254))
@@ -381,7 +405,15 @@ class MyApp(wx.App):
         self.panel_passwd.Hide()
         self.panel_signup.Hide()
         self.panel_charge.Hide()
-    
+
+    def onKillFocus(self, event):
+        event.Skip()
+
+    def onSetFocus(self, event):
+        if self.phone_signin.GetValue() == u'手机号':
+            self.phone_signin.SetValue('')
+        event.Skip()
+
     def init_app_frame(self):
         self.app_frame = wx.Frame(None, wx.ID_ANY, title=u'风暴眼v0.1', style=wx.SYSTEM_MENU|wx.MINIMIZE_BOX|wx.CLOSE_BOX|wx.CAPTION|wx.RESIZE_BORDER)
         self.w = w = 1000
@@ -402,6 +434,7 @@ class MyApp(wx.App):
 
         # 二级菜单
         information_second_menu = wx.Menu()
+        wx.ID_CHARGE = 101
         wx.ID_KJYC = 201
         wx.ID_CJZZ = 301
         wx.ID_CJRL = 302
@@ -423,7 +456,7 @@ class MyApp(wx.App):
         information_second_menu.AppendItem(information_item_two)
         information_second_menu.AppendItem(information_item_three)
         information_second_menu.AppendItem(information_item_four)    
-        file.Append(wx.ID_ABOUT, u"&登录", u"登录")
+        file.Append(wx.ID_CHARGE, u"&充值", u"充值")
         file.AppendSeparator()
         file.Append(wx.ID_EXIT, u"&退出", u"退出")
         file.AppendSeparator()
@@ -439,6 +472,7 @@ class MyApp(wx.App):
         menubar.Append( information, u'&资讯' )
         menubar.Append( help, u'&帮助' )
 
+        self.app_frame.Bind(wx.EVT_MENU, self.OnCharge, id=wx.ID_CHARGE)
         self.app_frame.Bind(wx.EVT_MENU, self.OnQuit, id=wx.ID_EXIT)
         self.app_frame.Bind(wx.EVT_MENU, self.OnKJYC, id=wx.ID_KJYC)
         self.app_frame.Bind(wx.EVT_MENU, self.OnCJZZ, id=wx.ID_CJZZ_ZGCJ)
@@ -460,7 +494,8 @@ class MyApp(wx.App):
         font = wx.Font(10, wx.DECORATIVE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
         right_base_x = 200
         tc_delta = 50
-
+        t_out0 = wx.StaticText(self.kjyc_panel, -1, u'上涨计算', pos=(40,35), size=wx.DefaultSize, style=0)
+        t_out0.SetFont(font)
         # first row
         FIRST_H = tc_delta + 20
         
@@ -510,6 +545,8 @@ class MyApp(wx.App):
         
         wx.StaticLine(self.kjyc_panel, -1, (0, FORTH_H+60), (1000, 1))
         #fifth row
+        d_out0 = wx.StaticText(self.kjyc_panel, -1, u'下跌计算', pos=(40,295), size=wx.DefaultSize, style=0)
+        d_out0.SetFont(font)
         FIFTH_H = tc_delta + 280
         wx.StaticText(self.kjyc_panel, -1, u'L', pos=(40,FIFTH_H), size=(50,20), style=0)
         wx.StaticText(self.kjyc_panel, -1, u'H', pos=(100,FIFTH_H), size=(50,20), style=0)
@@ -559,8 +596,12 @@ class MyApp(wx.App):
 
         self.app_frame.SetMenuBar( menubar )
         self.app_frame.SetSize( wx.Size(w, h))
-
-
+        
+        self.init_panel = wx.Panel(self.app_frame, wx.ID_ANY, size=(w,h))
+        image_file = 'bg.jpg'
+        to_bmp_image = wx.Image(image_file, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+        self.init_panel.bitmap = wx.StaticBitmap(self.init_panel, -1, to_bmp_image, (0, 0))
+        
 if __name__ == '__main__':
     app = MyApp()
     app.MainLoop()
