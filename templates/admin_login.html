@@ -69,7 +69,7 @@
 </head>
 
 <body bgcolor="#1E81C2" onload="javascript:focusOnUsername();" >
-     <form  action="login" name="loginForm" >
+     <form  action="login" name="loginForm" method="post">
      <div  id="loginFormMain">
          <table  style="width:468px;height:262px;background-color: gray;text-align: center;">
               <tr>
@@ -82,7 +82,7 @@
                   <td>密  码:<input type="password"  style="width: 200px;height: 30px;"  name="password"></td>
               </tr>
               <tr>
-                  <td align="center" ><input  formmethod="post" type="submit" style="cursor: pointer;font-style: inherit;" name="submit"  onclick="return checkLogin();" value="登录" > 
+                  <td align="center" ><input type="submit" style="cursor: pointer;font-style: inherit;" name="submit"  onclick="return checkLogin();" value="登录" > 
                       <input type="reset"  style="cursor: pointer;" name=reset  value="重置"></td>
               </tr>
          </table>
