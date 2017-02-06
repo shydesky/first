@@ -300,12 +300,24 @@ def op_get_information():
     ret['data'] = data
     return ret
 
-def op_set_card(card, cardtype):
+def op_set_card(cardlist, cardtype):
     u"""设置充值卡."""
     ret = {}
-    card = Card(number=card, type=cardtype, status=1)
-    db_session.add(card)
+    success_add = []
+    for card in cardlist:
+        temp = card[0:2].upper()
+        if temp == 'YK':
+            cardtype = 1
+        if temp == 'BK':
+            cardtype = 2
+        if temp == 'NK':
+            cardtype = 3
+        else:
+            continue
+        success_add.append(card)
+        card = Card(number=card, type=cardtype, status=1)
+        db_session.add(card)
     db_session.commit()
     ret['msg'] = SUCCESS
-    ret['data'] = {}
+    ret['data'] = {'data': success_add}
     return ret
