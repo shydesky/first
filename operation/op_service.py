@@ -131,7 +131,7 @@ def op_send_verifycode(kwargs):
     ret = {}
     phone = kwargs.args.get('phone', '')
     code_type = int(kwargs.args.get('type', 0))
-    code = ''.join(random.sample(string.ascii_letters + string.digits, 6)).lower()
+    code = ''.join(random.sample(string.digits, 6)).lower()
     now = datetime.datetime.now()
     if code_type == 1:  # forget password send code
         user = User.query.filter(User.phone == phone).first()

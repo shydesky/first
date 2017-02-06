@@ -41,6 +41,8 @@ class MyApp(wx.App):
         
     def OnQuit(self, event):
         self.app_frame.Close()
+        self.login_frame.Close()
+
     def OnCharge(self, event):
         self.init_login_frame()
         self.login_frame.Centre()
@@ -275,7 +277,7 @@ class MyApp(wx.App):
 
     def op_get_code(self):
         url = URL_PREFIX + '/service?service=user&function=getcode&phone=%s&type=1'
-        phone = self.phone.GetValue()
+        phone = self.phone_resetpwd.GetValue()
         url = url % (phone)
         response = requests.get(url).json()
         msg = response.get('msg')
@@ -598,10 +600,18 @@ class MyApp(wx.App):
         self.app_frame.SetSize( wx.Size(w, h))
         
         self.init_panel = wx.Panel(self.app_frame, wx.ID_ANY, size=(w,h))
-        image_file = 'bg.jpg'
-        to_bmp_image = wx.Image(image_file, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+
+        to_bmp_image = wx.Image(resource_path('resource\\bg.jpg'), wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         self.init_panel.bitmap = wx.StaticBitmap(self.init_panel, -1, to_bmp_image, (0, 0))
-        
+
+def resource_path(relative_path):
+    import os
+    if hasattr(sys, "_MEIPASS"):
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
 if __name__ == '__main__':
     app = MyApp()
     app.MainLoop()
