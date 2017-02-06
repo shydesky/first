@@ -308,9 +308,9 @@ def op_set_card(cardlist, cardtype):
         temp = card[0:2].upper()
         if temp == 'YK':
             cardtype = 1
-        if temp == 'BK':
+        elif temp == 'BK':
             cardtype = 2
-        if temp == 'NK':
+        elif temp == 'NK':
             cardtype = 3
         else:
             continue
