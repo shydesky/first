@@ -315,8 +315,8 @@ def op_set_card(cardlist, cardtype):
         else:
             continue
         success_add.append(card)
-        card = Card(number=card, type=cardtype, status=1)
-        db_session.add(card)
+        card_ins = Card(number=card, type=cardtype, status=1)
+        db_session.add(card_ins)
     db_session.commit()
     ret['msg'] = SUCCESS
     ret['data'] = {'data': success_add}
