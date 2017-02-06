@@ -40,8 +40,7 @@ class MyApp(wx.App):
         self.login_frame.Show()
         
     def OnQuit(self, event):
-        self.app_frame.Close()
-        self.login_frame.Close()
+        self.Close()
 
     def OnCharge(self, event):
         self.init_login_frame()
