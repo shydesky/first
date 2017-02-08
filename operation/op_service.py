@@ -305,7 +305,10 @@ def op_set_card(cardlist, cardtype):
     ret = {}
     success_add = []
     for card in cardlist:
-        temp = card[0:2].upper()
+        card_pwd = card.split(' ')
+        number = card_pwd[0]
+        pwd = card_pwd[1]
+        temp = number[0:2].upper()
         if temp == 'YK':
             cardtype = 1
         elif temp == 'BK':
@@ -315,7 +318,7 @@ def op_set_card(cardlist, cardtype):
         else:
             continue
         success_add.append(card)
-        card_ins = Card(number=card, type=cardtype, status=1)
+        card_ins = Card(number=number, password=pwd, type=cardtype, status=1)
         db_session.add(card_ins)
     db_session.commit()
     ret['msg'] = SUCCESS
