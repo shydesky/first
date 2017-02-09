@@ -84,9 +84,6 @@ class MyApp(wx.App):
         url = URL_PREFIX + '/download'
         webbrowser.open(url)
 
-    def OnFWXY(self, event): # 服务协议
-        url = URL_PREFIX + '/file/servicefile'
-        webbrowser.open(url)
 
     def OnButton(self, evt):
         #Button的响应事件
@@ -98,7 +95,7 @@ class MyApp(wx.App):
             self.op_calc2()
         elif name == 'bSignup': #用户注册panel
             self.op_signup()
-        elif name == 'bSignin' or 'text': #用户登入panel
+        elif name == 'bSignin' or name == 'text': #用户登入panel
             if self.op_signin():
                 self.init_app_frame()
                 self.login_frame.Hide()
@@ -145,8 +142,12 @@ class MyApp(wx.App):
             self.op_charge()
         elif name == 'bBuyCard':
             self.op_buycard()
-        elif name == 'bServiceFile':
-        	self.OnFWXY()
+        elif name == 'bSrvfile':
+        	self.showsrvfile()
+
+    def showsrvfile(self): # 服务协议
+        url = URL_PREFIX + '/file/servicefile'
+        webbrowser.open(url)
 
     def op_calc1(self):
         #import pdb;pdb.set_trace()
@@ -341,6 +342,8 @@ class MyApp(wx.App):
         self.signup_code = wx.TextCtrl(self.panel_signup, -1, pos=(225,40), size=(100, 25), style=0)
         
         self.checkSrvFile = wx.CheckBox(self.panel_signup,-1, u'我同意服务协议', pos=(20,75), size=(140,20))
+        bSrvfile = wx.Button(self.panel_signup, -1, u"查看服务协议", pos=(225,75), size=(80,25), name='bSrvfile')
+        self.Bind(wx.EVT_BUTTON, self.OnButton, bSrvfile)
 
         bGetCode_signup = wx.Button(self.panel_signup, -1, u"获取验证码", pos=(20,105), size=(80,25), name='bGetCode_signup')
         self.Bind(wx.EVT_BUTTON, self.OnButton, bGetCode_signup)
