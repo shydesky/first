@@ -296,10 +296,11 @@ class MyApp(wx.App):
         self.statusbar_login.SetStatusText(msg, 0)
 
     def op_charge(self):
-        url = URL_PREFIX + '/service?service=user&function=usercharge&account=%s&cardpwd=%s'
+        url = URL_PREFIX + '/service?service=user&function=usercharge&account=%s&cardnum=%s&cardpwd=%s'
         account = self.account.GetValue()
+        cardnum =  self.cardnum.GetValue()
         cardpwd =  self.cardpwd.GetValue()
-        url = url % (account, cardpwd)
+        url = url % (account, cardnum, cardpwd)
         response = requests.get(url).json()
         msg = response.get('msg')
         self.statusbar_login.SetStatusText(msg, 0)
@@ -387,6 +388,8 @@ class MyApp(wx.App):
         wx.StaticText(self.panel_charge, -1, u'账号：', pos=(20,20), size=wx.DefaultSize, style=0)
         self.account = wx.TextCtrl(self.panel_charge, -1, pos=(85,20), size=wx.DefaultSize, style=0)
         wx.StaticText(self.panel_charge, -1, u'充值卡号：', pos=(20,60), size=wx.DefaultSize, style=0)
+        self.cardnum = wx.TextCtrl(self.panel_charge, -1, pos=(85,60), size=wx.DefaultSize, style=0)
+        wx.StaticText(self.panel_charge, -1, u'充值密码：', pos=(20,100), size=wx.DefaultSize, style=0)
         self.cardpwd = wx.TextCtrl(self.panel_charge, -1, pos=(85,60), size=wx.DefaultSize, style=0)
         bCharge = wx.Button(self.panel_charge, -1, u"充值", pos=(220,20), size=(80,30), name='bCharge')
         self.Bind(wx.EVT_BUTTON, self.OnButton, bCharge)

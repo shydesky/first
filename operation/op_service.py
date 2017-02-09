@@ -188,13 +188,14 @@ def op_user_charge(kwargs):
     u"""用户充值."""
     ret={}
     account = kwargs.args.get('account', '')
+    cardnum = kwargs.args.get('cardnum', '')
     cardpwd = kwargs.args.get('cardpwd', '')
     user = User.query.filter(User.phone == account).first()
     if not user:
        ret['msg'] = USER_NOT_EXIST
        return ret
 
-    card = Card.query.filter(and_(Card.number == cardpwd, Card.status==1)).first()
+    card = Card.query.filter(and_(Card.number == cardnum, Card.password == cardpwd, Card.status==1)).first()
     if not card:
        ret['msg'] = CARD_NOT_EXIST
        return ret
@@ -212,8 +213,10 @@ def op_user_charge(kwargs):
     else:
         user.valid_time = user.valid_time + datetime.timedelta(days=days)
     card.status = 0
+    deposit = Deposit(user.id, card.id)
+    db_session.add(deposit)
     db_session.commit()
-
+    
     ret['msg'] = DEPOSIT_SUCCESS
     ret['data'] = {}
 

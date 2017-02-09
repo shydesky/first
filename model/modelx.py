@@ -51,12 +51,12 @@ class Deposit(Base):
     __tablename__ = 'deposit'
     id = Column(Integer, primary_key=True) 
     userid = Column(Integer)
-    type = Column(String(10))
+    card_id = Column(String(32))
     create_time = Column(DateTime, default=datetime.datetime.now())
     
-    def __init__(self, userid=0, type='month', create_time=datetime.datetime.now()):
+    def __init__(self, userid, card_id, create_time=datetime.datetime.now()):
         self.userid = userid
-        self.type = type
+        self.card_id = card_id
         self.create_time = create_time
 
     def __repr__(self):
