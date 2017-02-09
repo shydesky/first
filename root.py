@@ -10,6 +10,10 @@ app.secret_key = 'some_secret'
 def hello():
     return "Hello World!"
 
+@app.route("/file/servicefile")
+def servicefile():
+    return "This is servicefile!"
+
 @app.route("/index")
 def index():
     return "Hello World!"

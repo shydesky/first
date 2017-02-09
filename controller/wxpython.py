@@ -84,6 +84,10 @@ class MyApp(wx.App):
         url = URL_PREFIX + '/download'
         webbrowser.open(url)
 
+    def OnFWXY(self, event): # 服务协议
+        url = URL_PREFIX + '/file/servicefile'
+        webbrowser.open(url)
+
     def OnButton(self, evt):
         #Button的响应事件
         #import pdb;pdb.set_trace()
@@ -94,7 +98,7 @@ class MyApp(wx.App):
             self.op_calc2()
         elif name == 'bSignup': #用户注册panel
             self.op_signup()
-        elif name == 'bSignin': #用户登入panel
+        elif name == 'bSignin' or 'text': #用户登入panel
             if self.op_signin():
                 self.init_app_frame()
                 self.login_frame.Hide()
@@ -141,6 +145,8 @@ class MyApp(wx.App):
             self.op_charge()
         elif name == 'bBuyCard':
             self.op_buycard()
+        elif name == 'bServiceFile':
+        	self.OnFWXY()
 
     def op_calc1(self):
         #import pdb;pdb.set_trace()
@@ -229,9 +235,13 @@ class MyApp(wx.App):
         if not emailmatch:
             self.statusbar_login.SetStatusText(u'邮箱格式无效！', 0)
             return
-
+        agree = self.checkSrvFile.GetValue()
+        if not agree:
+        	self.statusbar_login.SetStatusText(u'请阅读并同意服务协议！', 0)
+        	return
         passwd = hashlib.md5(PWD_PREFIX + self.passwd.GetValue()).hexdigest()
         code = self.signup_code.GetValue()
+        
         url = URL_PREFIX + '/service?service=user&function=signup&email=%s&passwd=%s&phone=%s&key=%s&code=%s'
         url = url % (email, passwd, phone, TOKEN, code)
         response = requests.get(url).json()
@@ -318,27 +328,27 @@ class MyApp(wx.App):
         # panel_signup
         self.panel_signup = wx.Panel(self.login_frame, wx.ID_ANY, size=(350,200), pos=(0,0))
 
-        wx.StaticText(self.panel_signup, -1, u'手机号', pos=(20,20), size=wx.DefaultSize, style=0)
-        self.phone_signup = wx.TextCtrl(self.panel_signup, -1, pos=(60,20), size=(100, 30), style=0, name="uout1")
+        wx.StaticText(self.panel_signup, -1, u'手机', pos=(15,10), size=wx.DefaultSize, style=0)
+        self.phone_signup = wx.TextCtrl(self.panel_signup, -1, pos=(60,10), size=(100, 25), style=0, name="uout1")
         
-        wx.StaticText(self.panel_signup, -1, u'邮箱', pos=(180,20), size=wx.DefaultSize, style=0)
-        self.email = wx.TextCtrl(self.panel_signup, -1, pos=(220,20), size=(100, 30))
+        wx.StaticText(self.panel_signup, -1, u'邮箱', pos=(175,10), size=wx.DefaultSize, style=0)
+        self.email = wx.TextCtrl(self.panel_signup, -1, pos=(225,10), size=(100, 25))
 
-        wx.StaticText(self.panel_signup, -1, u'密码', pos=(20,60), size=wx.DefaultSize, style=0)
-        self.passwd = wx.TextCtrl(self.panel_signup, -1, pos=(60,60), size=(100, 30), style=wx.TE_PASSWORD)
+        wx.StaticText(self.panel_signup, -1, u'密码', pos=(15,40), size=wx.DefaultSize, style=0)
+        self.passwd = wx.TextCtrl(self.panel_signup, -1, pos=(60,40), size=(100, 25), style=wx.TE_PASSWORD)
 
-        # wx.StaticText(self.panel_signup, -1, u'密码确认', pos=(20,140), size=wx.DefaultSize, style=0)
-        # self.passwd_confirm = wx.TextCtrl(self.panel_signup, -1, pos=(85,140), size=wx.DefaultSize, style=wx.TE_PASSWORD)
-        self.signup_code = wx.TextCtrl(self.panel_signup, -1, pos=(220,60), size=(100, 30), style=0)
-        wx.StaticText(self.panel_signup, -1, u"验证码", pos=(180,60), size=(80,30), name='sendCode_signup')
+        wx.StaticText(self.panel_signup, -1, u"验证码", pos=(175,40), size=wx.DefaultSize, name='sendCode_signup')
+        self.signup_code = wx.TextCtrl(self.panel_signup, -1, pos=(225,40), size=(100, 25), style=0)
+        
+        self.checkSrvFile = wx.CheckBox(self.panel_signup,-1, u'我同意服务协议', pos=(20,75), size=(140,20))
 
-        bGetCode_signup = wx.Button(self.panel_signup, -1, u"获取验证码", pos=(20,100), size=(80,30), name='bGetCode_signup')
+        bGetCode_signup = wx.Button(self.panel_signup, -1, u"获取验证码", pos=(20,105), size=(80,25), name='bGetCode_signup')
         self.Bind(wx.EVT_BUTTON, self.OnButton, bGetCode_signup)
 
-        bSignup = wx.Button(self.panel_signup, -1, u"提交注册", pos=(120,100), size=(80,30), name='bSignup')
+        bSignup = wx.Button(self.panel_signup, -1, u"提交注册", pos=(130,105), size=(80,25), name='bSignup')
         self.Bind(wx.EVT_BUTTON, self.OnButton, bSignup)
 
-        bBack = wx.Button(self.panel_signup, -1, u"返回登录", pos=(220,100), size=(80,30), name='bBack')
+        bBack = wx.Button(self.panel_signup, -1, u"返回登录", pos=(240,105), size=(80,25), name='bBack')
         self.Bind(wx.EVT_BUTTON, self.OnButton, bBack)
         
         # self.panel_signin
@@ -349,7 +359,7 @@ class MyApp(wx.App):
         self.phone_signin.Bind(wx.EVT_KILL_FOCUS, self.onKillFocus)
 
         wx.StaticText(self.panel_signin, -1, u'密码：', pos=(20,60), size=wx.DefaultSize, style=0)
-        self.passwd_signin = wx.TextCtrl(self.panel_signin, -1, pos=(85,60), size=wx.DefaultSize, style=wx.TE_PASSWORD)
+        self.passwd_signin = wx.TextCtrl(self.panel_signin, -1, pos=(85,60), size=wx.DefaultSize, style=wx.TE_PASSWORD|wx.TE_PROCESS_ENTER)
 
         bNewUser = wx.Button(self.panel_signin, -1, u"用户注册", pos=(220,20), size=(80,30), name='bNewUser')
         self.Bind(wx.EVT_BUTTON, self.OnButton, bNewUser)
@@ -369,7 +379,7 @@ class MyApp(wx.App):
         self.phone_resetpwd = wx.TextCtrl(self.panel_passwd, -1, pos=(85,20), size=wx.DefaultSize, style=0)
 
         wx.StaticText(self.panel_passwd, -1, u'新密码：', pos=(20,60), size=wx.DefaultSize, style=0)
-        self.newpasswd = wx.TextCtrl(self.panel_passwd, -1, pos=(85,60), size=wx.DefaultSize, style=0)
+        self.newpasswd = wx.TextCtrl(self.panel_passwd, -1, pos=(85,60), size=wx.DefaultSize, style=wx.TE_PASSWORD)
 
         wx.StaticText(self.panel_passwd, -1, u'验证码：', pos=(20,100), size=wx.DefaultSize, style=0)
         self.reset_code = wx.TextCtrl(self.panel_passwd, -1, pos=(85,100), size=wx.DefaultSize, style=0)
@@ -385,12 +395,12 @@ class MyApp(wx.App):
         
         # panel_charge
         self.panel_charge = wx.Panel(self.login_frame, wx.ID_ANY, size=(350,200), pos=(0,0))
-        wx.StaticText(self.panel_charge, -1, u'账号：', pos=(20,20), size=wx.DefaultSize, style=0)
+        wx.StaticText(self.panel_charge, -1, u'账号:', pos=(20,20), size=wx.DefaultSize, style=0)
         self.account = wx.TextCtrl(self.panel_charge, -1, pos=(85,20), size=wx.DefaultSize, style=0)
-        wx.StaticText(self.panel_charge, -1, u'充值卡号：', pos=(20,60), size=wx.DefaultSize, style=0)
+        wx.StaticText(self.panel_charge, -1, u'充值卡号:', pos=(20,60), size=wx.DefaultSize, style=0)
         self.cardnum = wx.TextCtrl(self.panel_charge, -1, pos=(85,60), size=wx.DefaultSize, style=0)
-        wx.StaticText(self.panel_charge, -1, u'充值密码：', pos=(20,100), size=wx.DefaultSize, style=0)
-        self.cardpwd = wx.TextCtrl(self.panel_charge, -1, pos=(85,60), size=wx.DefaultSize, style=0)
+        wx.StaticText(self.panel_charge, -1, u'充值密码:', pos=(20,100), size=wx.DefaultSize, style=0)
+        self.cardpwd = wx.TextCtrl(self.panel_charge, -1, pos=(85,100), size=wx.DefaultSize, style=wx.TE_PASSWORD)
         bCharge = wx.Button(self.panel_charge, -1, u"充值", pos=(220,20), size=(80,30), name='bCharge')
         self.Bind(wx.EVT_BUTTON, self.OnButton, bCharge)
        
@@ -400,6 +410,7 @@ class MyApp(wx.App):
         bBack_charge = wx.Button(self.panel_charge, -1, u"返回登录", pos=(220,100), size=(80,30), name='bBack_charge')
         self.Bind(wx.EVT_BUTTON, self.OnButton, bBack_charge)
 
+        self.Bind(wx.EVT_TEXT_ENTER, self.OnButton)
         self.panel_signin.SetBackgroundColour((211,244,254))
         self.panel_passwd.SetBackgroundColour((211,244,254))
         self.panel_signup.SetBackgroundColour((211,244,254))
@@ -409,6 +420,9 @@ class MyApp(wx.App):
         self.panel_passwd.Hide()
         self.panel_signup.Hide()
         self.panel_charge.Hide()
+
+        def OnKeyEnterDown(self, event):
+            wx.PostEvent(self,wx.CommandEvent(wx.EVT_BUTTON.typeId, bSignin.GetId()))
 
     def onKillFocus(self, event):
         event.Skip()
