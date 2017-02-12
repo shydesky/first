@@ -21,7 +21,7 @@
                     <option value ="1">正常用户</option>
                     <option value ="2">过期用户</option>
                 <td><div><a href='#' data-bind='click: $root.save'>保存修改</a></div></td>
-                <td><div><a href='/user/'+id>查看充值记录</a></div></td> 
+                <td><div><a data-bind="attr: { href: '/user/' + userid }" >查看充值记录</a></div></td> 
             </tr>
         </tbody>
     </table>
