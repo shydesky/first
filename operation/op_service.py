@@ -337,7 +337,7 @@ def user_get_charge(userid):
     data = []
     inss = Deposit.query.filter(Deposit.userid == userid).all()
     for i in inss:
-        d = {'userid':userid,'cardid':i.card_id,'create_time':str(i.create_time)}
+        d = {'userid':userid,'cardid':i.card_id,'createtime':str(i.create_time)}
         data.append(d)
     ret['msg'] = SUCCESS
     ret['data'] = data
