@@ -15,11 +15,13 @@ def permission_check(func):
         key = request.args.get('key', '')
         phone = request.args.get('account', '')
         key = hashlib.md5(phone + key).hexdigest()
-        user = User.query.filter(and_(User.clientKey == key, User.phone == phone)).first()
-        if not user:
-            ret['msg'] = u'权限拒绝'
+        user = User.query.filter(User.phone == phone).first()
+
+        if user.clientKey != key:
+            ret['msg'] = u'您的账号已绑定其他机器,不能使用空间预测服务!'
             ret['data'] = {}
             return ret
+
         if user.valid_time > datetime.datetime.now():
             return func(*args, **kwargs)
         else:

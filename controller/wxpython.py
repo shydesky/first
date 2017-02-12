@@ -220,7 +220,7 @@ class MyApp(wx.App):
                     message = u'亲爱的用户,感谢您注册风暴眼科技外汇计算工具进行体验。\n体验期为10天,有效期至'\
                     + validtime + u',祝您使用愉快。'
                 else:
-                    message = u'亲爱的用户,感谢您使用风暴眼科技外汇计算工具进行体验。\n您的体验期已结束,为了不影响您的使用,请及时充值。'\
+                    message = u'亲爱的用户,感谢您使用风暴眼科技外汇计算工具进行体验。\n您的体验期已结束,为了不影响您的使用,请及时充值。'
             elif usertype == 1:
                 if str(datetime.datetime.now().date()) < validtime:
                     message = u'尊敬的用户,感谢您使用风暴眼科技外汇计算器工具。\n您当前的使用有效期至'\
