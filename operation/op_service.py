@@ -2,7 +2,7 @@
 from model import *
 import hashlib
 import datetime,time
-from decorator import permission_check_admin
+from decorator import permission_check_admin, permission_check
 from constant import *
 from sqlalchemy import or_, and_
 USER_FUNCTION = ['SIGNUP','SIGNIN','RESETPWD','GETCODE','USERCHARGE']
