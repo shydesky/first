@@ -18,7 +18,7 @@ def permission_check(func):
         user = User.query.filter(User.phone == phone).first()
 
         if user.clientKey != key:
-            ret['msg'] = u'您的账号已绑定其他机器,不能使用空间预测服务!'
+            ret['msg'] = u'您的账号已绑定其他机器,登陆失败!'
             ret['code'] = '100'
             ret['data'] = {}
             return ret
