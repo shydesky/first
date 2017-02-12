@@ -61,8 +61,6 @@ def process_card():
     return redirect(url_for('card'))
 
 def user_get_charge():
-    import json
     userid = request.form['userid']
     res = op_service.user_get_charge(userid)
-    resp = make_response(json.dumps(res))
-    return resp
+    return res

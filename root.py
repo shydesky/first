@@ -47,6 +47,7 @@ def user(userid):
         return render_template('userchargedetail.html')
 
 @app.route("/user/getcharge", methods=['GET','POST'])
+@jsonapi
 def user_get_charge():
     if request.method == 'POST':
         return service.user_get_charge()
