@@ -256,13 +256,19 @@ class MyApp(wx.App):
         	self.statusbar_login.SetStatusText(u'请阅读并同意服务协议！', 0)
         	return
         passwd = hashlib.md5(PWD_PREFIX + self.passwd.GetValue()).hexdigest()
-        code = self.signup_code.GetValue()
+        verifycode = self.signup_code.GetValue()
         
         url = URL_PREFIX + '/service?service=user&function=signup&email=%s&passwd=%s&phone=%s&key=%s&code=%s'
-        url = url % (email, passwd, phone, TOKEN, code)
+        url = url % (email, passwd, phone, TOKEN, verifycode)
         response = requests.get(url).json()
-
+        
         msg = response.get('msg')
+        code = response.get('code')
+        if code:
+            self.phone_signup.SetValue('')
+            self.email.SetValue('')
+            self.checkSrvFile.SetValue(0)
+            self.signup_code.SetValue('')
         self.statusbar_login.SetStatusText(msg, 0)
 
     #退出
