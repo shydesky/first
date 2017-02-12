@@ -217,7 +217,7 @@ class MyApp(wx.App):
             usertype = int(response.get('data').get('usertype'))
             if usertype == 0:
                 if str(datetime.datetime.now().date() - datetime.timedelta(days=10)) < createtime:
-                    message = u'亲爱的用户,感谢您注册风暴眼科技外汇计算工具进行体验。\n体验期为10天,有效期至'\
+                    message = u'亲爱的用户,感谢您使用风暴眼科技外汇计算工具进行体验。\n体验期为10天,有效期至'\
                     + validtime + u',祝您使用愉快。'
                 else:
                     message = u'亲爱的用户,感谢您使用风暴眼科技外汇计算工具进行体验。\n您的体验期已结束,为了不影响您的使用,请及时充值。'
@@ -226,7 +226,7 @@ class MyApp(wx.App):
                     message = u'尊敬的用户,感谢您使用风暴眼科技外汇计算器工具。\n您当前的使用有效期至'\
                     + validtime + u',如您想在服务到期之后继续使用,请及时充值。'
                 else:
-                    message = u'尊敬的用户你好,感谢你使用风暴眼科技外汇计算器工具。\n您当前的使用有效期至'\
+                    message = u'尊敬的用户,感谢您使用风暴眼科技外汇计算器工具。\n您当前的使用有效期至'\
                     + validtime + u',为了不影响您的使用,请及时充值。'
             
             dlg = wx.MessageDialog(parent=None, message=message, caption=u'温馨提示', style=wx.OK)

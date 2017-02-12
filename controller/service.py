@@ -59,3 +59,8 @@ def process_card():
     else:
         flash(u'添加卡密失败!')
     return redirect(url_for('card'))
+
+def user_get_charge():
+    userid = request.form['userid']
+    res = op_service.user_get_charge(userid)
+    return res

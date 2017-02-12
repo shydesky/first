@@ -53,7 +53,7 @@ class Deposit(Base):
     userid = Column(Integer)
     card_id = Column(String(32))
     create_time = Column(DateTime, default=datetime.datetime.now())
-    
+
     def __init__(self, userid, card_id, create_time=datetime.datetime.now()):
         self.userid = userid
         self.card_id = card_id

@@ -41,6 +41,17 @@ def card():
 def admin_user():
     return service.process_user_list()
 
+@app.route("/user/<int:userid>", methods=['GET','POST'])
+@jsonapi
+def user():
+    if request.method == 'GET':
+        return render_template('userchargedetail.html')
+
+@app.route("/user/getcharge", methods=['GET','POST'])
+def user_get_charge():
+    if request.method == 'Post':
+        return service.user_get_charge()
+
 @app.route("/admin/login", methods=['GET','POST'])
 def admin_login():
     if request.method == 'GET':
@@ -65,4 +76,3 @@ def application():
     app.run(host='0.0.0.0')
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
-

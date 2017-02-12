@@ -219,7 +219,7 @@ def op_user_charge(kwargs):
     user.usertype = 1
     db_session.add(deposit)
     db_session.commit()
-    
+
     ret['msg'] = DEPOSIT_SUCCESS
     ret['data'] = {}
 
@@ -329,4 +329,15 @@ def op_set_card(cardlist, cardtype):
     db_session.commit()
     ret['msg'] = SUCCESS
     ret['data'] = {'data': success_add}
+    return ret
+
+
+def user_get_charge(userid):
+    data = []
+    inss = Deposit.query().filter(Deposit.userid == userid).all()
+    for i in inss:
+        d = {'userid':userid,'cardid':i.card_id,'create_time':i.create_time}
+        data.append(d)
+    ret['msg'] = SUCCESS
+    ret['data'] = data
     return ret

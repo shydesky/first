@@ -1,0 +1,60 @@
+<html>
+<script src='knockout.js'></script>
+<script src='http://libs.baidu.com/jquery/1.11.1/jquery.min.js'></script>
+<h2>User</h2>
+<br/>
+<div id='userchargeList'>
+    <table class='contactsEditor'>
+        <tr>
+            <th>序号</th>
+            <th>邮箱</th>
+            <th>联系电话</th>
+            <th>用户类型</th>
+        </tr>
+        <tbody data-bind="foreach: users">
+            <tr>
+                <td><input data-bind='value: userid' readonly="readonly" /></td>
+                <td><input data-bind='value: cardid' readonly="readonly" /></td>
+                <td><input data-bind='value: createtime' readonly="readonly" /></td>
+                <!-- <td><input data-bind='value: phone' readonly="readonly" /></td> -->
+            </tr>
+        </tbody>
+    </table>
+</div>
+</html>
+
+<script type="text/javascript">
+var initialData = [
+    { id: "1", email: "sunhaoyu", phone:"15901009909", usertype:"1" },
+    { id: "2", email: "dudongmei", phone:"15901009908", usertype:"2" }
+];
+
+var UserModel = function(users) {
+    var self = this;
+
+    self.users = ko.observableArray([]);
+
+    self.loadData = function () {
+        $.ajax({
+            url:  "/user/getcharge", //这里你需要有自己的web api 
+            type: "Post",
+            success: function (response) {
+                self.users(response.data);  // 加载结果入joinlist
+            }
+        });
+    }
+
+    self.chargedetail = function(user) {
+        $.ajax({
+            url:  "/user/" + user.id, 
+            type: "Get",
+            success: function (response) {
+            }
+        });
+    };
+    
+};
+usermodel = new UserModel(initialData)
+ko.applyBindings(usermodel);
+usermodel.loadData()
+</script>
