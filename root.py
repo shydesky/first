@@ -48,7 +48,7 @@ def user(userid):
 
 @app.route("/user/getcharge", methods=['GET','POST'])
 def user_get_charge():
-    if request.method == 'Post':
+    if request.method == 'POST':
         return service.user_get_charge()
 
 @app.route("/admin/login", methods=['GET','POST'])

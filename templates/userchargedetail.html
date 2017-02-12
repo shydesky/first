@@ -43,16 +43,6 @@ var ChargeModel = function(users) {
             }
         });
     }
-
-    self.chargedetail = function(user) {
-        $.ajax({
-            url:  "/user/" + user.id, 
-            type: "Get",
-            success: function (response) {
-            }
-        });
-    };
-    
 };
 chargeModel = new ChargeModel(initialData)
 ko.applyBindings(chargeModel);
