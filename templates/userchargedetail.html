@@ -38,6 +38,7 @@ var ChargeModel = function(users) {
         $.ajax({
             url:  "/user/getcharge", //这里你需要有自己的web api 
             type: "Post",
+            data: {'userid': 6}
             success: function (response) {
                 self.users(response.data);  // 加载结果入joinlist
             }
