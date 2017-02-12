@@ -1,15 +1,15 @@
 <html>
 <script src='knockout.js'></script>
 <script src='http://libs.baidu.com/jquery/1.11.1/jquery.min.js'></script>
-<h2>User</h2>
+<h2>充值详情</h2>
 <br/>
 <div id='userchargeList'>
     <table class='contactsEditor'>
         <tr>
-            <th>序号</th>
-            <th>邮箱</th>
-            <th>联系电话</th>
-            <th>用户类型</th>
+            <th>用户id</th>
+            <th>充值卡id</th>
+            <th>充值时间</th>
+            <!-- <th>用户类型</th> -->
         </tr>
         <tbody data-bind="foreach: users">
             <tr>
@@ -29,7 +29,7 @@ var initialData = [
     { id: "2", email: "dudongmei", phone:"15901009908", usertype:"2" }
 ];
 
-var UserModel = function(users) {
+var ChargeModel = function(users) {
     var self = this;
 
     self.users = ko.observableArray([]);
@@ -54,7 +54,7 @@ var UserModel = function(users) {
     };
     
 };
-usermodel = new UserModel(initialData)
-ko.applyBindings(usermodel);
-usermodel.loadData()
+chargeModel = new ChargeModel(initialData)
+ko.applyBindings(chargeModel);
+chargeModel.loadData()
 </script>
