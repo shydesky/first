@@ -334,7 +334,7 @@ def op_set_card(cardlist, cardtype):
 
 def user_get_charge(userid):
     data = []
-    inss = Deposit.query().filter(Deposit.userid == userid).all()
+    inss = Deposit.query.filter(Deposit.userid == userid).all()
     for i in inss:
         d = {'userid':userid,'cardid':i.card_id,'create_time':i.create_time}
         data.append(d)
