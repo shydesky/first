@@ -42,7 +42,6 @@ def admin_user():
     return service.process_user_list()
 
 @app.route("/user/<int:userid>", methods=['GET','POST'])
-@jsonapi
 def user(userid):
     if request.method == 'GET':
         return render_template('userchargedetail.html')
