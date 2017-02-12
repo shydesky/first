@@ -43,7 +43,7 @@ def admin_user():
 
 @app.route("/user/<int:userid>", methods=['GET','POST'])
 @jsonapi
-def user():
+def user(userid):
     if request.method == 'GET':
         return render_template('userchargedetail.html')
 
