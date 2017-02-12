@@ -90,6 +90,8 @@ def op_signin(kwargs):
 
         data['account'] = user.phone
         data['validtime'] = str(user.valid_time.date())
+        data['createtime'] = str(user.create_time.date())
+        data['usertype'] = user.usertype
 
         ret['msg'] = SIGNIN_SUCCESS
         ret['data'] = data
