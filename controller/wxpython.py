@@ -7,7 +7,7 @@ import wx
 import hashlib
 import json
 import re
-import datetime
+import datetime, time
 from wx.lib.wordwrap import wordwrap
 sys.path.append("libs")
 URL_PREFIX = 'http://www.thestormeye.com:5000'
@@ -20,7 +20,9 @@ TOKEN = get_user_token()
 
 info_gywm_g = u'风暴眼外汇计算工具\n著作人:王岩，联合出品人:黄伟\n更多详细信息请登录www.thestormeye.com'
 info_lxwm_g = 'email: hag_kane@sina.com'
+last_getcode_time = None
 def init_information():
+    global info_gywm_g, info_lxwm_g
     url = URL_PREFIX + '/service?service=information'
     #print url
     response = requests.get(url).json()
@@ -31,7 +33,7 @@ def init_information():
     info_lxwm_g = data.get('lxwm')
 
 account_g = ''
-focus_flag = 0
+
 class MyApp(wx.App):
     def __init__(self, redirect=False, filename=None):
         wx.App.__init__(self, redirect, filename)
@@ -40,7 +42,8 @@ class MyApp(wx.App):
         self.login_frame.Show()
         
     def OnQuit(self, event):
-        self.Close()
+        self.login_frame.Destroy()
+        self.app_frame.Destroy()
 
     def OnCharge(self, event):
         self.init_login_frame()
@@ -286,14 +289,27 @@ class MyApp(wx.App):
             return False
 
     def op_get_code(self):
+        global last_getcode_time
+        time_now = time.time()
+        if last_getcode_time != None:
+            if time_now - last_getcode_time < 70:
+                self.statusbar_login.SetStatusText(u'验证码已发送,如未收到,请1分钟后再试', 0)
+                return
         url = URL_PREFIX + '/service?service=user&function=getcode&phone=%s&type=1'
         phone = self.phone_resetpwd.GetValue()
         url = url % (phone)
         response = requests.get(url).json()
         msg = response.get('msg')
+        last_getcode_time = time_now
         self.statusbar_login.SetStatusText(msg, 0)
     
     def op_get_code_signup(self):
+        global last_getcode_time
+        time_now = time.time()
+        if last_getcode_time != None:
+            if time_now - last_getcode_time < 70:
+                self.statusbar_login.SetStatusText(u'验证码已发送,如未收到,请1分钟后再试', 0)
+                return
         url = URL_PREFIX + '/service?service=user&function=getcode&phone=%s&type=2'
         phone = self.phone_signup.GetValue()
         p_re = re.compile('^0\d{2,3}\d{7,8}$|^1[358]\d{9}$|^147\d{8}')
@@ -304,6 +320,7 @@ class MyApp(wx.App):
         url = url % (phone)
         response = requests.get(url).json()
         msg = response.get('msg')
+        last_getcode_time = time_now
         self.statusbar_login.SetStatusText(msg, 0)
 
     def op_charge(self):
@@ -617,7 +634,7 @@ class MyApp(wx.App):
 
         self.app_frame.SetMenuBar( menubar )
         self.app_frame.SetSize( wx.Size(w, h))
-        
+        self.app_frame.Bind(wx.EVT_CLOSE, self.OnQuit)
         self.init_panel = wx.Panel(self.app_frame, wx.ID_ANY, size=(w,h))
 
         to_bmp_image = wx.Image(resource_path('resource\\bg.jpg'), wx.BITMAP_TYPE_ANY).ConvertToBitmap()

@@ -12,7 +12,7 @@ def hello():
 
 @app.route("/file/servicefile")
 def servicefile():
-    return "This is servicefile!"
+    return render_template('servicefile.html')
 
 @app.route("/index")
 def index():
