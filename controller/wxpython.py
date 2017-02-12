@@ -208,7 +208,7 @@ class MyApp(wx.App):
             self.statusbar_login.SetStatusText(msg, 0)
             return False
         passwd = hashlib.md5(PWD_PREFIX + self.passwd_signin.GetValue()).hexdigest()
-        url = URL_PREFIX + '/service?service=user&function=signin&account=%s&passwd=%s&token=%s'
+        url = URL_PREFIX + '/service?service=user&function=signin&account=%s&passwd=%s&key=%s'
         url = url % (phone,passwd,TOKEN)
         response = requests.get(url).json()
         msg = response.get('msg')

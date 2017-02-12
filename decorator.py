@@ -27,6 +27,7 @@ def permission_check(func):
             return func(*args, **kwargs)
         else:
             ret['msg'] = BALANCE_NOT_ENOUGH
+            ret['code'] = '1'
             ret['data'] = {}
             return ret
     return new_func
