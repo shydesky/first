@@ -64,6 +64,5 @@ def user_get_charge():
     import json
     userid = request.form['userid']
     res = op_service.user_get_charge(userid)
-    json.dumps(res)
-    resp = make_response(res)
+    resp = make_response(json.dumps(res))
     return resp
