@@ -2,7 +2,7 @@
 from model import *
 import hashlib
 import datetime,time
-from decorator import permission_check_admin, permission_check
+from decorator import permission_check_admin, permission_check_signin
 from constant import *
 from sqlalchemy import or_, and_
 USER_FUNCTION = ['SIGNUP','SIGNIN','RESETPWD','GETCODE','USERCHARGE']
@@ -64,7 +64,7 @@ def op_signup(kwargs):
     ret['code'] = 1
     return ret
 
-@permission_check
+@permission_check_signin
 def op_signin(kwargs):
     u"""用户登录."""
     ret = {}
