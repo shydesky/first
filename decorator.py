@@ -19,6 +19,7 @@ def permission_check(func):
 
         if user.clientKey != key:
             ret['msg'] = u'您的账号已绑定其他机器,不能使用空间预测服务!'
+            ret['code'] = '100'
             ret['data'] = {}
             return ret
 

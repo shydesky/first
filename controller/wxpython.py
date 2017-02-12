@@ -101,11 +101,15 @@ class MyApp(wx.App):
         elif name == 'bSignup': #用户注册panel
             self.op_signup()
         elif name == 'bSignin' or name == 'text': #用户登入panel
-            if self.op_signin():
+            flag, msg = self.op_signin()
+            if flag == 1:
                 self.init_app_frame()
                 self.login_frame.Hide()
                 self.app_frame.Show()
                 self.statusbar_login.SetStatusText('', 0)
+            elif flag == 100:
+                self.statusbar_login.SetStatusText(msg, 0)
+
         elif name == 'bNewUser':
             self.panel_signin.Hide()
             self.panel_signup.Show()
@@ -208,9 +212,9 @@ class MyApp(wx.App):
         url = url % (phone,passwd,TOKEN)
         response = requests.get(url).json()
         msg = response.get('msg')
-        flag = response.get('code')
+        flag = int(response.get('code'))
         self.statusbar_login.SetStatusText(msg, 0)
-        if flag:
+        if flag == 1:
             account_g = str(response.get('data').get('account'))
             createtime = str(response.get('data').get('createtime'))
             time_split = createtime.split('-')
@@ -233,9 +237,9 @@ class MyApp(wx.App):
             
             dlg = wx.MessageDialog(parent=None, message=message, caption=u'温馨提示', style=wx.OK)
             dlg.ShowModal()
-            return True
-        else:
-            return False
+            return flag, msg
+        elif flag == 100:
+            return flag, msg
 
     #注册
     def op_signup(self):

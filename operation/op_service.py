@@ -64,6 +64,7 @@ def op_signup(kwargs):
     ret['code'] = 1
     return ret
 
+@permission_check
 def op_signin(kwargs):
     u"""用户登录."""
     ret = {}
