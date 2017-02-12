@@ -214,11 +214,11 @@ class MyApp(wx.App):
             account_g = str(response.get('data').get('account'))
             createtime = str(response.get('data').get('createtime'))
             time_split = createtime.split('-')
-            tryuse_time = datetime.date(time_split[0], time_split[1], time_split[2]) + datetime.timedelta(days=10)
+            tryuse_time = datetime.date(int(time_split[0]), int(time_split[1]), int(time_split[2])) + datetime.timedelta(days=10)
             validtime = str(response.get('data').get('validtime'))
             usertype = int(response.get('data').get('usertype'))
             if usertype == 0:
-                if str(datetime.datetime.now().date()) < tryuse_time:
+                if str(datetime.datetime.now().date()) < str(tryuse_time):
                     message = u'亲爱的用户,感谢您使用风暴眼科技外汇计算工具进行体验。\n体验期为10天,有效期至'\
                     + tryuse_time + u',祝您使用愉快。'
                 else:
