@@ -333,6 +333,7 @@ def op_set_card(cardlist, cardtype):
 
 
 def user_get_charge(userid):
+    ret = {}
     data = []
     inss = Deposit.query.filter(Deposit.userid == userid).all()
     for i in inss:
