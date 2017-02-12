@@ -214,6 +214,7 @@ def op_user_charge(kwargs):
         user.valid_time = user.valid_time + datetime.timedelta(days=days)
     card.status = 0
     deposit = Deposit(user.id, card.id)
+    user.usertype = 1
     db_session.add(deposit)
     db_session.commit()
     

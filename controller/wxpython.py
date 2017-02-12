@@ -87,6 +87,8 @@ class MyApp(wx.App):
         url = URL_PREFIX + '/download'
         webbrowser.open(url)
 
+    def EvtCheckBox(self,event):
+        self.showsrvfile()
 
     def OnButton(self, evt):
         #Button的响应事件
@@ -146,7 +148,7 @@ class MyApp(wx.App):
         elif name == 'bBuyCard':
             self.op_buycard()
         elif name == 'bSrvfile':
-        	self.showsrvfile()
+            self.showsrvfile()
 
     def showsrvfile(self): # 服务协议
         url = URL_PREFIX + '/file/servicefile'
@@ -359,8 +361,9 @@ class MyApp(wx.App):
         self.signup_code = wx.TextCtrl(self.panel_signup, -1, pos=(225,40), size=(100, 25), style=0)
         
         self.checkSrvFile = wx.CheckBox(self.panel_signup,-1, u'我同意服务协议', pos=(20,75), size=(140,20))
-        bSrvfile = wx.Button(self.panel_signup, -1, u"查看服务协议", pos=(225,75), size=(80,25), name='bSrvfile')
-        self.Bind(wx.EVT_BUTTON, self.OnButton, bSrvfile)
+        #bSrvfile = wx.Button(self.panel_signup, -1, u"查看服务协议", pos=(225,75), size=(80,25), name='bSrvfile', style=1)
+        #self.Bind(wx.EVT_BUTTON, self.OnButton, bSrvfile)
+        self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, self.checkSrvFile)
 
         bGetCode_signup = wx.Button(self.panel_signup, -1, u"获取验证码", pos=(20,105), size=(80,25), name='bGetCode_signup')
         self.Bind(wx.EVT_BUTTON, self.OnButton, bGetCode_signup)
@@ -429,13 +432,12 @@ class MyApp(wx.App):
 
         bBack_charge = wx.Button(self.panel_charge, -1, u"返回登录", pos=(220,100), size=(80,30), name='bBack_charge')
         self.Bind(wx.EVT_BUTTON, self.OnButton, bBack_charge)
-
+        
         self.Bind(wx.EVT_TEXT_ENTER, self.OnButton)
         self.panel_signin.SetBackgroundColour((211,244,254))
         self.panel_passwd.SetBackgroundColour((211,244,254))
         self.panel_signup.SetBackgroundColour((211,244,254))
         self.panel_charge.SetBackgroundColour((211,244,254))
-
         self.panel_signin.Show()
         self.panel_passwd.Hide()
         self.panel_signup.Hide()
