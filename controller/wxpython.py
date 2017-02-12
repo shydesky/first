@@ -269,6 +269,7 @@ class MyApp(wx.App):
             self.email.SetValue('')
             self.checkSrvFile.SetValue(0)
             self.signup_code.SetValue('')
+            self.passwd.SetValue('')
         self.statusbar_login.SetStatusText(msg, 0)
 
     #退出
