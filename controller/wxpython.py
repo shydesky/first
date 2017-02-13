@@ -212,23 +212,24 @@ class MyApp(wx.App):
         url = url % (phone,passwd,TOKEN)
         response = requests.get(url).json()
         msg = response.get('msg')
-        flag = int(response.get('code'))
         self.statusbar_login.SetStatusText(msg, 0)
-        if flag == 1:
+        can_signin = int(response.get('data').get('can_signin'))
+
+        if can_signin == 1:
             account_g = str(response.get('data').get('account'))
-            createtime = str(response.get('data').get('createtime'))
-            time_split = createtime.split('-')
-            tryuse_time = datetime.date(int(time_split[0]), int(time_split[1]), int(time_split[2])) + datetime.timedelta(days=10)
             validtime = str(response.get('data').get('validtime'))
+            tryuse_time = str(response.get('data').get('tryuse_time'))
             usertype = int(response.get('data').get('usertype'))
+            can_use = int(response.get('data').get('can_use'))
+
             if usertype == 0:
-                if str(datetime.datetime.now().date()) < str(tryuse_time):
+                if can_use:
                     message = u'亲爱的用户,感谢您使用风暴眼科技外汇计算工具进行体验。\n体验期为10天,有效期至'\
                     + tryuse_time + u',祝您使用愉快。'
                 else:
                     message = u'亲爱的用户,感谢您使用风暴眼科技外汇计算工具进行体验。\n您的体验期已结束,为了不影响您的使用,请及时充值。'
             elif usertype == 1:
-                if str(datetime.datetime.now().date()) < validtime:
+                if can_use:
                     message = u'尊敬的用户,感谢您使用风暴眼科技外汇计算器工具。\n您当前的使用有效期至'\
                     + validtime + u',如您想在服务到期之后继续使用,请及时充值。'
                 else:
@@ -237,8 +238,8 @@ class MyApp(wx.App):
             
             dlg = wx.MessageDialog(parent=None, message=message, caption=u'温馨提示', style=wx.OK)
             dlg.ShowModal()
-            return flag, msg
-        elif flag == 100:
+
+        elif can_signin == 0:
             return flag, msg
 
     #注册
@@ -263,7 +264,7 @@ class MyApp(wx.App):
         	return
         passwd = hashlib.md5(PWD_PREFIX + self.passwd.GetValue()).hexdigest()
         verifycode = self.signup_code.GetValue()
-        
+
         url = URL_PREFIX + '/service?service=user&function=signup&email=%s&passwd=%s&phone=%s&key=%s&code=%s'
         url = url % (email, passwd, phone, TOKEN, verifycode)
         response = requests.get(url).json()

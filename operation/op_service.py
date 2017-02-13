@@ -69,8 +69,10 @@ def op_signin(kwargs):
     u"""用户登录."""
     ret = {}
     data = {}
+    key = request.args.get('key', '')
     phone = kwargs.args.get('account', '')
     passwd = kwargs.args.get('passwd', '')
+    key = hashlib.md5(phone + key).hexdigest()
     userip = kwargs.remote_addr
     user = User.query.filter(User.phone == phone).first()
 
@@ -85,15 +87,30 @@ def op_signin(kwargs):
             ret['data'] = {}
             ret['code'] = 0
             return ret
+        if user.clientKey != key:
+            ret['msg'] = USER_ACCESS_DENY
+            data['can_sign'] = 0
+            ret['data'] = data
+            ret['code'] = 0
+            return ret
 
         user.userip = userip
         db_session.commit()
 
         data['account'] = user.phone
-        data['validtime'] = str(user.valid_time.date())
-        data['createtime'] = str(user.create_time.date())
+        valid_time = user.valid_time
+        data['validtime'] = str(valid_time.date())
+        create_time = user.create_time
+        data['createtime'] = str(create_time.date())
         data['usertype'] = user.usertype
-
+        tryuse_time = user.create_time + datetime.timedelta(days=10)
+        data['tryuse_time'] = str(tryuse_time.date())
+        current_time = datetime.datetime.now()
+        data['current_time'] = str(current_time.date())
+        if user.usertype == 0:
+            data['can_use'] = 1 if tryuse_time > current_time else 0
+        elif user.usertype == 1:
+            data['can_use'] = 1 if valid_time > current_time else 0
         ret['msg'] = SIGNIN_SUCCESS
         ret['data'] = data
         ret['code'] = 1
