@@ -101,14 +101,10 @@ class MyApp(wx.App):
         elif name == 'bSignup': #用户注册panel
             self.op_signup()
         elif name == 'bSignin' or name == 'text': #用户登入panel
-            flag, msg = self.op_signin()
-            if flag == 1:
+            if self.op_signin():
                 self.init_app_frame()
                 self.login_frame.Hide()
                 self.app_frame.Show()
-                self.statusbar_login.SetStatusText('', 0)
-            elif flag == 100:
-                self.statusbar_login.SetStatusText(msg, 0)
 
         elif name == 'bNewUser':
             self.panel_signin.Hide()
@@ -238,9 +234,11 @@ class MyApp(wx.App):
             
             dlg = wx.MessageDialog(parent=None, message=message, caption=u'温馨提示', style=wx.OK)
             dlg.ShowModal()
-
+            self.statusbar_login.SetStatusText(msg, 0)
+            return True
         elif can_signin == 0:
-            return flag, msg
+            self.statusbar_login.SetStatusText(msg, 0)
+            return False
 
     #注册
     def op_signup(self):
