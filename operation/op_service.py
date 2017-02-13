@@ -78,20 +78,20 @@ def op_signin(kwargs):
 
     if not user:
         ret['msg'] = USER_NOT_EXIST
-        data['can_sign'] = 0
+        data['can_signin'] = 0
         ret['data'] = data
         ret['code'] = 0
         return ret
     else:
         if user.passwd != passwd:
             ret['msg'] = USER_PASSWD_WRONG
-            data['can_sign'] = 0
+            data['can_signin'] = 0
             ret['data'] = data
             ret['code'] = 0
             return ret
         if user.clientKey != key:
             ret['msg'] = USER_ACCESS_DENY
-            data['can_sign'] = 0
+            data['can_signin'] = 0
             ret['data'] = data
             ret['code'] = 0
             return ret
@@ -99,7 +99,7 @@ def op_signin(kwargs):
         user.userip = userip
         db_session.commit()
 
-        data['can_sign'] = 1
+        data['can_signin'] = 1
         data['account'] = user.phone
         valid_time = user.valid_time
         data['validtime'] = str(valid_time.date())
