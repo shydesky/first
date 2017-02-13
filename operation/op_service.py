@@ -69,7 +69,7 @@ def op_signin(kwargs):
     u"""用户登录."""
     ret = {}
     data = {}
-    key = request.args.get('key', '')
+    key = kwargs.args.get('key', '')
     phone = kwargs.args.get('account', '')
     passwd = kwargs.args.get('passwd', '')
     key = hashlib.md5(phone + key).hexdigest()
