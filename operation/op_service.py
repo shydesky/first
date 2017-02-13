@@ -110,9 +110,9 @@ def op_signin(kwargs):
         data['tryuse_time'] = str(tryuse_time.date())
         current_time = datetime.datetime.now()
         data['current_time'] = str(current_time.date())
-        if user.usertype == 0:
+        if int(user.usertype) == 0:
             data['can_use'] = 1 if tryuse_time > current_time else 0
-        elif user.usertype == 1:
+        elif int(user.usertype) == 1:
             data['can_use'] = 1 if valid_time > current_time else 0
         ret['msg'] = SIGNIN_SUCCESS
         ret['data'] = data
