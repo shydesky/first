@@ -21,7 +21,7 @@ def permission_check(func):
             ret['msg'] = u'您的账号已绑定其他机器,无法使用空间预测服务!'
             ret['data'] = {}
             return ret
-
+        # valid_time 不用区分usertype 因为试用账户已经自动将validtime设置为createtime+10天之后的时间
         if user.valid_time > datetime.datetime.now():
             return func(*args, **kwargs)
         else:
@@ -30,23 +30,6 @@ def permission_check(func):
             return ret
     return new_func
 
-def permission_check_signin(func):
-    @wraps(func)
-    def new_func(*args, **kwargs):
-        ret = {}
-        key = request.args.get('key', '')
-        phone = request.args.get('account', '')
-        key = hashlib.md5(phone + key).hexdigest()
-        user = User.query.filter(User.phone == phone).first()
-
-        if user.clientKey != key:
-            ret['msg'] = u'您的账号已绑定其他机器,登陆失败!'
-            ret['code'] = '100'
-            ret['data'] = {}
-            return ret
-
-        return func(*args, **kwargs)
-    return new_func
 
 def permission_check_admin(func):
     @wraps(func)
