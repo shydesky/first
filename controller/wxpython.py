@@ -10,7 +10,7 @@ import re
 import datetime, time
 from wx.lib.wordwrap import wordwrap
 sys.path.append("libs")
-URL_PREFIX = 'http://www.thestormeye.com:5000'
+URL_PREFIX = 'http://www.thestormeye.com'
 PWD_PREFIX = 'MDF'
 
 def get_user_token():
