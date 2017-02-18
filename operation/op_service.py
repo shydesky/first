@@ -292,7 +292,7 @@ def op_get_all_user():
     for user in users:
         usertype = user.usertype
         now = datetime.datetime.now()
-        if now > user.valid_time && int(user.usertype) == 1:
+        if now > user.valid_time and int(user.usertype) == 1:
             usertype = 2
         d = {'id': user.id, 'email': user.email, 'phone': user.phone, 'usertype': usertype}
         data.append(d)
