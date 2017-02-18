@@ -33,12 +33,14 @@ var ChargeModel = function(users) {
     var self = this;
 
     self.users = ko.observableArray([]);
-
+    url = window.location.href;
+    pos = window.location.href.indexOf('user')
+    userid = url.split(pos + 5)
     self.loadData = function () {
         $.ajax({
             url:  "/user/getcharge", //这里你需要有自己的web api 
             type: "Post",
-            data: {'userid': 6},
+            data: {'userid': userid},
             success: function (response) {
                 self.users(response.data);  // 加载结果入joinlist
             }
