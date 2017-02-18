@@ -35,7 +35,7 @@ var ChargeModel = function(users) {
     self.users = ko.observableArray([]);
     url = window.location.href;
     pos = window.location.href.indexOf('user')
-    userid = url.split(pos + 5)
+    userid = url.substr(pos + 5)
     self.loadData = function () {
         $.ajax({
             url:  "/user/getcharge", //这里你需要有自己的web api 
