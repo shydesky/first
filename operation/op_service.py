@@ -290,7 +290,11 @@ def op_get_all_user():
     data = []
     users = User.query.all()
     for user in users:
-        d = {'id':user.id,'email':user.email,'phone':user.phone,'usertype':user.usertype}
+        usertype = user.usertype
+        now = datetime.datetime.now()
+        if now > user.valid_time && int(user.usertype) == 1:
+            usertype = 2
+        d = {'id': user.id, 'email': user.email, 'phone': user.phone, 'usertype': usertype}
         data.append(d)
     ret['msg'] = SUCCESS
     ret['data'] = data
