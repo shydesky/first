@@ -61,6 +61,6 @@ def process_card():
     return redirect(url_for('card'))
 
 def user_get_charge():
-    userid = request.form['userid']
+    userid = int(request.form['userid'])
     res = op_service.user_get_charge(userid)
     return res

@@ -355,9 +355,15 @@ def op_set_card(cardlist, cardtype):
 def user_get_charge(userid):
     ret = {}
     data = []
-    inss = Deposit.query.filter(Deposit.userid == userid).all()
+    inss = db_session.query(Deposit, Card).filter(Deposit.userid == userid).join(Card, Deposit.card_id == Card.id).all()
     for i in inss:
-        d = {'userid':userid,'cardid':i.card_id,'createtime':str(i.create_time)}
+        d = {}
+        d['userid'] = i.Deposit.userid
+        d['cardid'] = i.Card.id
+        d['cardno'] = i.Card.number
+        d['cardtype'] = i.Card.type
+        d['cardstatus'] = i.Card.status
+        d['createtime'] = i.Deposit.create_time
         data.append(d)
     ret['msg'] = SUCCESS
     ret['data'] = data
