@@ -50,8 +50,8 @@ class MyApp(wx.App):
         self.login_frame.Centre()
         self.login_frame.Show()
         self.app_frame.Hide()
+
     def OnMenu(self, event):
-        # import pdb;pdb.set_trace()
         print event.GetEventObject().GetId()
 
     def OnKJYC(self, event): # 空间预测
@@ -66,13 +66,13 @@ class MyApp(wx.App):
 
     def OnCJZZ(self, event): # 财经主站 
         if event.GetId() == wx.ID_CJZZ_ZGCJ:
-            url = 'http://finance.fecn.net/'
+            url = 'http://forex.cfi.cn/'
         elif event.GetId() == wx.ID_CJZZ_DFCF:
             url = ' http://forex.eastmoney.com/'
         elif event.GetId() == wx.ID_CJZZ_XLCJ:
             url = 'http://finance.sina.com.cn/forex/'
         elif event.GetId() == wx.ID_CJZZ_SHCJ:
-            url = 'http://money.sohu.com/waihui/'
+            url = 'http://forex.hexun.com'
         webbrowser.open(url)
 
     def OnGY(self, event):  # 关于
@@ -114,7 +114,7 @@ class MyApp(wx.App):
             self.panel_signin.Show()
             self.panel_signup.Hide()
             self.statusbar_login.SetStatusText('', 0)
-        elif name == 'bLogout':
+        elif name == 'bLogout': #unuse
             self.op_logout()
             self.panel_signin.Show()
             self.panel_left_2.Hide()
@@ -197,7 +197,7 @@ class MyApp(wx.App):
     def op_signin(self):
         global account_g , TOKEN
         import re
-        p2 = re.compile('^1[358]\d{9}$|^147\d{8}')
+        p2 = re.compile('^1[358]\d{9}$|^147\d{8}|^170\d{8}')
         phone = self.phone_signin.GetValue()
         if not p2.match(phone):
             msg = u'请输入有效的手机号!'
@@ -244,7 +244,8 @@ class MyApp(wx.App):
     def op_signup(self):
         global TOKEN
         phone = self.phone_signup.GetValue()
-        p_re = re.compile('^0\d{2,3}\d{7,8}$|^1[358]\d{9}$|^147\d{8}')
+        p_re = re.compile('^1[358]\d{9}$|^147\d{8}|^170\d{8}')
+
         phonematch=p_re.match(phone)
         if not phonematch:
             self.statusbar_login.SetStatusText(u'手机号码无效！', 0)
@@ -308,6 +309,11 @@ class MyApp(wx.App):
         self.statusbar_login.SetStatusText(msg, 0)
         if flag:
             self.passwd_signin.SetValue('')
+            self.phone_resetpwd.SetValue('')
+            self.reset_code.SetValue('')
+            self.newpasswd.SetValue('')
+            dlg = wx.MessageDialog(parent=None, message=u'密码重置成功', caption=u'温馨提示', style=wx.OK)
+            dlg.ShowModal()
             return True
         else:
             return False
@@ -321,6 +327,11 @@ class MyApp(wx.App):
                 return
         url = URL_PREFIX + '/service?service=user&function=getcode&phone=%s&type=1'
         phone = self.phone_resetpwd.GetValue()
+        p_re = re.compile('^1[358]\d{9}$|^147\d{8}|^170\d{8}')
+        phonematch=p_re.match(phone)
+        if not phonematch:
+            self.statusbar_login.SetStatusText(u'手机号码无效！', 0)
+            return
         url = url % (phone)
         response = requests.get(url).json()
         msg = response.get('msg')
@@ -336,7 +347,7 @@ class MyApp(wx.App):
                 return
         url = URL_PREFIX + '/service?service=user&function=getcode&phone=%s&type=2'
         phone = self.phone_signup.GetValue()
-        p_re = re.compile('^0\d{2,3}\d{7,8}$|^1[358]\d{9}$|^147\d{8}')
+        p_re = re.compile('^1[358]\d{9}$|^147\d{8}|^170\d{8}')
         phonematch=p_re.match(phone)
         if not phonematch:
             self.statusbar_login.SetStatusText(u'手机号码无效！', 0)
@@ -512,10 +523,10 @@ class MyApp(wx.App):
         wx.ID_CJZZ_XLCJ = 3013
         wx.ID_CJZZ_SHCJ = 3014
 
-        information_item_one = wx.MenuItem(information_second_menu, 3011, text=u'中国财经网',kind=wx.ITEM_NORMAL)
+        information_item_one = wx.MenuItem(information_second_menu, 3011, text=u'中国财经信息网',kind=wx.ITEM_NORMAL)
         information_item_two = wx.MenuItem(information_second_menu, 3012, text=u'东方财富网',kind=wx.ITEM_NORMAL)
         information_item_three = wx.MenuItem(information_second_menu, 3013, text=u'新浪财经',kind=wx.ITEM_NORMAL)
-        information_item_four = wx.MenuItem(information_second_menu, 3014, text=u'搜狐财经',kind=wx.ITEM_NORMAL)
+        information_item_four = wx.MenuItem(information_second_menu, 3014, text=u'和讯外汇',kind=wx.ITEM_NORMAL)
 
         information_second_menu.AppendItem(information_item_one)
         information_second_menu.AppendItem(information_item_two)

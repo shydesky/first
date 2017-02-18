@@ -122,19 +122,19 @@ def op_resetpwd(kwargs):
     u"""重置密码."""
     ret = {}
     data = {}
-    phone = kwargs.args.get('phone','')
-    passwd = kwargs.args.get('passwd','')
-    verifycode = kwargs.args.get('verifycode','')
+    phone = kwargs.args.get('phone', '')
+    passwd = kwargs.args.get('passwd', '')
+    verifycode = kwargs.args.get('verifycode', '')
 
-    user = User.query.filter(User.phone==phone).first()
+    user = User.query.filter(User.phone == phone).first()
     if not user:
-       ret['msg'] = USER_NOT_EXIST
-       ret['code'] = 0
-       return ret
+        ret['msg'] = USER_NOT_EXIST
+        ret['code'] = 0
+        return ret
 
-    vcode = VerifyCode.query.filter(VerifyCode.userid==user.id).order_by(desc(VerifyCode.create_time)).first()
-    if vcode and (vcode.code == verifycode) and ((datetime.datetime.now() - vcode.create_time).seconds < 600):
-        user = User.query.filter(User.phone==phone).first()
+    vcode = VerifyCode.query.filter(VerifyCode.userid == user.id).order_by(desc(VerifyCode.create_time)).first()
+    if vcode and (vcode.code == verifycode) and ((datetime.datetime.now() - vcode.create_time).seconds < 180):
+        user = User.query.filter(User.phone == phone).first()
         user.passwd = passwd
         db_session.commit()
         ret['msg'] = PASSWORD_RESET_SUCCESS
