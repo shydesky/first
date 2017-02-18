@@ -363,7 +363,7 @@ def user_get_charge(userid):
         d['cardno'] = i.Card.number
         d['cardtype'] = i.Card.type
         d['cardstatus'] = i.Card.status
-        d['createtime'] = i.Deposit.create_time
+        d['createtime'] = str(i.Deposit.create_time)
         data.append(d)
     ret['msg'] = SUCCESS
     ret['data'] = data
