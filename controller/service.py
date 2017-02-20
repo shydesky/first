@@ -55,7 +55,7 @@ def process_card():
     res = op_service.op_set_card(card_list, cardtype)
     if res.get('data').get('data', None):
         ss = res.get('data').get('data')
-        flash(u'成功添加了%s个卡密,它们是%s' % (len(ss), ss))
+        flash(u'成功添加了%s个卡密' % (len(ss)))
     else:
         flash(u'添加卡密失败!')
     return redirect(url_for('card'))

@@ -336,6 +336,8 @@ def op_set_card(cardlist, cardtype):
     success_add = []
     for card in cardlist:
         card_pwd = card.split(' ')
+        if len(card_pwd) != 2:
+            continue
         number = card_pwd[0]
         pwd = card_pwd[1]
         temp = number[0:2].upper()
