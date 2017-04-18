@@ -27,7 +27,8 @@ class User(Base):
         self.userip = userip
         self.usertype = usertype
         if create_time is None:
-            self.create_time = datetime.datetime.now()
+            create_time = datetime.datetime.now()
+        self.create_time = create_time
         self.valid_time = create_time + datetime.timedelta(days=10)
 
     def __repr__(self):
