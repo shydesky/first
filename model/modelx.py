@@ -42,9 +42,11 @@ class VerifyCode(Base):
     code_type = Column(Integer)
     create_time = Column(DateTime, default=datetime.datetime.now())
 
-    def __init__(self, userid=0, code='000000', code_type=0, create_time=datetime.datetime.now()):
+    def __init__(self, userid=0, code='000000', code_type=0, create_time=None):
         self.userid = userid
         self.code = code
+        if create_time is None:
+            create_time = datetime.datetime.now()
         self.create_time = create_time
         self.code_type = code_type
 
@@ -58,9 +60,11 @@ class Deposit(Base):
     card_id = Column(String(32))
     create_time = Column(DateTime, default=datetime.datetime.now())
 
-    def __init__(self, userid, card_id, create_time=datetime.datetime.now()):
+    def __init__(self, userid, card_id, create_time=None):
         self.userid = userid
         self.card_id = card_id
+        if create_time is None:
+            create_time = datetime.datetime.now()
         self.create_time = create_time
 
     def __repr__(self):
