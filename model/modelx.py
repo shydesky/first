@@ -18,7 +18,7 @@ class User(Base):
     create_time = Column(DateTime, default=datetime.datetime.now())
     valid_time = Column(DateTime, default=datetime.datetime.now() + datetime.timedelta(days=10))
 
-    def __init__(self, name=None, email=None, passwd=None, phone=None, clientKey=None, userip=None, usertype=0, create_time=datetime.datetime.now()):
+    def __init__(self, name=None, email=None, passwd=None, phone=None, clientKey=None, userip=None, usertype=0, create_time=None):
         self.name = name
         self.email = email
         self.passwd = passwd
@@ -26,7 +26,8 @@ class User(Base):
         self.clientKey = clientKey
         self.userip = userip
         self.usertype = usertype
-        self.create_time = create_time
+        if create_time is None:
+            self.create_time = datetime.datetime.now()
         self.valid_time = create_time + datetime.timedelta(days=10)
 
     def __repr__(self):
